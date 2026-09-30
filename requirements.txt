@@ -1,0 +1,41 @@
+# Async & WebSocket
+aiohttp>=3.9.0
+websockets>=12.0
+
+# Binance
+python-binance>=1.0.19
+
+# Data Processing
+numpy>=1.26.0
+pandas>=2.1.0
+scipy>=1.11.0
+
+# Deep Learning & RL
+torch>=2.1.0
+gymnasium>=0.29.0
+stable-baselines3>=2.2.0
+
+# Database
+clickhouse-driver>=0.2.6
+asyncpg>=0.29.0
+sqlalchemy>=2.0.0
+
+# Configuration & Env
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Monitoring & Logging
+rich>=13.7.0
+loguru>=0.7.0
+
+# Visualization
+matplotlib>=3.8.0
+plotly>=5.18.0
+
+# Data Storage
+pyarrow>=14.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
