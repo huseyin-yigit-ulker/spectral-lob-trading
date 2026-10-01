@@ -60,7 +60,7 @@ class LiveSignalGenerator:
                         # Stream isimleri binance tarafindan kucuk harf gelir
                         if "depth" in stream: 
                             self._handle_depth(payload)
-                        elif "aggTrade" in stream: 
+                        elif "trade" in stream: 
                             self._handle_trade(payload)
             except asyncio.CancelledError: break
             except Exception as e: pass

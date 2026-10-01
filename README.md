@@ -1,77 +1,96 @@
-# 🤖 HFT Orders & Signal Autonomous Agent (Private Core)
+# Orders Signal - Mikro-Yapı & SMC Tabanlı Otonom Trading Ajanı
 
-Bu proje, Binance Futures (USDT-M) piyasasında **Yüksek Frekanslı Ticaret (HFT)** dinamiklerini kullanan gizli ve otonom bir ticaret ajanıdır. Sıradan indikatörler (RSI, MACD) yerine kurumsal piyasa yapıcıların kullandığı **Emir Defteri Dengesizliği (OBI)** ve **Kümülatif Hacim Deltası (CVD)** tabanlı algoritmalarla çalışır. Ayrıca sistem, **PPO (Proximal Policy Optimization)** tabanlı bir Reinforcement Learning (Pekiştirmeli Öğrenme) yapay zeka ajanına ev sahipliği yapar.
+Orders Signal is an autonomous trading agent designed to trade on Binance Futures using Order Book Imbalance (OBI), Cumulative Volume Delta (CVD), and Smart Money Concepts (SMC) via Reinforcement Learning.
 
-## 🏗️ Proje Mimarisi ve Akışı
+## Architecture Overview (Mimari Genel Bakış)
 
-Proje 4 temel modülden oluşmaktadır:
-1. **Veri Toplayıcı** (`scripts/collect_data.py`)
-2. **Gerçek Zamanlı Karar Motoru** (`scripts/run_agent.py`)
-3. **Gerçek Makro Backtester** (`scripts/backtest_macro.py`)
-4. **PPO (Yapay Zeka) Eğitmeni** (`scripts/train_agent.py`)
+Bu proje, mikro-yapı verilerini (emir defteri dengesizliği, CVD) ve fiyat aksiyonu konseptlerini (SMC) birleştirerek derin pekiştirmeli öğrenme (Deep RL) ile alım satım kararları alan otonom bir sistemdir.
 
----
+- **Data Collection (Veri Toplama):** Binance Futures WebSocket API üzerinden yüksek frekanslı depth ve trade verilerinin toplanması.
+- **Feature Engineering:** Toplanan verilerin işlenerek OBI, CVD ve SMC özelliklerinin çıkarılması.
+- **RL Agent:** Çıkarılan özelliklerle eğitilmiş ajanın piyasa yönünü tahmin etmesi ve işlem kararları alması.
+- **Execution (Gerçekleştirme):** Binance Futures API üzerinden kararların asenkron olarak uygulanması (Testnet ve Dry-run desteğiyle).
+- **Monitoring (İzleme):** Terminal tabanlı canlı dashboard (Rich kütüphanesi).
 
-## 📊 1. Veri Madenciliği (Data Mining)
-Sistem gecikmeyi minimize etmek için mum verisi kullanmaz. Binance WebSockets üzerinden doğrudan şu iki kanala bağlanır:
+## Project Structure (Proje Yapısı)
 
-* **`depth20@100ms` (Emir Defteri):** Saniyede 10 kez güncellenir. Tahtadaki en iyi 20 Alış (Bid) ve 20 Satış (Ask) kademesindeki yığılmaları yakalar.
-* **`trade` (Gerçekleşen İşlemler):** Milisaniye hızında akan anlık alım satımları (Taker/Maker detaylarıyla) alır. *(Not: Binance'in aggTrade kanalındaki gizli kısıtlamaları by-pass edilerek doğrudan `trade` kanalı tercih edilmiştir).*
+```text
+orders_signal/
+├── execution/
+│   └── binance_executor.py
+├── monitoring/
+│   └── dashboard.py
+├── scripts/
+│   ├── collect_data.py
+│   └── run_agent.py
+├── main.py
+└── README.md
+```
 
-**Kayıt Formatı:** Veriler milisaniyelik boyutta şişmemesi ve yapay zeka eğitiminde çok hızlı (vectorized) okunabilmesi için `.parquet` formatında `data/` dizinine kaydedilir.
+## Installation
 
----
+1. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # on Windows: venv\Scripts\activate
+   ```
+2. Install requirements:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Setup environment variables:
+   Create a `.env` file in the root directory:
+   ```env
+   BINANCE_API_KEY=your_api_key
+   BINANCE_API_SECRET=your_api_secret
+   ```
 
-## 🧠 2. Gizli Strateji ve Karar Mekanizması ("Gerçek Macro")
-Canlı ajan, piyasadaki "Spoofing" (Sahte Emir Duvarı) tuzaklarına düşmemek için **Hysteresis (Tolerans Bantları)** ile donatılmış kati bir algoritmaya sahiptir.
+## Usage
 
-**Strateji Kriterleri:**
-* **Zaman Penceresi:** Son 10 saniyelik verinin HFT dünyasında "çok gürültülü" olması sebebiyle **60 saniyelik (600 tick)** hareketli ortalama kullanılır.
-* **LONG Sinyali Şartı:**
-  1. `Macro OBI > +0.30`: Tahtadaki emirlerin en az %65'i net alış yönünde baskı kurmalı.
-  2. `CVD_1m > 0`: Sadece tahtaya sahte emir girmek yetmez, son 1 dakikada **gerçekten** marketten alım yapan hacim (CVD) pozitif olmalıdır.
-* **SHORT Sinyali Şartı:**
-  1. `Macro OBI < -0.30`: Tahtadaki emirler güçlü satış yönlü olmalı.
-  2. `CVD_1m < 0`: Son 1 dakikalık gerçek işlem hacmi satıcılı (negatif) olmalı.
-* **İşlem Kapatma (Exit) Kriteri:** Fiyat yön değiştirdiğinde sinyalin `NOTR` (Bekle) durumuna geçmesi için OBI'nin sıfıra ulaşması yetmez, momentumun tersine dönerek `+/- 0.05` eşiğine kırılması beklenir.
-
-*Bu katı kısıtlamalar sayesinde bot yatay (sideways) piyasalarda işlem açmayıp (komisyon tasarrufu yapar), sadece kesin ivme anlarında işleme girer.*
-
----
-
-## 🤖 3. Derin Pekiştirmeli Öğrenme (RL - PPO)
-Kural tabanlı stratejinin ötesinde sistemin kendi kendine optimize olması için `Stable Baselines3` altyapısı kullanılmıştır.
-
-* **State (Gözlem Vektörü):** Yapay zeka ajanına şu 4'lü matris sunulur:
-  - `OBI` (Anlık Dengesizlik)
-  - `OBI_60s` (Makro Trend Eğilimi)
-  - `Return_1s` (Fiyat Volatilitesi)
-  - `Spread` (Likidite/Makas)
-* **Action (Aksiyon Uzayı):** `[0: SHORT, 1: BEKLE, 2: LONG]`
-* **Reward (Ödül Fonksiyonu):** 
-  - İşlem açıldığında/kapandığında **Komisyon Cezası** kesilir.
-  - Sadece izleyip risk almadığı her saniye için mikro bir **Hareketsizlik Cezası** uygulanır.
-  - Açtığı pozisyon doğru yönde ilerlerse, PnL (Gerçekleşen Kâr) yüksek bir skaler değerle çarpılarak ajana ödül olarak verilir.
-
-Eğitim bittiğinde elde edilen ağırlık dosyası `models/ppo_symbol_v1.zip` dizinine kaydedilir.
-
----
-
-## 💻 Kullanım Komutları
+You can use the `main.py` entry point to access different modules:
 
 ```bash
-# Gerekli bagimliliklar
-pip install -r requirements.txt
+# Start data collection
+python main.py collect --symbol BTCUSDT
 
-# 1. Ham Veri Toplama (Arka planda acik kalmali)
-python scripts/collect_data.py --symbol BTCUSDT
+# Train the RL agent
+python main.py train
 
-# 2. Canli Sinyal ve Dashboard Izleyici
-python scripts/run_agent.py --symbol BTCUSDT
+# Run live trading (use with caution)
+python main.py live --dry-run
 
-# 3. Kendi Bilgisayarinda YZ (PPO) Egitimi
-python scripts/train_agent.py --symbol BTCUSDT --timesteps 500000
-
-# 4. Kural Tabanli Gecmis Strateji Testi
-python scripts/backtest_macro.py
+# Start monitoring dashboard
+python main.py monitor
 ```
+
+## Configuration
+All configuration parameters (symbols, refresh rates, model paths) can be set via environment variables or configuration files in the future.
+
+## Development Roadmap
+- [x] Basic project scaffolding
+- [ ] Data collection module integration
+- [ ] Feature engineering pipeline
+- [ ] RL environment and training scripts
+- [ ] Live execution module implementation
+
+## Tech Stack
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Binance](https://img.shields.io/badge/Binance-FCD535?style=for-the-badge&logo=binance&logoColor=white)
+
+## 📈 Kuralcı Bot Stratejisi (Gerçek Makro)
+
+Yapay zeka (RL) modellerinin komisyon ücretleri nedeniyle HFT (Yüksek Frekanslı Ticaret) alanında zorlanması üzerine, başarılı kâr oranına sahip (`+%1.28 Net`) bir "Kuralcı (Heuristic) Makro Bot" geliştirilmiştir.
+
+### Strateji Mimarisi:
+Bu bot, piyasadaki gürültüyü (noise) ve sahte duvarları (spoofing) engellemek için üç temel matematiksel filtre kullanır:
+
+1. **60-Saniyelik Makro OBI (Emir Defteri Dengesizliği):**
+   * Saniyelik OBI dalgalanmaları yerine, son 60 saniyenin hareketli ortalaması (MA) alınır. Bu, anlık manipülasyonları filtreler.
+2. **CVD (Kümülatif Hacim) Gerçeklik Onayı:**
+   * Balinalar emir defterine devasa bir alış duvarı koyup fiyatı manipüle edebilir (Spoofing). Bot, bu duvara inanmak için **CVD_1m > 0** (gerçekten market alışları yapılıyor mu?) onayını zorunlu tutar.
+3. **Hysteresis (Yapışkanlık / Ölü Bölge):**
+   * Aşırı işlem (Overtrading) yapıp komisyonlara para kaptırmamak için asimetrik giriş/çıkış sınırları belirlenmiştir.
+   * **LONG Giriş:** Makro OBI `> 0.30` ve CVD pozitif.
+   * **LONG Çıkış:** Makro OBI `< -0.05` (Trendin tersine döndüğüne dair hafif bir kanıt).
+   * Aradaki bölgede (-0.30 ile 0.30 arası) bot tamamen "Sağır ve Dilsiz" davranarak **Ölü Bölgede (Dead Zone)** bekler. Bu sayede işlem sayısı binlerden ~170 bandına düşürülür.
+
