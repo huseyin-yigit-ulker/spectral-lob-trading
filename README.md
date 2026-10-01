@@ -94,3 +94,22 @@ Bu bot, piyasadaki gürültüyü (noise) ve sahte duvarları (spoofing) engellem
    * **LONG Çıkış:** Makro OBI `< -0.05` (Trendin tersine döndüğüne dair hafif bir kanıt).
    * Aradaki bölgede (-0.30 ile 0.30 arası) bot tamamen "Sağır ve Dilsiz" davranarak **Ölü Bölgede (Dead Zone)** bekler. Bu sayede işlem sayısı binlerden ~170 bandına düşürülür.
 
+
+## 📊 Güncel Durum ve Backtest Sonuçları (Ekim 2026)
+
+Projede iki farklı yaklaşım (Yapay Zeka ve Kuralcı Algoritma) aynı 14 saatlik (417.000 satır) gerçek piyasa verisi üzerinde test edilmiştir. Taker (Piyasa Alıcı) komisyonlarının (%0.04 x 2 = %0.08) yıkıcı etkisi açıkça gözlemlenmiştir.
+
+| Model / Strateji | Toplam İşlem | Başarı Oranı (Win Rate) | Net Kâr / Zarar (PnL) | Durum |
+| :--- | :--- | :--- | :--- | :--- |
+| Sadece Bekleseydik (Market) | 0 | - | + % 0.44 | Kıyaslama (Benchmark) |
+| **Yapay Zeka V1** (Sadece OBI) | 583 | % 10.63 | **- % 34.99** | Spoofing (Sahte Duvar) kurbanı oldu. |
+| **Yapay Zeka V2** (Ham CVD) | 2140 | % 3.55 | **- % 81.51** | Dev Hacim sayıları sinir ağını patlattı (Overtrading). |
+| **Yapay Zeka V3** (Normalize CVD) | 1241 | % 2.66 | **- % 65.45** | Kararlılık arttı ama Histerezis (Hafıza) olmadığı için komisyona eridi. |
+| **Yapay Zeka V4** (Hafızalı - Mevcut) | 669 | % 6.28 | **- % 43.58** | İşlem sayısı harika düştü ama Taker komisyonunu yenemedi. |
+| **Kuralcı Bot** (Gerçek Makro) | **173** | **% 56.00** | **+ % 1.28** | **KAZANAN! (Canlıda Aktif)** |
+
+### 🚀 Mevcut Canlı Sistem
+Yapay zeka (RL) ajanının, Taker (Piyasa) komisyonları altında kâr üretemediği matematiksel olarak kanıtlandıktan sonra; **Kuralcı Makro Bot (+%1.28 Net Kâr)** projenin ana omurgası olarak seçilmiştir. 
+
+Şu an `scripts/run_agent.py` üzerinden Binance WebSocket (Canlı) bağlantısı ile 7/24 çalışmakta, asimetrik "Ölü Bölge" ve "CVD Hacim Onayı" filtrelerini kullanarak canlı piyasada (Overtrading'e düşmeden) fırsat aramaktadır. Elde ettiği sinyaller `logs/` dizinine `.csv` formatında gerçek zamanlı kaydedilmektedir.
+
