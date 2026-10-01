@@ -1,19 +1,19 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 import pandas as pd
 import numpy as np
 import os
 from pathlib import Path
-import matplotlib.pyplot as plt
 
-def run_true_macro_backtest():
+def run_true_macro_backtest_v3():
     data_dir = Path("data")
     depth_files = sorted([f for f in os.listdir(data_dir) if f.startswith("depth_btcusdt")])
     trade_files = sorted([f for f in os.listdir(data_dir) if f.startswith("trades_btcusdt")])
     
     if not depth_files or not trade_files:
-        print("[!] Veri bulunamadi (Hem depth hem trade dosyasi gerekli).")
+        print("[!] Veri bulunamadi.")
         return
         
-    print("[1] Veriler yukleniyor...")
     df_depth = pd.read_parquet(data_dir / depth_files[-1])
     df_depth['datetime'] = pd.to_datetime(df_depth['timestamp'], unit='ms')
     df_depth = df_depth.sort_values('datetime').reset_index(drop=True)
@@ -22,113 +22,128 @@ def run_true_macro_backtest():
     df_trades['datetime'] = pd.to_datetime(df_trades['timestamp'], unit='ms')
     df_trades = df_trades.sort_values('datetime')
     
-    print("[2] 60 Saniyelik Hacim (CVD) hesaplaniyor...")
-    # Satici ise eksi, alici ise arti hacim
-    df_trades['signed_vol'] = np.where(df_trades['is_buyer_maker'], -df_trades['qty'], df_trades['qty'])
+    qty_col = 'quantity' if 'quantity' in df_trades.columns else 'qty'
+    df_trades['signed_vol'] = np.where(df_trades['is_buyer_maker'], -df_trades[qty_col], df_trades[qty_col])
     df_trades = df_trades.set_index('datetime')
     df_trades['CVD_60s'] = df_trades['signed_vol'].rolling('60s').sum()
     
-    # Depth ve CVD verilerini zaman damgasina gore birlestir
     df = pd.merge_asof(df_depth, df_trades[['CVD_60s']], left_on='datetime', right_index=True, direction='backward')
     df['CVD_60s'] = df['CVD_60s'].fillna(0)
     
-    print("[3] OBI ve 60s Hareketli Ortalama hesaplaniyor...")
     df['mid_price'] = (df['bid_price_0'] + df['ask_price_0']) / 2
     bids_qty = sum(df[f'bid_qty_{i}'] for i in range(5))
     asks_qty = sum(df[f'ask_qty_{i}'] for i in range(5))
     df['OBI_Raw'] = (bids_qty - asks_qty) / (bids_qty + asks_qty + 1e-8)
-    
-    # Canlıdaki gibi 600 tick (60 saniye) ortalama
     df['OBI_60s'] = df['OBI_Raw'].rolling(600).mean().fillna(0)
     
-    print("[4] Canlidaki kati kurallarla sinyal uretiliyor...")
-    signals = []
-    current_sig = 0
+    # --- V3 GENIS OLU BOLGE (WIDE DEAD ZONE) STRATEJISI ---
+    TP_PCT = 0.0030  # Kâr Al (%0.30) - Trendde daha cok otur!
+    SL_PCT = 0.0015  # Zarar Kes (%0.15)
+    COMMISSION_ENTRY = 0.00016 # Maker
+    COMMISSION_EXIT = 0.00016  # Maker
     
-    for obi, cvd in zip(df['OBI_60s'], df['CVD_60s']):
-        # Canlı stratejideki AL/SAT ve Kapama kosullari
-        if obi > 0.30 and cvd > 0:
-            current_sig = 1
-        elif obi < -0.30 and cvd < 0:
-            current_sig = -1
-        elif current_sig == 1 and obi < -0.05:
-            current_sig = 0
-        elif current_sig == -1 and obi > 0.05:
-            current_sig = 0
-            
-        signals.append(current_sig)
-        
-    df['Signal'] = signals
+    ENTRY_THRESH = 0.40 # Eskiden 0.30'du (Giris zorlastirildi)
+    EXIT_THRESH = 0.15  # Eskiden 0.05'ti (Cikis zorlastirildi, Dead Zone buyudu)
     
-    print("[5] Kâr/Zarar (PnL) Sonuclari Olusturuluyor...")
-    df['Future_Return'] = df['mid_price'].pct_change().shift(-1)
-    df['Strategy_Return'] = df['Signal'] * df['Future_Return']
-    df['Cumulative_Market'] = (1 + df['Future_Return']).cumprod() - 1
-    df['Cumulative_Strategy'] = (1 + df['Strategy_Return']).cumprod() - 1
+    balance = 10000.0
+    initial_balance = 10000.0
+    position = 0 
+    entry_price = 0.0
+    entry_time = None
     
     trades = []
-    current_pos = 0
-    entry_time, entry_price = None, 0.0
+    win_count = 0
+    total_fee_paid = 0.0
     
-    for i, row in df.iterrows():
-        sig = row['Signal']
-        price = row['mid_price']
-        time = row['datetime']
+    obi_arr = df['OBI_60s'].values
+    cvd_arr = df['CVD_60s'].values
+    price_arr = df['mid_price'].values
+    time_arr = df['datetime'].values
+    
+    for i in range(1, len(df)):
+        obi = obi_arr[i]
+        cvd = cvd_arr[i]
+        price = price_arr[i]
+        time = time_arr[i]
         
-        if sig != current_pos:
-            if current_pos != 0:
-                pnl = (price - entry_price) / entry_price
-                if current_pos == -1: pnl = -pnl
-                trades.append({
-                    'Islem_Yonu': 'LONG' if current_pos == 1 else 'SHORT',
-                    'Giris_Zamani': entry_time,
-                    'Giris_Fiyati': round(entry_price, 2),
-                    'Cikis_Zamani': time,
-                    'Cikis_Fiyati': round(price, 2),
-                    'Sure_Saniye': round((time - entry_time).total_seconds(), 2),
-                    'Kar_Zarar_%': round(pnl * 100, 4)
-                })
-            current_pos = sig
-            if current_pos != 0:
-                entry_time = time
+        if position == 0:
+            if obi > ENTRY_THRESH and cvd > 0:
+                position = 1
                 entry_price = price
+                entry_time = time
+                fee = balance * COMMISSION_ENTRY
+                balance -= fee
+                total_fee_paid += fee
+            elif obi < -ENTRY_THRESH and cvd < 0:
+                position = -1
+                entry_price = price
+                entry_time = time
+                fee = balance * COMMISSION_ENTRY
+                balance -= fee
+                total_fee_paid += fee
+        
+        elif position == 1:
+            exit_reason = None
+            if price >= entry_price * (1 + TP_PCT):
+                exit_reason = "TAKE_PROFIT"
+            elif price <= entry_price * (1 - SL_PCT):
+                exit_reason = "STOP_LOSS"
+            elif obi < -EXIT_THRESH:
+                exit_reason = "TREND_REVERSAL"
                 
-    trades_df = pd.DataFrame(trades)
-    market_ret = df['Cumulative_Market'].iloc[-2] * 100
-    strategy_ret = df['Cumulative_Strategy'].iloc[-2] * 100
+            if exit_reason:
+                pnl_pct = (price - entry_price) / entry_price
+                gross_pnl = balance * pnl_pct
+                fee = balance * COMMISSION_EXIT
+                net_pnl = gross_pnl - fee
+                balance += net_pnl
+                total_fee_paid += fee
+                
+                if net_pnl > 0: win_count += 1
+                trades.append({"Yon": "LONG", "Sebep": exit_reason, "Net PnL": net_pnl, "Giris": entry_price, "Cikis": price})
+                position = 0
+                
+        elif position == -1:
+            exit_reason = None
+            if price <= entry_price * (1 - TP_PCT):
+                exit_reason = "TAKE_PROFIT"
+            elif price >= entry_price * (1 + SL_PCT):
+                exit_reason = "STOP_LOSS"
+            elif obi > EXIT_THRESH:
+                exit_reason = "TREND_REVERSAL"
+                
+            if exit_reason:
+                pnl_pct = (entry_price - price) / entry_price
+                gross_pnl = balance * pnl_pct
+                fee = balance * COMMISSION_EXIT
+                net_pnl = gross_pnl - fee
+                balance += net_pnl
+                total_fee_paid += fee
+                
+                if net_pnl > 0: win_count += 1
+                trades.append({"Yon": "SHORT", "Sebep": exit_reason, "Net PnL": net_pnl, "Giris": entry_price, "Cikis": price})
+                position = 0
+                
+    market_return = (price_arr[-1] - price_arr[0]) / price_arr[0] * 100
+    strategy_return = (balance - initial_balance) / initial_balance * 100
+    win_rate = (win_count / len(trades) * 100) if trades else 0
     
-    print("\n" + "="*50)
-    print(" 🚀 CANLIDAKİ GERÇEK MACRO SİSTEM BACKTEST SONUCU ")
-    print("="*50)
-    if not trades_df.empty:
-        print(f"Toplam Islem Sayisi: {len(trades_df)}")
-        print(f"Ortalama Islem Suresi: {trades_df['Sure_Saniye'].mean():.2f} Saniye")
-        win_rate = (trades_df['Kar_Zarar_%'] > 0).mean() * 100
-        print(f"Basari Orani (Win Rate): % {win_rate:.2f}")
-    else:
-        print("DIKKAT: Verilen periyotta sinyal kosullari (OBI>0.30 & CVD>0) hic olusmadi!")
-        print("Bu botun yatay piyasada parayi korudugunun en buyuk kanitidir.")
+    print("\n==================================================")
+    print(" 🚀 KURALCI BOT V3 (GENIS OLU BOLGE + LIMIT EMIR) ")
+    print("==================================================")
+    print(f"Toplam Islem Sayisi: {len(trades)}")
+    print(f"Odenen Toplam Komisyon Masrafi: ${total_fee_paid:.2f}")
+    
+    tp_count = sum(1 for t in trades if t['Sebep'] == 'TAKE_PROFIT')
+    sl_count = sum(1 for t in trades if t['Sebep'] == 'STOP_LOSS')
+    rev_count = sum(1 for t in trades if t['Sebep'] == 'TREND_REVERSAL')
+    
+    print(f"Cikislar -> TP: {tp_count} | SL: {sl_count} | Reversal: {rev_count}")
+    print(f"Basari Orani (Win Rate): % {win_rate:.2f}")
     print("-" * 50)
-    print(f"Sadece Bekleseydik (Piyasa): % {market_ret:.4f}")
-    print(f"Gercek Macro Stratejisi:     % {strategy_ret:.4f}")
-    print("="*50 + "\n")
-    
-    if not trades_df.empty:
-        csv_path = "btc_canli_macro_islemleri.csv"
-        trades_df.to_csv(csv_path, index=False)
-        print(f"[OK] Islemler detayli olarak '{csv_path}' dosyasina kaydedildi.")
-
-    plt.figure(figsize=(12, 6))
-    plt.style.use('dark_background')
-    plt.plot(df['Cumulative_Market'] * 100, label='Piyasa', color='cyan', alpha=0.6)
-    plt.plot(df['Cumulative_Strategy'] * 100, label='Canli Macro Ajan', color='magenta', linewidth=2)
-    plt.title('Canlidaki Modelin Backtest Performansi (Kumulatif Kar %)', fontsize=14)
-    plt.xlabel('Zaman (Adim)')
-    plt.ylabel('Kar / Zarar (%)')
-    plt.legend()
-    plt.grid(alpha=0.2)
-    plt.savefig("backtest_canli_macro.png")
-    print("\n[OK] Grafik 'backtest_canli_macro.png' olarak kaydedildi.")
+    print(f"Sadece Bekleseydik (Piyasa): % {market_return:.4f}")
+    print(f"Genisletilmis Bot (Net Kâr): % {strategy_return:.4f}")
+    print("==================================================\n")
 
 if __name__ == "__main__":
-    run_true_macro_backtest()
+    run_true_macro_backtest_v3()
