@@ -35,6 +35,7 @@ class SMCAgent:
         self.cvd_1m = 0.0
         self.smc_status = "ISINIYOR"
         self.internal_signal_state = 0
+        self.active_trade_sl = None
         self.last_signal_text = "[!] BEKLE"
         self.last_signal_color = "gray"
         self.last_log_time = 0
@@ -195,11 +196,25 @@ async def binance_ws():
                             
                             if agent.macro_obi > 0.40 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG':
                                 agent.internal_signal_state = 1
+                                b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+                                b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
+                                bot_bound = b5 if b5 else b3
+                                if bot_bound: agent.active_trade_sl = bot_bound * 0.9995
                             elif agent.macro_obi < -0.40 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG':
                                 agent.internal_signal_state = -1
+                                b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+                                b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
+                                top_bound = t5 if t5 else t3
+                                if top_bound: agent.active_trade_sl = top_bound * 1.0005
                                 
-                            if agent.internal_signal_state == 1 and agent.macro_obi < -0.15: agent.internal_signal_state = 0
-                            if agent.internal_signal_state == -1 and agent.macro_obi > 0.15: agent.internal_signal_state = 0
+                            if agent.internal_signal_state == 1:
+                                if agent.macro_obi < -0.15 or (agent.active_trade_sl and agent.current_price < agent.active_trade_sl):
+                                    agent.internal_signal_state = 0
+                                    agent.active_trade_sl = None
+                            if agent.internal_signal_state == -1:
+                                if agent.macro_obi > 0.15 or (agent.active_trade_sl and agent.current_price > agent.active_trade_sl):
+                                    agent.internal_signal_state = 0
+                                    agent.active_trade_sl = None
                             
                             if agent.internal_signal_state == 1:
                                 agent.last_signal_text = "[+] AL (LONG)"; agent.last_signal_color = "green bold"

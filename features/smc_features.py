@@ -91,6 +91,12 @@ class SMCAnalyzer:
                 return fvg['type']
         return 'NEUTRAL'
 
+    def get_active_fvg_bounds(self, current_price):
+        for fvg in self.active_fvgs:
+            if fvg['bottom'] <= current_price <= fvg['top']:
+                return fvg['bottom'], fvg['top']
+        return None, None
+
 class SMCFeatures:
     """RL ajani icin geriye donuk uyumluluk saglayan dummy sinif"""
     def __init__(self):
