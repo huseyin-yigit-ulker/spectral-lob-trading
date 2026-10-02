@@ -90,3 +90,10 @@ class SMCAnalyzer:
             if fvg['bottom'] <= current_price <= fvg['top']:
                 return fvg['type']
         return 'NEUTRAL'
+
+class SMCFeatures:
+    """RL ajani icin geriye donuk uyumluluk saglayan dummy sinif"""
+    def __init__(self):
+        pass
+    def get_nearest_ob_distance(self, current_price):
+        return 0.0, 0.0
