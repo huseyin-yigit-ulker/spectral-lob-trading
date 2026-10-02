@@ -1,9 +1,16 @@
 import os
 import psycopg2
-from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def parse_dsn(dsn: str) -> dict:
+    body = dsn.split("://", 1)[1]
+    creds, hostpart = body.rsplit("@", 1)
+    user, password = creds.split(":", 1)
+    hostport, db = hostpart.split("/", 1)
+    host, port = hostport.rsplit(":", 1)
+    return {"user": user, "password": password, "host": host, "port": int(port), "dbname": db}
 
 def get_supabase_conn():
     dsn = os.getenv("SUPABASE_DB_URL") or os.getenv("DB_CONNECTION_STRING")
@@ -11,9 +18,10 @@ def get_supabase_conn():
         return None
     
     dsn = dsn.strip().strip('"').strip("'")
+    dsn = dsn.replace("\ufffd", "£")
     
     try:
-        conn = psycopg2.connect(dsn, connect_timeout=15)
+        conn = psycopg2.connect(**parse_dsn(dsn), connect_timeout=15)
         return conn
     except Exception as e:
         print(f"  [Supabase Baglanti Hatasi] {e}")
@@ -53,7 +61,6 @@ def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_t
         print(f"  [Supabase DB Yazma Hatasi] {e}")
     finally:
         conn.close()
-
 
 def log_screener_to_supabase(zaman, sembol, fiyat, hacim, spread, fvg_mesafe_yuzde, skor, durum):
     conn = get_supabase_conn()
