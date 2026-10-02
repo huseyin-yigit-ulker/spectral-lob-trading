@@ -1,11 +1,13 @@
 #!/bin/bash
+# Hangi klasorden calistirilirsa calistirilsin, projenin ana dizinine (bir ust klasore) gec:
+cd "$(dirname "$0")/.." || exit
+
 echo "Eski botlar temizleniyor..."
 pkill -f "python scripts/" 2>/dev/null
 pkill -f "python3 scripts/" 2>/dev/null
 
 mkdir -p logs
 
-# Akilli Python Dedektoru
 PYTHON_CMD="python3"
 if [ -f "venv/bin/python" ]; then
     PYTHON_CMD="venv/bin/python"
