@@ -182,6 +182,7 @@ async def binance_ws():
                             agent.macro_obi = sum(agent.obi_buffer) / len(agent.obi_buffer)
                             
                             if len(agent.obi_buffer) < 100: continue
+                            if agent.current_price == 0.0: continue # Fiyat verisi henuz gelmediyse islem yapma
                             cvd_dict = agent.state_builder.cvd_features.get_multi_window_cvd(agent.latest_time)
                             agent.cvd_1m = cvd_dict.get('1m', 0.0)
                             
