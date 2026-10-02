@@ -2,6 +2,13 @@ import requests
 import time
 import json
 import csv
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from utils.database import log_screener_to_supabase
+except ImportError:
+    log_screener_to_supabase = None
 from datetime import datetime
 import os
 import sys
@@ -136,6 +143,8 @@ def run_screener():
         for c in scored_candidates:
             durum = 'KABUL' if c['symbol'] in top_symbols else 'RED'
             writer.writerow([log_time, c['symbol'], c['price'], c['vol'], c['spread'], c['fvg_dist'], c['score'], durum])
+            if log_screener_to_supabase:
+                log_screener_to_supabase(log_time, c['symbol'], c['price'], c['vol'], c['spread'], c['fvg_dist'], c['score'], durum)
         
     print(f"\n[OK] Yeni liste '{OUTPUT_FILE}' dosyasina asenkron olarak yazildi.")
     print("Siradaki tarama 15 dakika sonra otomatik baslayacak...")

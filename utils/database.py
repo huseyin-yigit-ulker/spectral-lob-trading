@@ -27,7 +27,7 @@ def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_t
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                CREATE TABLE IF NOT EXISTS v5_trade_logs (
+                CREATE TABLE IF NOT EXISTS quant_v5.trade_logs (
                     id SERIAL PRIMARY KEY,
                     zaman TIMESTAMP,
                     sembol VARCHAR(50),
@@ -44,12 +44,30 @@ def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_t
             """)
             
             cur.execute("""
-                INSERT INTO v5_trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth)
+                INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth))
             
         conn.commit()
     except Exception as e:
         print(f"  [Supabase DB Yazma Hatasi] {e}")
+    finally:
+        conn.close()
+
+
+def log_screener_to_supabase(zaman, sembol, fiyat, hacim, spread, fvg_mesafe_yuzde, skor, durum):
+    conn = get_supabase_conn()
+    if not conn:
+        return
+        
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO quant_v5.screener_history (zaman, sembol, fiyat, hacim, spread, fvg_mesafe_yuzde, skor, durum)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (zaman, sembol, fiyat, hacim, spread, fvg_mesafe_yuzde, skor, durum))
+        conn.commit()
+    except Exception as e:
+        print(f"  [Supabase Screener DB Yazma Hatasi] {e}")
     finally:
         conn.close()
