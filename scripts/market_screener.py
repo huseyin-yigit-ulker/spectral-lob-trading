@@ -1,6 +1,8 @@
 import requests
 import time
 import json
+import csv
+from datetime import datetime
 import os
 import sys
 from datetime import datetime
@@ -119,6 +121,21 @@ def run_screener():
         
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump({"updated_at": time.time(), "symbols": top_symbols}, f)
+        
+    # --- YENI: BACKTEST ICIN SCREENER TARIHCESINI LOGLA ---
+    os.makedirs('logs', exist_ok=True)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    log_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    history_file = f'logs/screener_history_{date_str}.csv'
+    
+    file_exists = os.path.isfile(history_file)
+    with open(history_file, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(['Zaman', 'Sembol', 'Fiyat', 'Hacim', 'Spread', 'FVG_Mesafe_Yuzde', 'Skor', 'Durum'])
+        for c in scored_candidates:
+            durum = 'KABUL' if c['symbol'] in top_symbols else 'RED'
+            writer.writerow([log_time, c['symbol'], c['price'], c['vol'], c['spread'], c['fvg_dist'], c['score'], durum])
         
     print(f"\n[OK] Yeni liste '{OUTPUT_FILE}' dosyasina asenkron olarak yazildi.")
     print("Siradaki tarama 15 dakika sonra otomatik baslayacak...")

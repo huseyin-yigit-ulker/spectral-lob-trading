@@ -20,7 +20,6 @@ fi
 echo "Secilen Python Yolu: $PYTHON_CMD"
 
 echo "1) 100-Coin Madencisi (V2) arka planda baslatiliyor..."
-nohup $PYTHON_CMD scripts/run_multi_agent.py > logs/nohup_multi_agent.log 2>&1 &
 
 echo "2) V5 Izci (Screener) arka planda baslatiliyor..."
 nohup $PYTHON_CMD scripts/market_screener.py > logs/nohup_screener.log 2>&1 &

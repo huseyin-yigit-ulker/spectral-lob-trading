@@ -2,7 +2,6 @@ echo "Eski botlar temizleniyor..."
 Get-Process -Name python -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match "scripts" } | Stop-Process -Force 2>$null
 
 echo "1) 100-Coin Madencisi (V2) arka planda baslatiliyor..."
-Start-Process -FilePath ".\venv\Scripts\python.exe" -ArgumentList "scripts\run_multi_agent.py" -WindowStyle Hidden -RedirectStandardOutput "logs\multi_agent_console.log" -RedirectStandardError "logs\multi_agent_error.log"
 
 echo "2) V5 Izci (Screener) arka planda baslatiliyor..."
 Start-Process -FilePath ".\venv\Scripts\python.exe" -ArgumentList "scripts\market_screener.py" -WindowStyle Hidden -RedirectStandardOutput "logs\screener_console.log" -RedirectStandardError "logs\screener_error.log"

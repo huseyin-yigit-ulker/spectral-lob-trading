@@ -22,7 +22,7 @@ date_str = datetime.now().strftime("%Y-%m-%d")
 csv_file = f'logs/dynamic_smc_signals_{date_str}.csv'
 if not os.path.isfile(csv_file):
     with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
-        csv.writer(f).writerow(['Zaman', 'Sembol', 'Fiyat', 'Macro_OBI', 'CVD_1m', 'SMC_Context', 'Sinyal_Yonu'])
+        csv.writer(f).writerow(['Zaman', 'Sembol', 'Fiyat', 'Macro_OBI', 'CVD_1m', 'SMC_Context', 'FVG_Top', 'FVG_Bottom', 'FVG_Depth_Pct', 'Sinyal_Yonu', 'Aktif_SL'])
 
 class SMCAgent:
     def __init__(self, symbol):
@@ -195,13 +195,21 @@ async def binance_ws():
                             
                             prev_sig = agent.internal_signal_state
                             
-                            if agent.macro_obi > 0.40 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG':
+                            # FVG Derinlik (Boyutu) Kontrolu (>%0.10)
+                            b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+                            b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
+                            cur_b = b5 if b5 else b3
+                            cur_t = t5 if t5 else t3
+                            fvg_depth_ratio = ((cur_t - cur_b) / cur_b) if cur_b else 0.0
+                            is_fvg_wide_enough = fvg_depth_ratio >= 0.001 # %0.10
+                            
+                            if agent.macro_obi > 0.40 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
                                 agent.internal_signal_state = 1
                                 b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                 b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                                 bot_bound = b5 if b5 else b3
                                 if bot_bound: agent.active_trade_sl = bot_bound * 0.9995
-                            elif agent.macro_obi < -0.40 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG':
+                            elif agent.macro_obi < -0.40 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
                                 agent.internal_signal_state = -1
                                 b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                 b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
@@ -232,7 +240,16 @@ async def binance_ws():
                                     agent.last_log_time = now
                                     dt_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                     with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
-                                        csv.writer(f).writerow([dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, agent.smc_status, agent.last_signal_text])
+                                        b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+                                    b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
+                                    f_b = b5 if b5 else (b3 if b3 else 0.0)
+                                    f_t = t5 if t5 else (t3 if t3 else 0.0)
+                                    f_depth = ((f_t - f_b) / f_b * 100) if f_b > 0 else 0.0
+                                    
+                                    csv.writer(f).writerow([
+                                        dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
+                                        agent.smc_status, f_t, f_b, round(f_depth, 4), agent.last_signal_text, agent.active_trade_sl or 0.0
+                                    ])
             except Exception as e:
                 time.sleep(2)
 
