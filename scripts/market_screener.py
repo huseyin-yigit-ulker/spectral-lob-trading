@@ -97,11 +97,15 @@ def run_screener():
         time.sleep(0.02) # API Engeli Yememek Icin
         
     scored_candidates.sort(key=lambda x: x['score'], reverse=True)
-    top_15 = scored_candidates[:15]
+    # Dinamik Esik (Threshold): Sadece FVG'ye %1.5 veya daha yakin olanlari al!
+    threshold_candidates = [c for c in scored_candidates if c['fvg_dist'] <= 1.5]
+    # WS guvenligi icin ust limit 40
+    threshold_candidates = threshold_candidates[:40]
     
-    print("\n--- SECILEN TOP 15 SMC PUSU COINI ---")
+    print(f"\n--- DINAMIK ESIK: FVG'YE YAKIN {len(threshold_candidates)} COIN BULUNDU ---")
     top_symbols = []
-    for rank, c in enumerate(top_15):
+    for rank, c in enumerate(threshold_candidates):
+    
         print(f"{rank+1}. {c['symbol']} | Skor: {c['score']:.1f} | FVG Mesafe: %{c['fvg_dist']:.2f} | Spread: %{c['spread']:.3f}")
         top_symbols.append(c['symbol'])
         
