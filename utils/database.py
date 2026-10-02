@@ -6,13 +6,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_supabase_conn():
-    """
-    Supabase'e (PostgreSQL) dogrudan baglanir.
-    .env icerisinde SUPABASE_DB_URL bulunmalidir.
-    """
-    dsn = os.getenv("SUPABASE_DB_URL")
+    dsn = os.getenv("SUPABASE_DB_URL") or os.getenv("DB_CONNECTION_STRING")
     if not dsn:
         return None
+    
+    dsn = dsn.strip().strip('"').strip("'")
     
     try:
         conn = psycopg2.connect(dsn, connect_timeout=15)
@@ -22,14 +20,12 @@ def get_supabase_conn():
         return None
 
 def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth):
-    """Islem (Sinyal) kaydini Supabase tablosuna yazar."""
     conn = get_supabase_conn()
     if not conn:
         return
         
     try:
         with conn.cursor() as cur:
-            # Tablo yoksa olustur
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS v5_trade_logs (
                     id SERIAL PRIMARY KEY,

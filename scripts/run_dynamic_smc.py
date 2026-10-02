@@ -1,4 +1,12 @@
 import asyncio
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from utils.notifier import send_telegram_message
+    from utils.database import log_trade_to_supabase
+except ImportError:
+    send_telegram_message = None
+    log_trade_to_supabase = None
 import websockets
 import json
 import csv
@@ -250,6 +258,21 @@ async def binance_ws():
                                         dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
                                         agent.smc_status, f_t, f_b, round(f_depth, 4), agent.last_signal_text, agent.active_trade_sl or 0.0
                                     ])
+                                    
+                                    # SUPABASE VE TELEGRAM ENTEGRASYONU
+                                    if log_trade_to_supabase:
+                                        log_trade_to_supabase(
+                                            dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
+                                            agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4)
+                                        )
+                                        
+                                    if send_telegram_message:
+                                        msg = f"<b>{agent.symbol}</b>
+Sinyal: {agent.last_signal_text}
+Fiyat: {agent.current_price}
+OBI: {agent.macro_obi:.2f}
+SMC: {agent.smc_status}"
+                                        send_telegram_message(msg)
             except Exception as e:
                 time.sleep(2)
 
