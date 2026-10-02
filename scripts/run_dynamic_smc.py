@@ -267,11 +267,7 @@ async def binance_ws():
                                         )
                                         
                                     if send_telegram_message:
-                                        msg = f"<b>{agent.symbol}</b>
-Sinyal: {agent.last_signal_text}
-Fiyat: {agent.current_price}
-OBI: {agent.macro_obi:.2f}
-SMC: {agent.smc_status}"
+                                        msg = f"<b>{agent.symbol}</b>\nSinyal: {agent.last_signal_text}\nFiyat: {agent.current_price}\nOBI: {agent.macro_obi:.2f}\nSMC: {agent.smc_status}"
                                         send_telegram_message(msg)
             except Exception as e:
                 time.sleep(2)
