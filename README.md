@@ -1,123 +1,64 @@
-# Orders Signal - Mikro-Yapı & SMC Tabanlı Otonom Trading Ajanı
+# 🧠 HFT & SMC Kantitatif İşlem Algoritması (Binance Futures)
 
-Orders Signal is an autonomous trading agent designed to trade on Binance Futures using Order Book Imbalance (OBI), Cumulative Volume Delta (CVD), and Smart Money Concepts (SMC) via Reinforcement Learning.
+Bu proje, yüksek frekanslı emir defteri verilerini (Order Book Imbalance & Cumulative Volume Delta) Kurumsal Akıllı Para (Smart Money Concepts - FVG/OB) yapılarıyla birleştiren mikromimari tabanlı bir algoritmik ticaret sistemidir. Sistem, sahte likidite duvarlarını (spoofing) filtreleyerek sadece yüksek olasılıklı pusu işlemlerini (Sniper) hedefler.
 
-## Architecture Overview (Mimari Genel Bakış)
+## 📁 Klasör Yapısı (Folder Structure)
 
-Bu proje, mikro-yapı verilerini (emir defteri dengesizliği, CVD) ve fiyat aksiyonu konseptlerini (SMC) birleştirerek derin pekiştirmeli öğrenme (Deep RL) ile alım satım kararları alan otonom bir sistemdir.
+* **`features/`**: Özellik mühendisliği (Feature Engineering) modüllerini içerir.
+  * `cvd_features.py`: Alıcı/Satıcı agresifliğini (Trade verisi) ölçer.
+  * `orderbook_features.py`: 100ms hızındaki derinlik verisinden OBI hesaplar.
+  * `smc_features.py`: Kendi özel algoritmamızla 3m ve 5m FVG (Likidite Boşluğu) haritasını çıkarır.
+  * `state_builder.py`: Makine öğrenmesi modelleri için verileri normalize eder.
+* **`scripts/`**: Çalıştırılabilir ana ajanları (Botları) barındırır. Her versiyonun botu buradadır (Detaylar aşağıda).
+* **`notebooks/`**: Algoritmanın başarısını test eden Quant analiz araçlarıdır. 
+  * `Islem_Analizi.ipynb`: Geçmiş logları okuyup komisyon dahil net kârı (PnL) simüle eder.
+  * `SMC_Backtest.ipynb`: Zaman makinesi mantığıyla geçmiş HFT işlemlerini SMC filtresinden geçirerek Win Rate optimizasyonu yapar.
+* **`data/`**: Mikroservislerin kendi aralarında haberleştiği RAM-Disk benzeri JSON önbellek (cache) klasörüdür.
+* **`logs/`**: Ajanların ürettiği AL/SAT sinyallerinin saniyesi saniyesine kaydedildiği CSV klasörüdür.
+* **`vm_deploy/`**: Projeyi bulut sunuculara (Ubuntu/Linux) kurmak için gerekli paketler ve başlatma scriptleridir (`start.sh`).
 
-- **Data Collection (Veri Toplama):** Binance Futures WebSocket API üzerinden yüksek frekanslı depth ve trade verilerinin toplanması.
-- **Feature Engineering:** Toplanan verilerin işlenerek OBI, CVD ve SMC özelliklerinin çıkarılması.
-- **RL Agent:** Çıkarılan özelliklerle eğitilmiş ajanın piyasa yönünü tahmin etmesi ve işlem kararları alması.
-- **Execution (Gerçekleştirme):** Binance Futures API üzerinden kararların asenkron olarak uygulanması (Testnet ve Dry-run desteğiyle).
-- **Monitoring (İzleme):** Terminal tabanlı canlı dashboard (Rich kütüphanesi).
+---
 
-## Project Structure (Proje Yapısı)
+## 🚀 Versiyonlar ve Evrim Süreci
 
-```text
-orders_signal/
-├── execution/
-│   └── binance_executor.py
-├── monitoring/
-│   └── dashboard.py
-├── scripts/
-│   ├── collect_data.py
-│   └── run_agent.py
-├── main.py
-└── README.md
-```
+### V1 & V2: Veri Madencisi (Multi-Agent)
+* **Dosya:** `scripts/run_multi_agent.py`
+* **Mantık:** Sabit 100 coini takip eder. SMC (Bağlam) bilmez, sadece OBI (Emir Defteri) +0.40 olduğunda körü körüne işleme girer.
+* **Amacı:** Piyasada hangi coinlerin toksik (hantal) olduğunu, hangi coinlerin bot dostu olduğunu anlamak için 7/24 çalışıp veri (log) toplar.
+* **Çıktı (Output):** `logs/multi_signals_*.csv`
 
-## Installation
+### V3: Statik Keskin Nişancı (Sniper Agent)
+* **Dosya:** `scripts/run_sniper_agent.py`
+* **Mantık:** V2'nin ürettiği binlerce işlemin analizi sonucunda BTC, ETH, BNB gibi komisyon düşmanı ağır coinler atılmış; sadece en kârlı 15 coin (MANA, SOL, AVAX vb.) hedeflenmiştir. 
+* **Çıktı:** `logs/sniper_signals_*.csv`
 
-1. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # on Windows: venv\Scripts\activate
-   ```
-2. Install requirements:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Setup environment variables:
-   Create a `.env` file in the root directory:
-   ```env
-   BINANCE_API_KEY=your_api_key
-   BINANCE_API_SECRET=your_api_secret
-   ```
+### V4: SMC Filtreli HFT (Akıllı Para Ajanı)
+* **Dosya:** `scripts/run_smc_agent.py`
+* **Mantık:** 15 Altın Coini takip eder. Ancak OBI patlasa bile, fiyat eğer 3m veya 5m mum grafiğinde bir FVG (Likidite Boşluğu) içinde değilse işlemi reddeder (Sinyal: BEKLE). Backtest sonucunda %39 Win Rate'i **%66.67'ye** fırlatmıştır.
+* **Çıktı:** `logs/smc_signals_*.csv`
 
-## Usage
+### V5: Tam Dinamik Kurumsal Mimari (Microservices)
+Piyasa koşulları sürekli değiştiği için sabit 15 coin mantığı terk edilmiş, sistem asenkron haberleşen iki bağımsız mikroservise bölünmüştür:
 
-You can use the `main.py` entry point to access different modules:
+**1. Dinamik İzci (Screener):** `scripts/market_screener.py`
+* Her 15 dakikada bir Binance USDT vadeli işlemlerindeki 150+ coini tarar. 
+* Spread'i %0.06'dan büyük olanları ve Hacmi 50M$ altı olanları çöpe atar. 
+* Kalanları FVG'ye yakınlıklarına (Proximity) ve RVOL (Hacim artışı) durumuna göre puanlar.
+* **Çıktı:** En iyi 15 "Pusu Coinini" bulur ve `data/active_screener.json` dosyasına yazar.
 
-```bash
-# Start data collection
-python main.py collect --symbol BTCUSDT
+**2. Dinamik Tetikçi (Dynamic SMC Agent):** `scripts/run_dynamic_smc.py`
+* Canlı olarak piyasayı izler. Her 15 saniyede bir JSON dosyasını dinler.
+* Tarayıcı (Screener) yeni bir coin bulduğunda kendini kapatmadan eski kanalları (WebSocket) iptal edip yeni coinlere bağlanır.
+* SMC onayı aldığında tetiği çeker.
+* **Çıktı:** `logs/dynamic_smc_signals_*.csv`
 
-# Train the RL agent
-python main.py train
+---
 
-# Run live trading (use with caution)
-python main.py live --dry-run
+## ⚙️ Girdi ve Çıktılar (Input / Output Pipeline)
 
-# Start monitoring dashboard
-python main.py monitor
-```
-
-## Configuration
-All configuration parameters (symbols, refresh rates, model paths) can be set via environment variables or configuration files in the future.
-
-## Development Roadmap
-- [x] Basic project scaffolding
-- [ ] Data collection module integration
-- [ ] Feature engineering pipeline
-- [ ] RL environment and training scripts
-- [ ] Live execution module implementation
-
-## Tech Stack
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![Binance](https://img.shields.io/badge/Binance-FCD535?style=for-the-badge&logo=binance&logoColor=white)
-
-## 📈 Kuralcı Bot Stratejisi (Gerçek Makro)
-
-Yapay zeka (RL) modellerinin komisyon ücretleri nedeniyle HFT (Yüksek Frekanslı Ticaret) alanında zorlanması üzerine, başarılı kâr oranına sahip (`+%1.28 Net`) bir "Kuralcı (Heuristic) Makro Bot" geliştirilmiştir.
-
-### Strateji Mimarisi:
-Bu bot, piyasadaki gürültüyü (noise) ve sahte duvarları (spoofing) engellemek için üç temel matematiksel filtre kullanır:
-
-1. **60-Saniyelik Makro OBI (Emir Defteri Dengesizliği):**
-   * Saniyelik OBI dalgalanmaları yerine, son 60 saniyenin hareketli ortalaması (MA) alınır. Bu, anlık manipülasyonları filtreler.
-2. **CVD (Kümülatif Hacim) Gerçeklik Onayı:**
-   * Balinalar emir defterine devasa bir alış duvarı koyup fiyatı manipüle edebilir (Spoofing). Bot, bu duvara inanmak için **CVD_1m > 0** (gerçekten market alışları yapılıyor mu?) onayını zorunlu tutar.
-3. **Hysteresis (Yapışkanlık / Ölü Bölge):**
-   * Aşırı işlem (Overtrading) yapıp komisyonlara para kaptırmamak için asimetrik giriş/çıkış sınırları belirlenmiştir.
-   * **LONG Giriş:** Makro OBI `> 0.30` ve CVD pozitif.
-   * **LONG Çıkış:** Makro OBI `< -0.05` (Trendin tersine döndüğüne dair hafif bir kanıt).
-   * Aradaki bölgede (-0.30 ile 0.30 arası) bot tamamen "Sağır ve Dilsiz" davranarak **Ölü Bölgede (Dead Zone)** bekler. Bu sayede işlem sayısı binlerden ~170 bandına düşürülür.
-
-
-## 📊 Güncel Durum ve Backtest Sonuçları (Ekim 2026)
-
-Projede iki farklı yaklaşım (Yapay Zeka ve Kuralcı Algoritma) aynı 14 saatlik (417.000 satır) gerçek piyasa verisi üzerinde test edilmiştir. Taker (Piyasa Alıcı) komisyonlarının (%0.04 x 2 = %0.08) yıkıcı etkisi açıkça gözlemlenmiştir.
-
-| Model / Strateji | Toplam İşlem | Başarı Oranı (Win Rate) | Net Kâr / Zarar (PnL) | Durum |
-| :--- | :--- | :--- | :--- | :--- |
-| Sadece Bekleseydik (Market) | 0 | - | + % 0.44 | Kıyaslama (Benchmark) |
-| **Yapay Zeka V1** (Sadece OBI) | 583 | % 10.63 | **- % 34.99** | Spoofing (Sahte Duvar) kurbanı oldu. |
-| **Yapay Zeka V2** (Ham CVD) | 2140 | % 3.55 | **- % 81.51** | Dev Hacim sayıları sinir ağını patlattı (Overtrading). |
-| **Yapay Zeka V3** (Normalize CVD) | 1241 | % 2.66 | **- % 65.45** | Kararlılık arttı ama Histerezis (Hafıza) olmadığı için komisyona eridi. |
-| **Yapay Zeka V4** (Hafızalı - Mevcut) | 669 | % 6.28 | **- % 43.58** | İşlem sayısı harika düştü ama Taker komisyonunu yenemedi. |
-| **Kuralcı Bot** (Gerçek Makro) | **173** | **% 56.00** | **+ % 1.28** | **KAZANAN! (Canlıda Aktif)** |
-
-### 🚀 Mevcut Canlı Sistem
-Yapay zeka (RL) ajanının, Taker (Piyasa) komisyonları altında kâr üretemediği matematiksel olarak kanıtlandıktan sonra; **Kuralcı Makro Bot (+%1.28 Net Kâr)** projenin ana omurgası olarak seçilmiştir. 
-
-Şu an `scripts/run_agent.py` üzerinden Binance WebSocket (Canlı) bağlantısı ile 7/24 çalışmakta, asimetrik "Ölü Bölge" ve "CVD Hacim Onayı" filtrelerini kullanarak canlı piyasada (Overtrading'e düşmeden) fırsat aramaktadır. Elde ettiği sinyaller `logs/` dizinine `.csv` formatında gerçek zamanlı kaydedilmektedir.
-
-
-## 🎯 Sniper Modu (Keskin Nişancı - Seçkin Tahtalar)
-712 canlı işlemin makine öğrenmesi ve istatistiksel analizi (Jupyter) sonucunda, BTC, ETH, BNB gibi hantal tahtalardaki (Whipsaw) erozyonu fark edilmiştir. Botun Maker komisyonunu (%0.032) rahatça yenebildiği ve trendin dürüst olduğu 15 Mid-Cap coin tespit edilmiştir. 
-Bu seçkin tahtalarda işlem yapmak için:
-``bash
-python scripts/run_sniper_agent.py
-``
-Bu mod, yalnızca Win Rate'i yüksek ve CVD şiddeti dürüst olan şu coinlerde pusuya yatar: MANA, MAGIC, TIA, SOL, ZEC, AVAX, AAVE, OP, TRB, ARB, ORDI, AR, FIL, KAVA, CFX.
+* **Girdi (Input):**
+  * `Binance REST API`: Geçmiş mum verileri (FVG çizimi için).
+  * `Binance WebSocket`: Saniyede 10 kez gelen `@depth20@100ms` (Derinlik), `@trade` (Alım-Satım) ve `@kline` (Mum kapanış) verileri.
+* **Çıktı (Output Log Formatı):**
+  * Her işlem CSV formatında loglanır:
+  * `Zaman | Sembol | Fiyat | Macro_OBI | CVD_1m | SMC_Context (BULLISH_FVG) | Sinyal_Yonu`
