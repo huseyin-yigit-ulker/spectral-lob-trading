@@ -29,7 +29,7 @@ class SMCAgent:
         self.cvd_1m = 0.0
         self.smc_status = "ISINIYOR"
         self.internal_signal_state = 0
-        self.last_signal_text = "⚪ BEKLE"
+        self.last_signal_text = "[!] BEKLE"
         self.last_signal_color = "gray"
         self.last_log_time = 0
         
@@ -48,7 +48,7 @@ with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
 agents = {s: SMCAgent(s) for s in SYMBOLS}
 
 def init_smc_engines():
-    print("🧠 SMC Motorlari (3m ve 5m) Gecmis Likidite Verileriyle Isitiliyor...")
+    print(" SMC Motorlari (3m ve 5m) Gecmis Likidite Verileriyle Isitiliyor...")
     for s in SYMBOLS:
         try:
             r5 = requests.get(f"https://fapi.binance.com/fapi/v1/klines?symbol={s}&interval=5m&limit=30", timeout=5).json()
@@ -61,7 +61,7 @@ def init_smc_engines():
         time.sleep(0.05)
 
 def generate_table():
-    table = Table(title="🧠 V4 SMC + HFT (Akilli Para Keskin Nisancisi) 🧠", border_style="cyan")
+    table = Table(title=" V4 SMC + HFT (Akilli Para Keskin Nisancisi) ", border_style="cyan")
     table.add_column("Sembol", justify="left", style="cyan", no_wrap=True)
     table.add_column("Fiyat", justify="right", style="magenta")
     table.add_column("Doluluk", justify="center", style="white")
@@ -124,7 +124,7 @@ async def binance_ws():
                         elif msg.get('e') == 'trade':
                             agent.current_price = float(msg['p'])
                             agent.latest_time = msg['T']
-                            agent.state_builder.cvd_features.add_trade(float(msg['q']), msg['m'], agent.latest_time)
+                            agent.state_builder.cvd_features.add_trade(agent.latest_time, agent.current_price, float(msg['q']), msg['m'])
                             
                         elif msg.get('e') == 'depthUpdate':
                             bids = [[float(p), float(q)] for p, q in msg['b']]
@@ -158,11 +158,11 @@ async def binance_ws():
                             if agent.internal_signal_state == -1 and agent.macro_obi > 0.15: agent.internal_signal_state = 0
                             
                             if agent.internal_signal_state == 1:
-                                agent.last_signal_text = "🟢 AL (LONG)"; agent.last_signal_color = "green bold"
+                                agent.last_signal_text = "[+] AL (LONG)"; agent.last_signal_color = "green bold"
                             elif agent.internal_signal_state == -1:
-                                agent.last_signal_text = "🔴 SAT (SHORT)"; agent.last_signal_color = "red bold"
+                                agent.last_signal_text = "[-] SAT (SHORT)"; agent.last_signal_color = "red bold"
                             else:
-                                agent.last_signal_text = "⚪ BEKLE"; agent.last_signal_color = "gray"
+                                agent.last_signal_text = "[!] BEKLE"; agent.last_signal_color = "gray"
                                 
                             live.update(generate_table())
                             
@@ -174,6 +174,8 @@ async def binance_ws():
                                     with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
                                         csv.writer(f).writerow([dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, agent.smc_status, agent.last_signal_text])
             except Exception as e:
+                import traceback
+                traceback.print_exc()
                 time.sleep(3)
 
 if __name__ == "__main__":
