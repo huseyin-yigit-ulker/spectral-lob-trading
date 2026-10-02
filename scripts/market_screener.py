@@ -67,6 +67,8 @@ def run_screener():
     spreads, metrics = get_spreads_and_volumes()
     
     candidates = []
+    # KARA LISTE (Blacklist): HFT botlari icin zehirli olan coinler
+    BLACKLIST = ['PAXGUSDT', 'XAUTUSDT', 'PUMPUSDT', 'BTCDOMUSDT', 'USDCUSDT']
     for sym in symbols:
         if sym not in spreads or sym not in metrics: continue
         spread = spreads[sym]
@@ -74,6 +76,10 @@ def run_screener():
         price = metrics[sym]['price']
         
         # KATI FILTRE: Hacim 50M Altiysa veya Spread %0.06 Uzeriyse cope at
+        # Kara listeye takilan coinleri ele
+        if sym in BLACKLIST:
+            continue
+
         if spread > 0.06 or vol < 50000000:
             continue
         candidates.append({'symbol': sym, 'spread': spread, 'price': price, 'vol': vol})
@@ -82,6 +88,8 @@ def run_screener():
     print("Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)")
     
     scored_candidates = []
+    # KARA LISTE (Blacklist): HFT botlari icin zehirli olan coinler
+    BLACKLIST = ['PAXGUSDT', 'XAUTUSDT', 'PUMPUSDT', 'BTCDOMUSDT', 'USDCUSDT']
     for cand in candidates:
         dist = get_fvg_proximity(cand['symbol'], cand['price'])
         
