@@ -19,14 +19,13 @@ fi
 
 echo "Secilen Python Yolu: $PYTHON_CMD"
 
-echo "1) 100-Coin Madencisi (V2) arka planda baslatiliyor..."
 
-echo "2) V5 Izci (Screener) arka planda baslatiliyor..."
+echo "1) V5 Izci (Screener) arka planda baslatiliyor..."
 nohup $PYTHON_CMD scripts/market_screener.py > logs/nohup_screener.log 2>&1 &
 
 sleep 5
 
-echo "3) V5 Tetikci (SMC) arka planda baslatiliyor..."
+echo "2) V5 Tetikci (SMC) arka planda baslatiliyor..."
 nohup $PYTHON_CMD scripts/run_dynamic_smc.py > logs/nohup_dynamic_smc.log 2>&1 &
 
 echo "--------------------------------------------------------"
