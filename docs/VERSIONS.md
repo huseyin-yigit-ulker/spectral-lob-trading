@@ -39,3 +39,8 @@ Ajan neden hala çok sık fikir değiştiriyordu? Çünkü **Hafıza Kaybı (Amn
 
 ---
 *Geliştirme Tarihi: Ekim 2026*
+
+### 🟢 Heuristic V3 (Sniper Mode - Altın Tahta Seçimi)
+* **Problem:** 100 coinlik gece-gündüz taramasında (712 işlem) Toplam PnL'nin negatif çıkması.
+* **Teşhis:** İşlemlerin %45'i BTC, ETH, BNB ve TRX'te gerçekleşti. Makas dar olsa da volatilite çok düşük olduğu için Ortalama Kâr %0.10'da kaldı. Ayriyeten STRK ve PENDLE gibi tahtalarda devasa Spoofing (sahte duvar) tuzakları botun Whipsaw yemesine (Ort. %-1.8 Zarar) neden oldu.
+* **Çözüm (Sniper):** Jupyter ile PnL analizi yapılarak, kırılımların trend yarattığı (Ortalama kârın %0.50'leri aştığı ve Win Rate'in >%50 olduğu) 15 altın coin tespit edildi. un_sniper_agent.py yazılarak bot sadece bu dürüst tahtalarda işlem yapmaya programlandı.

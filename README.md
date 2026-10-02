@@ -113,3 +113,11 @@ Yapay zeka (RL) ajanının, Taker (Piyasa) komisyonları altında kâr üretemed
 
 Şu an `scripts/run_agent.py` üzerinden Binance WebSocket (Canlı) bağlantısı ile 7/24 çalışmakta, asimetrik "Ölü Bölge" ve "CVD Hacim Onayı" filtrelerini kullanarak canlı piyasada (Overtrading'e düşmeden) fırsat aramaktadır. Elde ettiği sinyaller `logs/` dizinine `.csv` formatında gerçek zamanlı kaydedilmektedir.
 
+
+## 🎯 Sniper Modu (Keskin Nişancı - Seçkin Tahtalar)
+712 canlı işlemin makine öğrenmesi ve istatistiksel analizi (Jupyter) sonucunda, BTC, ETH, BNB gibi hantal tahtalardaki (Whipsaw) erozyonu fark edilmiştir. Botun Maker komisyonunu (%0.032) rahatça yenebildiği ve trendin dürüst olduğu 15 Mid-Cap coin tespit edilmiştir. 
+Bu seçkin tahtalarda işlem yapmak için:
+``bash
+python scripts/run_sniper_agent.py
+``
+Bu mod, yalnızca Win Rate'i yüksek ve CVD şiddeti dürüst olan şu coinlerde pusuya yatar: MANA, MAGIC, TIA, SOL, ZEC, AVAX, AAVE, OP, TRB, ARB, ORDI, AR, FIL, KAVA, CFX.
