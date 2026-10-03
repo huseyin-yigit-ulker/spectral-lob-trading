@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/ulkerhuseyinyigit/signal-trade/orders_signal/scripts/run_dynamic_smc.py", line 3, in <module>
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+NameError: name 'os' is not defined
