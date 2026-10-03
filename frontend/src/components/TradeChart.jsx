@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { createChart, CandlestickSeries, createSeriesMarkers } from 'lightweight-charts';
+import { createChart, CandlestickSeries, createSeriesMarkers, BaselineSeries } from 'lightweight-charts';
 import { readChartTheme } from '../utils/chartTheme';
-
-// Sinyal grafigi — Binance'den 1m mumlar cekip giris/cikis oklarini ve
-// FVG bolgesini gosterir. ict-trade/TradeChart.jsx'den adapte edilmistir.
 
 const norm = (s) => (s ? s.replace(/[^A-Za-z0-9]/g, '') : '');
 
@@ -27,36 +24,45 @@ export default function TradeChart({ trade }) {
       width: el.clientWidth,
       height: el.clientHeight || 400,
       rightPriceScale: { borderColor: th.border, scaleMargins: { top: 0.12, bottom: 0.12 } },
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-        borderColor: th.border,
-      },
+      timeScale: { timeVisible: true, secondsVisible: false, borderColor: th.border },
       crosshair: { mode: 1 },
     });
 
     const candle = chart.addSeries(CandlestickSeries, {
-      upColor: th.up,
-      downColor: th.down,
-      borderVisible: false,
-      wickUpColor: th.up,
-      wickDownColor: th.down,
+      upColor: th.up, downColor: th.down, borderVisible: false,
+      wickUpColor: th.up, wickDownColor: th.down,
+    });
+
+    // Islem bolgesi renklendirmesi icin Baseline Series
+    const isLong = trade.yön === 'LONG';
+    const areaSeries = chart.addSeries(BaselineSeries, {
+      baseValue: { type: 'price', price: trade.giris_fiyat },
+      lineWidth: 1, lineStyle: 2, priceLineVisible: false, 
+      lastValueVisible: false, crosshairMarkerVisible: false,
+      topLineColor: isLong ? th.up : 'transparent',
+      topFillColor1: isLong ? th.upSoft(0.1) : 'transparent',
+      topFillColor2: isLong ? th.upSoft(0.02) : 'transparent',
+      bottomLineColor: isLong ? 'transparent' : th.down,
+      bottomFillColor1: isLong ? 'transparent' : th.downSoft(0.1),
+      bottomFillColor2: isLong ? 'transparent' : th.downSoft(0.02)
     });
 
     (async () => {
       try {
         setStatus('Grafik yukleniyor...');
-        const tradeTime = new Date(trade.zaman).getTime();
-        const pad = 2 * 3600e3; // 2 saat oncesi/sonrasi
-        const from = tradeTime - pad;
-        const to = Math.min(Date.now(), tradeTime + pad);
+        
+        const entryMs = new Date(trade.giris_zaman).getTime();
+        const exitMs = trade.cikis_zaman ? new Date(trade.cikis_zaman).getTime() : Date.now();
+        
+        const pad = Math.max(2 * 3600e3, (exitMs - entryMs) * 0.2); // Dinamik padding
+        const from = entryMs - pad;
+        const to = Math.min(Date.now(), exitMs + pad);
 
         const symbol = norm(trade.sembol);
         const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=1m&startTime=${from}&endTime=${to}&limit=1500`;
 
         let raw = await (await fetch(url)).json();
         if (!Array.isArray(raw)) {
-          // Futures yoksa Spot dene
           const spotUrl = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1m&startTime=${from}&endTime=${to}&limit=1500`;
           raw = await (await fetch(spotUrl)).json();
         }
@@ -68,72 +74,51 @@ export default function TradeChart({ trade }) {
         }
 
         const candles = raw.map((d) => ({
-          time: d[0] / 1000,
-          open: +d[1],
-          high: +d[2],
-          low: +d[3],
-          close: +d[4],
+          time: d[0] / 1000, open: +d[1], high: +d[2], low: +d[3], close: +d[4]
         }));
         candle.setData(candles);
 
-        // Giris noktasi isareti
-        const isLong = (trade.sinyal || '').includes('AL') || (trade.sinyal || '').includes('LONG');
-        const tradeSec = Math.floor(tradeTime / 1000);
-        let bestTime = candles[0]?.time || tradeSec;
-        for (const c of candles) {
-          if (c.time <= tradeSec) bestTime = c.time;
-          else break;
-        }
+        // Zaman noktasina en yakin mumu bulma fonksiyonu
+        const snap = (ms) => {
+          const target = ms / 1000;
+          let best = candles[0].time;
+          for (const c of candles) { if (c.time <= target) best = c.time; else break; }
+          return best;
+        };
 
-        const markers = [
-          {
-            time: bestTime,
-            position: isLong ? 'belowBar' : 'aboveBar',
-            shape: isLong ? 'arrowUp' : 'arrowDown',
-            color: th.accent,
-            size: 2,
-            text: isLong ? 'LONG' : 'SHORT',
-          },
-        ];
+        const entrySec = snap(entryMs);
+        const exitSec = trade.cikis_zaman ? snap(exitMs) : (candles.length ? candles[candles.length - 1].time : entrySec);
 
-        createSeriesMarkers(candle, markers);
+        // Marker'lar
+        const markers = [];
+        markers.push({
+          time: entrySec, position: isLong ? 'belowBar' : 'aboveBar',
+          shape: isLong ? 'arrowUp' : 'arrowDown', color: th.accent, size: 2, text: trade.yön
+        });
 
-        // FVG bolge cizgileri
-        const fvgTop = Number(trade.fvg_top);
-        const fvgBottom = Number(trade.fvg_bottom);
-        if (Number.isFinite(fvgTop) && fvgTop > 0) {
-          candle.createPriceLine({
-            price: fvgTop,
-            color: th.upSoft(0.6),
-            lineWidth: 1,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: 'FVG Top',
+        if (trade.cikis_zaman) {
+          const isWin = trade.pnl_yuzde > 0;
+          markers.push({
+            time: exitSec, position: isLong ? 'aboveBar' : 'belowBar',
+            shape: 'circle', size: 1, color: isWin ? th.up : th.down,
+            text: `Çıkış (${trade.pnl_yuzde > 0 ? '+' : ''}${trade.pnl_yuzde.toFixed(2)}%)`
           });
         }
-        if (Number.isFinite(fvgBottom) && fvgBottom > 0) {
-          candle.createPriceLine({
-            price: fvgBottom,
-            color: th.downSoft(0.6),
-            lineWidth: 1,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: 'FVG Bot',
-          });
-        }
+        
+        markers.sort((a, b) => a.time - b.time);
+        if (markers.length) createSeriesMarkers(candle, markers);
 
-        // Giris fiyati cizgisi
-        const entryPrice = Number(trade.fiyat);
-        if (Number.isFinite(entryPrice) && entryPrice > 0) {
-          candle.createPriceLine({
-            price: entryPrice,
-            color: th.accent,
-            lineWidth: 1,
-            lineStyle: 0,
-            axisLabelVisible: true,
-            title: 'Giris',
-          });
-        }
+        // ict-trade benzeri Islem Alani Cizimi
+        const zoneTop = trade.cikis_zaman ? trade.cikis_fiyat : (candles.length ? candles[candles.length-1].close : trade.giris_fiyat);
+        areaSeries.setData([
+          { time: entrySec, value: zoneTop },
+          { time: exitSec, value: zoneTop }
+        ]);
+
+        // FVG Cizgileri
+        if (trade.fvg_top > 0) candle.createPriceLine({ price: trade.fvg_top, color: th.upSoft(0.6), lineWidth: 1, lineStyle: 2 });
+        if (trade.fvg_bottom > 0) candle.createPriceLine({ price: trade.fvg_bottom, color: th.downSoft(0.6), lineWidth: 1, lineStyle: 2 });
+        candle.createPriceLine({ price: trade.giris_fiyat, color: th.accent, lineWidth: 1, lineStyle: 0 });
 
         chart.timeScale().fitContent();
         setStatus('');
@@ -142,25 +127,16 @@ export default function TradeChart({ trade }) {
       }
     })();
 
-    const ro = new ResizeObserver(() => {
-      chart.applyOptions({ width: el.clientWidth, height: el.clientHeight });
-    });
+    const ro = new ResizeObserver(() => chart.applyOptions({ width: el.clientWidth, height: el.clientHeight }));
     ro.observe(el);
 
-    return () => {
-      cancelled = true;
-      ro.disconnect();
-      chart.remove();
-    };
+    return () => { cancelled = true; ro.disconnect(); chart.remove(); };
   }, [trade]);
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: 400 }}>
       {status && (
-        <div style={{
-          position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
-          justifyContent: 'center', color: '#848E9C', fontSize: 14, zIndex: 2,
-        }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#848E9C', fontSize: 14, zIndex: 2 }}>
           {status}
         </div>
       )}

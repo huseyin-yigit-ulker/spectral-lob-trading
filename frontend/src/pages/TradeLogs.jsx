@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import SignalCard from '../components/SignalCard';
 import ChartModal from '../components/ChartModal';
+import { reconstructTrades } from '../utils/tradeLogic';
 
 export default function TradeLogs() {
   const [logs, setLogs] = useState([]);
@@ -10,8 +11,11 @@ export default function TradeLogs() {
 
   useEffect(() => {
     async function fetchLogs() {
-      const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: false }).limit(50);
-      if (data) setLogs(data);
+      const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: true });
+      if (data) {
+        const parsed = reconstructTrades(data);
+        setLogs(parsed.allTrades);
+      }
       setLoading(false);
     }
     fetchLogs();
@@ -35,8 +39,8 @@ export default function TradeLogs() {
               Awaiting Signals...
             </div>
           ) : (
-            logs.map(log => (
-              <SignalCard key={log.id} trade={log} onClick={setActiveTrade} />
+            logs.map((log, i) => (
+              <SignalCard key={log.id || i} trade={log} onClick={setActiveTrade} />
             ))
           )}
         </div>
