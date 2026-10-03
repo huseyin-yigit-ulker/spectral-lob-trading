@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Activity, Target, ShieldAlert, Zap } from 'lucide-react';
-import { createChart } from 'lightweight-charts';
+import { createChart, AreaSeries } from 'lightweight-charts';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ trades: 0, screener: 0 });
@@ -29,8 +29,11 @@ export default function Dashboard() {
       timeScale: { timeVisible: true, secondsVisible: false }
     });
 
-    const series = chart.addAreaSeries({
-      lineColor: '#3b82f6', topColor: 'rgba(59, 130, 246, 0.4)', bottomColor: 'rgba(59, 130, 246, 0.0)', lineWidth: 2
+    const series = chart.addSeries(AreaSeries, {
+      lineColor: '#3b82f6', 
+      topColor: 'rgba(59, 130, 246, 0.4)', 
+      bottomColor: 'rgba(59, 130, 246, 0.0)', 
+      lineWidth: 2
     });
 
     // Mock initial flatline data just for aesthetics until real PnL is tracked
