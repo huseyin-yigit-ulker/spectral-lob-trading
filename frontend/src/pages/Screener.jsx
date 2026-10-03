@@ -23,9 +23,9 @@ export default function Screener() {
       </div>
       
       {loading ? (
-        <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#F0B90B] border-t-transparent rounded-full animate-spin"></div></div>
       ) : (
-        <div className="bg-[#0b0e14] border border-[#1f2937] rounded-xl overflow-hidden shadow-xl">
+        <div className="bg-[#0B0E11] border border-[#1f2937] rounded-xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="bg-[#121822] border-b border-[#1f2937]">
@@ -46,21 +46,21 @@ export default function Screener() {
                   logs.map(log => (
                     <tr key={log.id} className="hover:bg-[#121822] transition-colors">
                       <td className="px-6 py-4 text-gray-400 font-mono text-xs flex items-center gap-2">
-                        <Clock size={14} />
+                        <Clock size={12} />
                         {new Date(log.zaman).toLocaleTimeString()}
                       </td>
                       <td className="px-6 py-4 font-bold text-gray-200">{log.sembol}</td>
                       <td className="px-6 py-4">
                         {log.durum === 'KABUL' ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-green-500/10 text-green-400 border border-green-500/20"><CheckCircle2 size={12}/> ACCEPT</span>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-green-500/10 text-[#0ECB81] border border-[#0ECB81]/20"><CheckCircle2 size={12}/> ACCEPT</span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-red-500/10 text-red-400 border border-red-500/20"><XCircle size={12}/> REJECT</span>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-red-500/10 text-[#F6465D] border border-[#F6465D]/20"><XCircle size={12}/> REJECT</span>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-right font-mono text-blue-400 font-bold">{log.skor}</td>
+                      <td className="px-6 py-4 text-right font-mono text-[#F0B90B] font-bold">{Number(log.skor).toFixed(1)}</td>
                       <td className="px-6 py-4 text-right font-mono text-gray-400">${Number(log.hacim).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
-                      <td className="px-6 py-4 text-right font-mono text-gray-400">{log.spread}%</td>
-                      <td className="px-6 py-4 text-right font-mono text-gray-400">{log.fvg_mesafe_yuzde}%</td>
+                      <td className="px-6 py-4 text-right font-mono text-gray-400">{Number(log.spread).toFixed(4)}%</td>
+                      <td className="px-6 py-4 text-right font-mono text-gray-400">{Number(log.fvg_mesafe_yuzde).toFixed(2)}%</td>
                     </tr>
                   ))
                 )}
