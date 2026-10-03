@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { Clock, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function Screener() {
   const [logs, setLogs] = useState([]);
@@ -7,63 +8,65 @@ export default function Screener() {
 
   useEffect(() => {
     async function fetchLogs() {
-      const { data, error } = await supabase
-        .from('screener_history')
-        .select('*')
-        .order('id', { ascending: false })
-        .limit(100);
-      
-      if (!error && data) {
-        setLogs(data);
-      }
+      const { data } = await supabase.from('screener_history').select('*').order('id', { ascending: false }).limit(100);
+      if (data) setLogs(data);
       setLoading(false);
     }
     fetchLogs();
   }, []);
 
   return (
-    <div className="space-y-4 mt-4">
-      <h2 className="text-2xl font-bold border-b border-gray-700 pb-2">İzci Geçmişi (Screener)</h2>
+    <div className="space-y-6">
+      <div className="border-b border-[#1f2937] pb-4">
+        <h2 className="text-2xl font-black text-gray-100 tracking-tight">Market Scanner</h2>
+        <p className="text-sm text-gray-500 mt-1">Live Volatility & FVG Proximity Screening</p>
+      </div>
+      
       {loading ? (
-        <p className="text-gray-400">Yükleniyor...</p>
+        <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>
       ) : (
-        <div className="overflow-x-auto bg-gray-800 rounded-lg border border-gray-700 shadow-lg">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-900 text-gray-400">
-              <tr>
-                <th className="p-3">Zaman</th>
-                <th className="p-3">Sembol</th>
-                <th className="p-3">Durum</th>
-                <th className="p-3">Skor</th>
-                <th className="p-3">Hacim</th>
-                <th className="p-3">Spread</th>
-                <th className="p-3">FVG Mesafe (%)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.length === 0 ? (
+        <div className="bg-[#0b0e14] border border-[#1f2937] rounded-xl overflow-hidden shadow-xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-[#121822] border-b border-[#1f2937]">
                 <tr>
-                  <td colSpan="7" className="p-4 text-center text-gray-500">Henüz tarama verisi yok.</td>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Time</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Asset</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Score</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Volume</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Spread</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">FVG Dist</th>
                 </tr>
-              ) : (
-                logs.map(log => (
-                  <tr key={log.id} className="border-t border-gray-700 hover:bg-gray-750">
-                    <td className="p-3">{new Date(log.zaman).toLocaleString()}</td>
-                    <td className="p-3 font-bold text-yellow-400">{log.sembol}</td>
-                    <td className="p-3">
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${log.durum === 'KABUL' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}`}>
-                        {log.durum}
-                      </span>
-                    </td>
-                    <td className="p-3">{log.skor}</td>
-                    <td className="p-3">{Number(log.hacim).toLocaleString()}</td>
-                    <td className="p-3">{log.spread}</td>
-                    <td className="p-3">{log.fvg_mesafe_yuzde}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#1f2937]">
+                {logs.length === 0 ? (
+                  <tr><td colSpan="7" className="px-6 py-12 text-center text-gray-500 font-medium">No scan data yet.</td></tr>
+                ) : (
+                  logs.map(log => (
+                    <tr key={log.id} className="hover:bg-[#121822] transition-colors">
+                      <td className="px-6 py-4 text-gray-400 font-mono text-xs flex items-center gap-2">
+                        <Clock size={14} />
+                        {new Date(log.zaman).toLocaleTimeString()}
+                      </td>
+                      <td className="px-6 py-4 font-bold text-gray-200">{log.sembol}</td>
+                      <td className="px-6 py-4">
+                        {log.durum === 'KABUL' ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-green-500/10 text-green-400 border border-green-500/20"><CheckCircle2 size={12}/> ACCEPT</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-red-500/10 text-red-400 border border-red-500/20"><XCircle size={12}/> REJECT</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-right font-mono text-blue-400 font-bold">{log.skor}</td>
+                      <td className="px-6 py-4 text-right font-mono text-gray-400">${Number(log.hacim).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                      <td className="px-6 py-4 text-right font-mono text-gray-400">{log.spread}%</td>
+                      <td className="px-6 py-4 text-right font-mono text-gray-400">{log.fvg_mesafe_yuzde}%</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
