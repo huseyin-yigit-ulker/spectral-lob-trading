@@ -124,7 +124,7 @@ export function LiveProvider({ children }) {
         if (buf.obi_arr.length > 50) buf.obi_arr.shift();
         
         const avg_obi = buf.obi_arr.reduce((a,b) => a+b, 0) / buf.obi_arr.length;
-        if (!tempMetrics[sym]) tempMetrics[sym] = { ...(metrics[sym] || {}) };
+        if (!tempMetrics[sym]) tempMetrics[sym] = {};
         tempMetrics[sym].obi = avg_obi;
 
       } else if (streamType === 'aggTrade') {
@@ -142,7 +142,7 @@ export function LiveProvider({ children }) {
         buf.cvd_arr = buf.cvd_arr.filter(t => (now - t.time) <= 60000);
         const cvd_1m = buf.cvd_arr.reduce((sum, t) => sum + t.qty, 0);
 
-        if (!tempMetrics[sym]) tempMetrics[sym] = { ...(metrics[sym] || {}) };
+        if (!tempMetrics[sym]) tempMetrics[sym] = {};
         tempMetrics[sym].price = price;
         tempMetrics[sym].cvd = cvd_1m;
       }
