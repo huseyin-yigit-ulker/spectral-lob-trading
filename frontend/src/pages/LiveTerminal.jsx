@@ -48,17 +48,17 @@ export default function LiveTerminal() {
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">Sembol</th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Fiyat</th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                  <Tooltip text="Emir Defteri Dengesizliği (Order Book Imbalance). Limit emirlerdeki alıcı/satıcı baskısını ölçer.\n\nSİNYAL ŞARTI:\nLONG (AL) için: > +0.40\nSHORT (SAT) için: < -0.40">
+                  <Tooltip text={`Emir Defteri Dengesizliği (Order Book Imbalance). Limit emirlerdeki alıcı/satıcı baskısını ölçer.\n\nSİNYAL ŞARTI:\nLONG (AL) için: > +0.40\nSHORT (SAT) için: < -0.40`}>
                     Canlı OBI (Depth) <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                  <Tooltip text="Kümülatif Hacim Deltası. Market (Piyasa) emirleriyle gerçekleşen anlık alım-satım baskısıdır.\n\nSİNYAL ŞARTI:\nLONG (AL) için: Pozitif (> 0)\nSHORT (SAT) için: Negatif (< 0)">
+                  <Tooltip text={`Kümülatif Hacim Deltası. Market (Piyasa) emirleriyle gerçekleşen anlık alım-satım baskısıdır.\n\nSİNYAL ŞARTI:\nLONG (AL) için: Pozitif (> 0)\nSHORT (SAT) için: Negatif (< 0)`}>
                     CVD (Son 1dk) <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
-                  <Tooltip text="Screener algoritması tarafından FVG (Boşluk) derinliği ve konumu uygun görülüp izlemeye alınan coinleri temsil eder.\n\nİŞLEME GİRİŞ:\nOBI ve CVD şartları aynı anda onaylandığında bot otomatik olarak pozisyon açar.">
+                  <Tooltip text={`Screener algoritması tarafından FVG (Boşluk) derinliği ve konumu uygun görülüp izlemeye alınan coinleri temsil eder.\n\nİŞLEME GİRİŞ:\nOBI ve CVD şartları aynı anda onaylandığında bot otomatik olarak pozisyon açar.`}>
                     Referans Durumu <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
@@ -81,6 +81,7 @@ export default function LiveTerminal() {
                   const isObiBullish = m.obi > 0;
                   const isObiBearish = m.obi < 0;
                   const isCvdBullish = m.cvd > 0;
+                  const isCvdBearish = m.cvd < 0;
                   
                   return (
                     <tr key={sym} className="hover:bg-[#1A2027] transition-colors font-mono">
@@ -89,15 +90,15 @@ export default function LiveTerminal() {
                         {m.price ? Number(m.price).toPrecision(6) : 'Bekleniyor...'}
                       </td>
                       <td className="px-6 py-5 text-right font-bold">
-                        {m.obi !== 0 ? (
+                        {m.obi !== undefined ? (
                           <span className={isObiBullish ? 'text-[#0ECB81]' : isObiBearish ? 'text-[#F6465D]' : 'text-gray-400'}>
                             {m.obi > 0 ? '+' : ''}{m.obi.toFixed(3)}
                           </span>
                         ) : '...'}
                       </td>
                       <td className="px-6 py-5 text-right font-bold">
-                        {m.cvd !== 0 ? (
-                          <span className={isCvdBullish ? 'text-[#0ECB81]' : 'text-[#F6465D]'}>
+                        {m.cvd !== undefined ? (
+                          <span className={isCvdBullish ? 'text-[#0ECB81]' : isCvdBearish ? 'text-[#F6465D]' : 'text-gray-400'}>
                             {m.cvd > 0 ? '+' : ''}{m.cvd.toFixed(2)}
                           </span>
                         ) : '...'}
