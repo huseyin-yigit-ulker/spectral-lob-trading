@@ -188,7 +188,7 @@ export default function LiveTerminal() {
               onClick={() => setSelectedSymbol(null)}
               className="text-gray-500 hover:text-white transition-colors flex items-center gap-1"
             >
-              Kapat ✕
+              Kapat X
             </button>
           </div>
           <div className="flex-1 w-full relative">
@@ -204,6 +204,7 @@ export default function LiveTerminal() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
