@@ -5943,3 +5943,2268 @@ Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
 
 [OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
 Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[21:12:14] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 39 COIN BULUNDU ---
+1. LTCUSDT | Skor: 200.9 | FVG Mesafe: %0.00 | Spread: %0.014
+2. ONDOUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.020
+3. ARBUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.005
+4. TRUMPUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.049
+5. BTCUSDT | Skor: 139.7 | FVG Mesafe: %0.02 | Spread: %0.000
+6. ETHUSDT | Skor: 124.5 | FVG Mesafe: %0.00 | Spread: %0.000
+7. ZECUSDT | Skor: 109.3 | FVG Mesafe: %0.04 | Spread: %0.001
+8. SOLUSDT | Skor: 108.9 | FVG Mesafe: %0.02 | Spread: %0.008
+9. SANDUSDT | Skor: 104.6 | FVG Mesafe: %0.31 | Spread: %0.013
+10. NEARUSDT | Skor: 104.1 | FVG Mesafe: %0.30 | Spread: %0.020
+11. XRPUSDT | Skor: 103.9 | FVG Mesafe: %0.01 | Spread: %0.007
+12. QNTUSDT | Skor: 103.8 | FVG Mesafe: %0.13 | Spread: %0.012
+13. DOGEUSDT | Skor: 103.0 | FVG Mesafe: %0.02 | Spread: %0.010
+14. STRKUSDT | Skor: 102.8 | FVG Mesafe: %0.23 | Spread: %0.017
+15. BNBUSDT | Skor: 102.6 | FVG Mesafe: %0.04 | Spread: %0.001
+16. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.09 | Spread: %0.017
+17. ADAUSDT | Skor: 101.5 | FVG Mesafe: %0.04 | Spread: %0.040
+18. 龙虾USDT | Skor: 101.4 | FVG Mesafe: %0.05 | Spread: %0.046
+19. MUBARAKUSDT | Skor: 101.3 | FVG Mesafe: %0.29 | Spread: %0.030
+20. ENAUSDT | Skor: 101.2 | FVG Mesafe: %0.06 | Spread: %0.004
+21. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.02 | Spread: %0.003
+22. AAVEUSDT | Skor: 100.9 | FVG Mesafe: %0.11 | Spread: %0.006
+23. UNIUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.011
+24. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.007
+25. 1000PEPEUSDT | Skor: 100.9 | FVG Mesafe: %0.03 | Spread: %0.019
+26. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.14 | Spread: %0.046
+27. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.02 | Spread: %0.005
+28. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.07 | Spread: %0.009
+29. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.22 | Spread: %0.028
+30. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.00 | Spread: %0.003
+31. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.025
+32. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.19 | Spread: %0.042
+33. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.039
+34. SUIUSDT | Skor: 53.4 | FVG Mesafe: %0.52 | Spread: %0.008
+35. AXSUSDT | Skor: 51.0 | FVG Mesafe: %0.70 | Spread: %0.015
+36. USUSDT | Skor: 50.8 | FVG Mesafe: %0.95 | Spread: %0.029
+37. MOVRUSDT | Skor: 50.5 | FVG Mesafe: %0.86 | Spread: %0.012
+38. BTWUSDT | Skor: 2.8 | FVG Mesafe: %1.22 | Spread: %0.008
+39. BEAMXUSDT | Skor: 1.8 | FVG Mesafe: %1.15 | Spread: %0.038
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[21:27:58] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 42
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 33 COIN BULUNDU ---
+1. BTCUSDT | Skor: 142.5 | FVG Mesafe: %0.07 | Spread: %0.000
+2. ETHUSDT | Skor: 124.8 | FVG Mesafe: %0.03 | Spread: %0.000
+3. ZECUSDT | Skor: 109.4 | FVG Mesafe: %0.17 | Spread: %0.001
+4. SOLUSDT | Skor: 109.0 | FVG Mesafe: %0.19 | Spread: %0.008
+5. SANDUSDT | Skor: 104.5 | FVG Mesafe: %0.38 | Spread: %0.013
+6. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.08 | Spread: %0.020
+7. XRPUSDT | Skor: 103.9 | FVG Mesafe: %0.01 | Spread: %0.007
+8. QNTUSDT | Skor: 103.8 | FVG Mesafe: %0.31 | Spread: %0.012
+9. SUIUSDT | Skor: 103.5 | FVG Mesafe: %0.11 | Spread: %0.008
+10. DOGEUSDT | Skor: 103.1 | FVG Mesafe: %0.01 | Spread: %0.010
+11. STRKUSDT | Skor: 102.8 | FVG Mesafe: %0.25 | Spread: %0.017
+12. BTWUSDT | Skor: 102.8 | FVG Mesafe: %0.35 | Spread: %0.016
+13. BNBUSDT | Skor: 102.7 | FVG Mesafe: %0.00 | Spread: %0.001
+14. HYPEUSDT | Skor: 102.3 | FVG Mesafe: %0.01 | Spread: %0.001
+15. ADAUSDT | Skor: 101.5 | FVG Mesafe: %0.04 | Spread: %0.040
+16. FETUSDT | Skor: 101.1 | FVG Mesafe: %0.08 | Spread: %0.040
+17. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.007
+18. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.22 | Spread: %0.006
+19. 1000PEPEUSDT | Skor: 100.9 | FVG Mesafe: %0.34 | Spread: %0.002
+20. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.007
+21. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.11 | Spread: %0.014
+22. USUSDT | Skor: 100.8 | FVG Mesafe: %0.38 | Spread: %0.015
+23. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.11 | Spread: %0.005
+24. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.25 | Spread: %0.009
+25. ONDOUSDT | Skor: 100.6 | FVG Mesafe: %0.22 | Spread: %0.020
+26. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.44 | Spread: %0.016
+27. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.04 | Spread: %0.003
+28. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.005
+29. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.10 | Spread: %0.039
+30. BEAMXUSDT | Skor: 51.8 | FVG Mesafe: %0.81 | Spread: %0.039
+31. 龙虾USDT | Skor: 51.4 | FVG Mesafe: %0.81 | Spread: %0.023
+32. MOVRUSDT | Skor: 50.5 | FVG Mesafe: %0.65 | Spread: %0.023
+33. MAGMAUSDT | Skor: 0.5 | FVG Mesafe: %1.19 | Spread: %0.004
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[21:43:31] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 43
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 34 COIN BULUNDU ---
+1. SOLUSDT | Skor: 209.0 | FVG Mesafe: %0.00 | Spread: %0.008
+2. BTCUSDT | Skor: 142.8 | FVG Mesafe: %0.02 | Spread: %0.000
+3. ZECUSDT | Skor: 109.4 | FVG Mesafe: %0.11 | Spread: %0.001
+4. SANDUSDT | Skor: 104.5 | FVG Mesafe: %0.24 | Spread: %0.013
+5. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.04 | Spread: %0.020
+6. XRPUSDT | Skor: 104.0 | FVG Mesafe: %0.03 | Spread: %0.007
+7. SUIUSDT | Skor: 103.5 | FVG Mesafe: %0.05 | Spread: %0.008
+8. BNBUSDT | Skor: 102.7 | FVG Mesafe: %0.03 | Spread: %0.001
+9. HYPEUSDT | Skor: 102.3 | FVG Mesafe: %0.10 | Spread: %0.001
+10. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.02 | Spread: %0.017
+11. 龙虾USDT | Skor: 101.4 | FVG Mesafe: %0.12 | Spread: %0.023
+12. MUBARAKUSDT | Skor: 101.3 | FVG Mesafe: %0.09 | Spread: %0.015
+13. ENAUSDT | Skor: 101.2 | FVG Mesafe: %0.07 | Spread: %0.004
+14. FETUSDT | Skor: 101.1 | FVG Mesafe: %0.08 | Spread: %0.040
+15. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.23 | Spread: %0.007
+16. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.01 | Spread: %0.006
+17. 1000PEPEUSDT | Skor: 100.9 | FVG Mesafe: %0.42 | Spread: %0.002
+18. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.30 | Spread: %0.007
+19. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.014
+20. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.05 | Spread: %0.009
+21. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.20 | Spread: %0.020
+22. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.45 | Spread: %0.005
+23. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.36 | Spread: %0.018
+24. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.025
+25. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.34 | Spread: %0.004
+26. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.33 | Spread: %0.013
+27. DOGEUSDT | Skor: 53.2 | FVG Mesafe: %0.53 | Spread: %0.010
+28. STRKUSDT | Skor: 52.9 | FVG Mesafe: %0.69 | Spread: %0.034
+29. BTWUSDT | Skor: 52.7 | FVG Mesafe: %0.51 | Spread: %0.016
+30. BEAMXUSDT | Skor: 51.8 | FVG Mesafe: %0.50 | Spread: %0.039
+31. ADAUSDT | Skor: 51.6 | FVG Mesafe: %0.71 | Spread: %0.040
+32. GTCUSDT | Skor: 51.2 | FVG Mesafe: %0.66 | Spread: %0.049
+33. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.64 | Spread: %0.005
+34. LYNUSDT | Skor: 50.6 | FVG Mesafe: %0.85 | Spread: %0.057
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[21:59:03] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 43
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. BTCUSDT | Skor: 143.3 | FVG Mesafe: %0.10 | Spread: %0.000
+2. ETHUSDT | Skor: 125.0 | FVG Mesafe: %0.12 | Spread: %0.000
+3. ZECUSDT | Skor: 109.4 | FVG Mesafe: %0.45 | Spread: %0.001
+4. SOLUSDT | Skor: 109.1 | FVG Mesafe: %0.11 | Spread: %0.008
+5. SANDUSDT | Skor: 104.5 | FVG Mesafe: %0.33 | Spread: %0.013
+6. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.18 | Spread: %0.020
+7. XRPUSDT | Skor: 104.0 | FVG Mesafe: %0.15 | Spread: %0.007
+8. QNTUSDT | Skor: 103.8 | FVG Mesafe: %0.14 | Spread: %0.004
+9. SUIUSDT | Skor: 103.5 | FVG Mesafe: %0.19 | Spread: %0.008
+10. DOGEUSDT | Skor: 103.3 | FVG Mesafe: %0.10 | Spread: %0.010
+11. BNBUSDT | Skor: 102.7 | FVG Mesafe: %0.04 | Spread: %0.001
+12. HYPEUSDT | Skor: 102.3 | FVG Mesafe: %0.08 | Spread: %0.001
+13. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.03 | Spread: %0.017
+14. ADAUSDT | Skor: 101.6 | FVG Mesafe: %0.20 | Spread: %0.040
+15. 龙虾USDT | Skor: 101.4 | FVG Mesafe: %0.16 | Spread: %0.046
+16. MUBARAKUSDT | Skor: 101.3 | FVG Mesafe: %0.34 | Spread: %0.015
+17. ENAUSDT | Skor: 101.2 | FVG Mesafe: %0.15 | Spread: %0.004
+18. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.19 | Spread: %0.003
+19. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.18 | Spread: %0.007
+20. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.006
+21. 1000PEPEUSDT | Skor: 100.9 | FVG Mesafe: %0.20 | Spread: %0.002
+22. UNIUSDT | Skor: 100.9 | FVG Mesafe: %0.21 | Spread: %0.011
+23. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.06 | Spread: %0.007
+24. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.06 | Spread: %0.014
+25. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.43 | Spread: %0.005
+26. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.11 | Spread: %0.009
+27. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.22 | Spread: %0.020
+28. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.003
+29. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.005
+30. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.25 | Spread: %0.012
+31. TRUMPUSDT | Skor: 100.5 | FVG Mesafe: %0.15 | Spread: %0.049
+32. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.37 | Spread: %0.017
+33. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.43 | Spread: %0.026
+34. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.16 | Spread: %0.013
+35. BTWUSDT | Skor: 52.6 | FVG Mesafe: %0.75 | Spread: %0.016
+36. BEAMXUSDT | Skor: 51.8 | FVG Mesafe: %0.59 | Spread: %0.040
+37. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.58 | Spread: %0.048
+38. AINUSDT | Skor: 5.3 | FVG Mesafe: %1.31 | Spread: %0.057
+39. GTCUSDT | Skor: 1.2 | FVG Mesafe: %1.07 | Spread: %0.037
+40. FETUSDT | Skor: 1.1 | FVG Mesafe: %1.32 | Spread: %0.040
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[22:14:35] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 29 COIN BULUNDU ---
+1. LYNUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.058
+2. BTCUSDT | Skor: 147.3 | FVG Mesafe: %0.33 | Spread: %0.000
+3. ETHUSDT | Skor: 126.9 | FVG Mesafe: %0.30 | Spread: %0.000
+4. SOLUSDT | Skor: 109.5 | FVG Mesafe: %0.24 | Spread: %0.008
+5. XRPUSDT | Skor: 104.1 | FVG Mesafe: %0.36 | Spread: %0.007
+6. STRKUSDT | Skor: 102.9 | FVG Mesafe: %0.18 | Spread: %0.033
+7. BNBUSDT | Skor: 102.7 | FVG Mesafe: %0.20 | Spread: %0.001
+8. HYPEUSDT | Skor: 102.4 | FVG Mesafe: %0.02 | Spread: %0.001
+9. 龙虾USDT | Skor: 101.4 | FVG Mesafe: %0.18 | Spread: %0.023
+10. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.39 | Spread: %0.003
+11. FETUSDT | Skor: 101.1 | FVG Mesafe: %0.16 | Spread: %0.040
+12. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.17 | Spread: %0.006
+13. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.14 | Spread: %0.007
+14. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.22 | Spread: %0.014
+15. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.28 | Spread: %0.014
+16. USUSDT | Skor: 100.8 | FVG Mesafe: %0.20 | Spread: %0.045
+17. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.05 | Spread: %0.048
+18. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.20 | Spread: %0.005
+19. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.23 | Spread: %0.009
+20. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.004
+21. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.10 | Spread: %0.025
+22. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.23 | Spread: %0.013
+23. ZECUSDT | Skor: 59.7 | FVG Mesafe: %0.72 | Spread: %0.001
+24. NEARUSDT | Skor: 54.2 | FVG Mesafe: %0.50 | Spread: %0.020
+25. DOGEUSDT | Skor: 53.4 | FVG Mesafe: %0.80 | Spread: %0.010
+26. GTCUSDT | Skor: 51.2 | FVG Mesafe: %0.93 | Spread: %0.024
+27. SANDUSDT | Skor: 4.5 | FVG Mesafe: %1.09 | Spread: %0.013
+28. 1000PEPEUSDT | Skor: 1.0 | FVG Mesafe: %1.43 | Spread: %0.002
+29. MOVRUSDT | Skor: 0.5 | FVG Mesafe: %1.49 | Spread: %0.018
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[22:30:10] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 37 COIN BULUNDU ---
+1. LTCUSDT | Skor: 200.9 | FVG Mesafe: %0.00 | Spread: %0.014
+2. AVAXUSDT | Skor: 200.7 | FVG Mesafe: %0.00 | Spread: %0.018
+3. BCHUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.003
+4. BTCUSDT | Skor: 151.8 | FVG Mesafe: %0.03 | Spread: %0.000
+5. ETHUSDT | Skor: 130.8 | FVG Mesafe: %0.04 | Spread: %0.000
+6. ZECUSDT | Skor: 110.2 | FVG Mesafe: %0.07 | Spread: %0.001
+7. SOLUSDT | Skor: 109.7 | FVG Mesafe: %0.02 | Spread: %0.008
+8. AINUSDT | Skor: 104.9 | FVG Mesafe: %0.47 | Spread: %0.037
+9. SANDUSDT | Skor: 104.4 | FVG Mesafe: %0.05 | Spread: %0.013
+10. NEARUSDT | Skor: 104.3 | FVG Mesafe: %0.38 | Spread: %0.020
+11. XRPUSDT | Skor: 104.3 | FVG Mesafe: %0.04 | Spread: %0.007
+12. SUIUSDT | Skor: 103.6 | FVG Mesafe: %0.02 | Spread: %0.008
+13. DOGEUSDT | Skor: 103.4 | FVG Mesafe: %0.01 | Spread: %0.010
+14. STRKUSDT | Skor: 102.9 | FVG Mesafe: %0.17 | Spread: %0.033
+15. BNBUSDT | Skor: 102.9 | FVG Mesafe: %0.28 | Spread: %0.001
+16. HYPEUSDT | Skor: 102.5 | FVG Mesafe: %0.03 | Spread: %0.001
+17. BTWUSDT | Skor: 102.4 | FVG Mesafe: %0.16 | Spread: %0.008
+18. 龙虾USDT | Skor: 101.4 | FVG Mesafe: %0.30 | Spread: %0.023
+19. MUBARAKUSDT | Skor: 101.3 | FVG Mesafe: %0.12 | Spread: %0.015
+20. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.02 | Spread: %0.003
+21. 1000PEPEUSDT | Skor: 101.0 | FVG Mesafe: %0.03 | Spread: %0.002
+22. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.006
+23. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.007
+24. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.01 | Spread: %0.011
+25. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.007
+26. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.02 | Spread: %0.020
+27. LYNUSDT | Skor: 100.6 | FVG Mesafe: %0.32 | Spread: %0.029
+28. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.01 | Spread: %0.005
+29. TRUMPUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.049
+30. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.051
+31. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.14 | Spread: %0.026
+32. ADAUSDT | Skor: 51.7 | FVG Mesafe: %0.58 | Spread: %0.039
+33. GTCUSDT | Skor: 51.3 | FVG Mesafe: %0.52 | Spread: %0.034
+34. BEAMXUSDT | Skor: 1.9 | FVG Mesafe: %1.34 | Spread: %0.039
+35. FETUSDT | Skor: 1.1 | FVG Mesafe: %1.27 | Spread: %0.040
+36. USUSDT | Skor: 0.9 | FVG Mesafe: %1.31 | Spread: %0.022
+37. MAGMAUSDT | Skor: 0.5 | FVG Mesafe: %1.37 | Spread: %0.004
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[22:45:44] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 36 COIN BULUNDU ---
+1. XRPUSDT | Skor: 204.4 | FVG Mesafe: %0.00 | Spread: %0.007
+2. LINKUSDT | Skor: 200.9 | FVG Mesafe: %0.00 | Spread: %0.007
+3. BTCUSDT | Skor: 153.3 | FVG Mesafe: %0.20 | Spread: %0.000
+4. ETHUSDT | Skor: 131.6 | FVG Mesafe: %0.26 | Spread: %0.000
+5. SOLUSDT | Skor: 109.9 | FVG Mesafe: %0.01 | Spread: %0.008
+6. AINUSDT | Skor: 104.8 | FVG Mesafe: %0.15 | Spread: %0.036
+7. SANDUSDT | Skor: 104.4 | FVG Mesafe: %0.09 | Spread: %0.013
+8. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.03 | Spread: %0.008
+9. STRKUSDT | Skor: 103.0 | FVG Mesafe: %0.17 | Spread: %0.017
+10. BNBUSDT | Skor: 102.9 | FVG Mesafe: %0.27 | Spread: %0.001
+11. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.01 | Spread: %0.001
+12. BTWUSDT | Skor: 102.1 | FVG Mesafe: %0.07 | Spread: %0.008
+13. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.10 | Spread: %0.017
+14. ADAUSDT | Skor: 102.0 | FVG Mesafe: %0.38 | Spread: %0.038
+15. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.07 | Spread: %0.004
+16. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.36 | Spread: %0.003
+17. 1000PEPEUSDT | Skor: 101.1 | FVG Mesafe: %0.11 | Spread: %0.002
+18. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.30 | Spread: %0.007
+19. USUSDT | Skor: 100.9 | FVG Mesafe: %0.25 | Spread: %0.014
+20. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.01 | Spread: %0.009
+21. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.12 | Spread: %0.020
+22. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.46 | Spread: %0.002
+23. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.04 | Spread: %0.003
+24. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.02 | Spread: %0.005
+25. TRUMPUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.049
+26. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.15 | Spread: %0.004
+27. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.28 | Spread: %0.025
+28. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.013
+29. ZECUSDT | Skor: 60.5 | FVG Mesafe: %0.80 | Spread: %0.001
+30. DOGEUSDT | Skor: 53.5 | FVG Mesafe: %0.66 | Spread: %0.010
+31. BEAMXUSDT | Skor: 51.9 | FVG Mesafe: %0.90 | Spread: %0.039
+32. 龙虾USDT | Skor: 51.4 | FVG Mesafe: %1.00 | Spread: %0.023
+33. FETUSDT | Skor: 51.1 | FVG Mesafe: %0.63 | Spread: %0.040
+34. AAVEUSDT | Skor: 51.0 | FVG Mesafe: %0.54 | Spread: %0.006
+35. GTCUSDT | Skor: 1.4 | FVG Mesafe: %1.08 | Spread: %0.051
+36. COLLECTUSDT | Skor: 0.8 | FVG Mesafe: %1.30 | Spread: %0.048
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[23:01:17] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 25 COIN BULUNDU ---
+1. BTCUSDT | Skor: 153.8 | FVG Mesafe: %0.07 | Spread: %0.000
+2. ETHUSDT | Skor: 132.0 | FVG Mesafe: %0.40 | Spread: %0.000
+3. SOLUSDT | Skor: 109.9 | FVG Mesafe: %0.07 | Spread: %0.008
+4. SANDUSDT | Skor: 104.4 | FVG Mesafe: %0.18 | Spread: %0.013
+5. XRPUSDT | Skor: 104.4 | FVG Mesafe: %0.28 | Spread: %0.007
+6. SUIUSDT | Skor: 103.6 | FVG Mesafe: %0.22 | Spread: %0.008
+7. DOGEUSDT | Skor: 103.5 | FVG Mesafe: %0.21 | Spread: %0.010
+8. BNBUSDT | Skor: 102.9 | FVG Mesafe: %0.32 | Spread: %0.001
+9. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.26 | Spread: %0.001
+10. ADAUSDT | Skor: 102.2 | FVG Mesafe: %0.46 | Spread: %0.038
+11. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.18 | Spread: %0.003
+12. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.18 | Spread: %0.022
+13. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.13 | Spread: %0.007
+14. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.48 | Spread: %0.048
+15. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.16 | Spread: %0.009
+16. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.12 | Spread: %0.020
+17. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.12 | Spread: %0.016
+18. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.03 | Spread: %0.003
+19. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.13 | Spread: %0.005
+20. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.40 | Spread: %0.025
+21. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.22 | Spread: %0.004
+22. ZECUSDT | Skor: 60.5 | FVG Mesafe: %0.71 | Spread: %0.001
+23. AAVEUSDT | Skor: 51.0 | FVG Mesafe: %0.69 | Spread: %0.006
+24. ATHUSDT | Skor: 50.5 | FVG Mesafe: %0.61 | Spread: %0.013
+25. BEAMXUSDT | Skor: 1.9 | FVG Mesafe: %1.34 | Spread: %0.039
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[23:16:51] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 43
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 33 COIN BULUNDU ---
+1. BTCUSDT | Skor: 154.8 | FVG Mesafe: %0.02 | Spread: %0.000
+2. ETHUSDT | Skor: 132.6 | FVG Mesafe: %0.08 | Spread: %0.000
+3. ZECUSDT | Skor: 110.3 | FVG Mesafe: %0.08 | Spread: %0.001
+4. SOLUSDT | Skor: 110.2 | FVG Mesafe: %0.06 | Spread: %0.008
+5. AINUSDT | Skor: 104.7 | FVG Mesafe: %0.22 | Spread: %0.036
+6. XRPUSDT | Skor: 104.4 | FVG Mesafe: %0.38 | Spread: %0.007
+7. SANDUSDT | Skor: 104.4 | FVG Mesafe: %0.14 | Spread: %0.013
+8. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.23 | Spread: %0.008
+9. DOGEUSDT | Skor: 103.6 | FVG Mesafe: %0.02 | Spread: %0.010
+10. BNBUSDT | Skor: 102.9 | FVG Mesafe: %0.10 | Spread: %0.001
+11. STRKUSDT | Skor: 102.9 | FVG Mesafe: %0.31 | Spread: %0.017
+12. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.07 | Spread: %0.001
+13. BEAMXUSDT | Skor: 101.9 | FVG Mesafe: %0.08 | Spread: %0.039
+14. 龙虾USDT | Skor: 101.3 | FVG Mesafe: %0.20 | Spread: %0.044
+15. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.11 | Spread: %0.004
+16. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.10 | Spread: %0.003
+17. 1000PEPEUSDT | Skor: 101.1 | FVG Mesafe: %0.13 | Spread: %0.002
+18. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.01 | Spread: %0.015
+19. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.11 | Spread: %0.011
+20. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.16 | Spread: %0.007
+21. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.03 | Spread: %0.014
+22. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.09 | Spread: %0.009
+23. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.14 | Spread: %0.020
+24. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.02 | Spread: %0.005
+25. TRUMPUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.048
+26. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.26 | Spread: %0.006
+27. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.025
+28. ADAUSDT | Skor: 52.2 | FVG Mesafe: %0.53 | Spread: %0.038
+29. AAVEUSDT | Skor: 51.0 | FVG Mesafe: %0.78 | Spread: %0.006
+30. BCHUSDT | Skor: 50.6 | FVG Mesafe: %0.62 | Spread: %0.003
+31. ATHUSDT | Skor: 50.5 | FVG Mesafe: %0.51 | Spread: %0.013
+32. MAGMAUSDT | Skor: 50.5 | FVG Mesafe: %0.82 | Spread: %0.004
+33. BRUSDT | Skor: 0.6 | FVG Mesafe: %1.13 | Spread: %0.025
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[23:32:22] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 42
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 20 COIN BULUNDU ---
+1. BTCUSDT | Skor: 157.2 | FVG Mesafe: %0.26 | Spread: %0.000
+2. ETHUSDT | Skor: 133.7 | FVG Mesafe: %0.36 | Spread: %0.000
+3. AINUSDT | Skor: 104.6 | FVG Mesafe: %0.49 | Spread: %0.036
+4. XRPUSDT | Skor: 104.5 | FVG Mesafe: %0.01 | Spread: %0.007
+5. SANDUSDT | Skor: 104.4 | FVG Mesafe: %0.39 | Spread: %0.013
+6. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.25 | Spread: %0.008
+7. DOGEUSDT | Skor: 103.6 | FVG Mesafe: %0.43 | Spread: %0.010
+8. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.17 | Spread: %0.001
+9. ADAUSDT | Skor: 102.3 | FVG Mesafe: %0.31 | Spread: %0.038
+10. 龙虾USDT | Skor: 101.3 | FVG Mesafe: %0.39 | Spread: %0.022
+11. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.10 | Spread: %0.018
+12. TRUMPUSDT | Skor: 100.5 | FVG Mesafe: %0.19 | Spread: %0.048
+13. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.45 | Spread: %0.025
+14. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.46 | Spread: %0.023
+15. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.09 | Spread: %0.038
+16. AXSUSDT | Skor: 51.0 | FVG Mesafe: %0.73 | Spread: %0.007
+17. USUSDT | Skor: 50.9 | FVG Mesafe: %0.56 | Spread: %0.022
+18. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.52 | Spread: %0.028
+19. BCHUSDT | Skor: 50.6 | FVG Mesafe: %0.60 | Spread: %0.003
+20. MAGMAUSDT | Skor: 0.5 | FVG Mesafe: %1.48 | Spread: %0.008
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[23:47:55] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 43
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 27 COIN BULUNDU ---
+1. SANDUSDT | Skor: 204.4 | FVG Mesafe: %0.00 | Spread: %0.013
+2. MUBARAKUSDT | Skor: 201.4 | FVG Mesafe: %0.00 | Spread: %0.031
+3. FETUSDT | Skor: 201.2 | FVG Mesafe: %0.00 | Spread: %0.039
+4. ONDOUSDT | Skor: 200.7 | FVG Mesafe: %0.00 | Spread: %0.020
+5. BTCUSDT | Skor: 158.4 | FVG Mesafe: %0.03 | Spread: %0.000
+6. ETHUSDT | Skor: 134.4 | FVG Mesafe: %0.07 | Spread: %0.000
+7. SOLUSDT | Skor: 110.5 | FVG Mesafe: %0.19 | Spread: %0.008
+8. ZECUSDT | Skor: 110.2 | FVG Mesafe: %0.28 | Spread: %0.001
+9. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.22 | Spread: %0.020
+10. QNTUSDT | Skor: 103.7 | FVG Mesafe: %0.46 | Spread: %0.012
+11. DOGEUSDT | Skor: 103.7 | FVG Mesafe: %0.13 | Spread: %0.010
+12. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.17 | Spread: %0.008
+13. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.00 | Spread: %0.001
+14. ADAUSDT | Skor: 102.3 | FVG Mesafe: %0.35 | Spread: %0.039
+15. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.10 | Spread: %0.017
+16. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.14 | Spread: %0.015
+17. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.01 | Spread: %0.011
+18. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.10 | Spread: %0.048
+19. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.12 | Spread: %0.050
+20. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.03 | Spread: %0.018
+21. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.35 | Spread: %0.013
+22. AINUSDT | Skor: 54.6 | FVG Mesafe: %0.73 | Spread: %0.035
+23. GTCUSDT | Skor: 51.5 | FVG Mesafe: %0.60 | Spread: %0.023
+24. 龙虾USDT | Skor: 51.3 | FVG Mesafe: %0.86 | Spread: %0.044
+25. USUSDT | Skor: 50.9 | FVG Mesafe: %0.92 | Spread: %0.029
+26. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.75 | Spread: %0.014
+27. MAGMAUSDT | Skor: 0.5 | FVG Mesafe: %1.36 | Spread: %0.008
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[00:03:25] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 41
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 37 COIN BULUNDU ---
+1. FETUSDT | Skor: 201.2 | FVG Mesafe: %0.00 | Spread: %0.040
+2. BTCUSDT | Skor: 157.7 | FVG Mesafe: %0.03 | Spread: %0.000
+3. ETHUSDT | Skor: 135.0 | FVG Mesafe: %0.04 | Spread: %0.000
+4. SOLUSDT | Skor: 110.5 | FVG Mesafe: %0.03 | Spread: %0.008
+5. ZECUSDT | Skor: 110.3 | FVG Mesafe: %0.06 | Spread: %0.001
+6. XRPUSDT | Skor: 104.6 | FVG Mesafe: %0.03 | Spread: %0.007
+7. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.08 | Spread: %0.020
+8. QNTUSDT | Skor: 103.7 | FVG Mesafe: %0.19 | Spread: %0.012
+9. DOGEUSDT | Skor: 103.7 | FVG Mesafe: %0.01 | Spread: %0.010
+10. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.10 | Spread: %0.008
+11. BNBUSDT | Skor: 103.0 | FVG Mesafe: %0.01 | Spread: %0.001
+12. STRKUSDT | Skor: 102.8 | FVG Mesafe: %0.09 | Spread: %0.017
+13. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.05 | Spread: %0.001
+14. ADAUSDT | Skor: 102.4 | FVG Mesafe: %0.19 | Spread: %0.038
+15. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.17 | Spread: %0.017
+16. GTCUSDT | Skor: 101.6 | FVG Mesafe: %0.25 | Spread: %0.041
+17. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.14 | Spread: %0.004
+18. 1000PEPEUSDT | Skor: 101.1 | FVG Mesafe: %0.11 | Spread: %0.002
+19. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.13 | Spread: %0.003
+20. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.06 | Spread: %0.006
+21. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.08 | Spread: %0.011
+22. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.26 | Spread: %0.037
+23. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.05 | Spread: %0.007
+24. USUSDT | Skor: 100.9 | FVG Mesafe: %0.21 | Spread: %0.059
+25. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.07 | Spread: %0.014
+26. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.19 | Spread: %0.047
+27. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.05 | Spread: %0.009
+28. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.20 | Spread: %0.020
+29. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.005
+30. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.15 | Spread: %0.049
+31. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.003
+32. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.10 | Spread: %0.025
+33. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.17 | Spread: %0.006
+34. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.013
+35. MAGMAUSDT | Skor: 100.5 | FVG Mesafe: %0.22 | Spread: %0.012
+36. AINUSDT | Skor: 54.5 | FVG Mesafe: %0.83 | Spread: %0.052
+37. MUBARAKUSDT | Skor: 51.4 | FVG Mesafe: %0.67 | Spread: %0.015
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[00:18:56] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 42
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 28 COIN BULUNDU ---
+1. BTCUSDT | Skor: 158.0 | FVG Mesafe: %0.46 | Spread: %0.000
+2. ETHUSDT | Skor: 135.4 | FVG Mesafe: %0.03 | Spread: %0.000
+3. SOLUSDT | Skor: 110.6 | FVG Mesafe: %0.31 | Spread: %0.008
+4. ZECUSDT | Skor: 110.5 | FVG Mesafe: %0.03 | Spread: %0.001
+5. DOGEUSDT | Skor: 103.7 | FVG Mesafe: %0.19 | Spread: %0.010
+6. QNTUSDT | Skor: 103.7 | FVG Mesafe: %0.23 | Spread: %0.004
+7. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.08 | Spread: %0.008
+8. STRKUSDT | Skor: 102.7 | FVG Mesafe: %0.27 | Spread: %0.017
+9. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.03 | Spread: %0.001
+10. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.26 | Spread: %0.017
+11. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.05 | Spread: %0.004
+12. FETUSDT | Skor: 101.2 | FVG Mesafe: %0.39 | Spread: %0.039
+13. 1000PEPEUSDT | Skor: 101.2 | FVG Mesafe: %0.07 | Spread: %0.002
+14. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.01 | Spread: %0.006
+15. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.011
+16. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.01 | Spread: %0.014
+17. AVAXUSDT | Skor: 100.7 | FVG Mesafe: %0.24 | Spread: %0.009
+18. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.04 | Spread: %0.020
+19. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.24 | Spread: %0.005
+20. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.06 | Spread: %0.003
+21. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.005
+22. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.018
+23. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.48 | Spread: %0.013
+24. SANDUSDT | Skor: 54.3 | FVG Mesafe: %0.61 | Spread: %0.013
+25. ADAUSDT | Skor: 52.4 | FVG Mesafe: %0.77 | Spread: %0.039
+26. MUBARAKUSDT | Skor: 51.4 | FVG Mesafe: %0.96 | Spread: %0.015
+27. AXSUSDT | Skor: 51.0 | FVG Mesafe: %0.85 | Spread: %0.029
+28. COLLECTUSDT | Skor: 50.8 | FVG Mesafe: %0.52 | Spread: %0.047
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[00:34:28] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 41
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 34 COIN BULUNDU ---
+1. DOGEUSDT | Skor: 203.7 | FVG Mesafe: %0.00 | Spread: %0.010
+2. BTCUSDT | Skor: 159.3 | FVG Mesafe: %0.02 | Spread: %0.000
+3. ETHUSDT | Skor: 135.4 | FVG Mesafe: %0.00 | Spread: %0.000
+4. SOLUSDT | Skor: 110.7 | FVG Mesafe: %0.02 | Spread: %0.008
+5. ZECUSDT | Skor: 110.4 | FVG Mesafe: %0.04 | Spread: %0.001
+6. XRPUSDT | Skor: 104.7 | FVG Mesafe: %0.03 | Spread: %0.007
+7. AINUSDT | Skor: 104.4 | FVG Mesafe: %0.37 | Spread: %0.053
+8. SANDUSDT | Skor: 104.3 | FVG Mesafe: %0.07 | Spread: %0.014
+9. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.04 | Spread: %0.020
+10. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.11 | Spread: %0.008
+11. QNTUSDT | Skor: 103.7 | FVG Mesafe: %0.25 | Spread: %0.004
+12. BNBUSDT | Skor: 103.0 | FVG Mesafe: %0.00 | Spread: %0.001
+13. HYPEUSDT | Skor: 102.6 | FVG Mesafe: %0.04 | Spread: %0.001
+14. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.24 | Spread: %0.017
+15. MUBARAKUSDT | Skor: 101.4 | FVG Mesafe: %0.11 | Spread: %0.015
+16. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.17 | Spread: %0.004
+17. 1000PEPEUSDT | Skor: 101.2 | FVG Mesafe: %0.03 | Spread: %0.002
+18. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.02 | Spread: %0.003
+19. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.006
+20. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.10 | Spread: %0.011
+21. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.007
+22. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.03 | Spread: %0.014
+23. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.09 | Spread: %0.047
+24. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.04 | Spread: %0.009
+25. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.19 | Spread: %0.005
+26. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.003
+27. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.28 | Spread: %0.025
+28. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.24 | Spread: %0.006
+29. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.34 | Spread: %0.026
+30. STRKUSDT | Skor: 52.7 | FVG Mesafe: %0.86 | Spread: %0.017
+31. ADAUSDT | Skor: 52.4 | FVG Mesafe: %0.62 | Spread: %0.039
+32. 龙虾USDT | Skor: 51.3 | FVG Mesafe: %0.61 | Spread: %0.023
+33. USUSDT | Skor: 50.9 | FVG Mesafe: %0.66 | Spread: %0.044
+34. AXSUSDT | Skor: 1.0 | FVG Mesafe: %1.16 | Spread: %0.007
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[00:50:01] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 41
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 31 COIN BULUNDU ---
+1. 1000PEPEUSDT | Skor: 201.2 | FVG Mesafe: %0.00 | Spread: %0.009
+2. AAVEUSDT | Skor: 201.0 | FVG Mesafe: %0.00 | Spread: %0.006
+3. AXSUSDT | Skor: 201.0 | FVG Mesafe: %0.00 | Spread: %0.007
+4. UNIUSDT | Skor: 201.0 | FVG Mesafe: %0.00 | Spread: %0.011
+5. USUSDT | Skor: 200.9 | FVG Mesafe: %0.00 | Spread: %0.050
+6. LTCUSDT | Skor: 200.8 | FVG Mesafe: %0.00 | Spread: %0.014
+7. MOVRUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.012
+8. BTCUSDT | Skor: 160.5 | FVG Mesafe: %0.12 | Spread: %0.000
+9. ETHUSDT | Skor: 135.9 | FVG Mesafe: %0.08 | Spread: %0.000
+10. SOLUSDT | Skor: 110.7 | FVG Mesafe: %0.16 | Spread: %0.008
+11. ZECUSDT | Skor: 110.4 | FVG Mesafe: %0.03 | Spread: %0.001
+12. XRPUSDT | Skor: 104.7 | FVG Mesafe: %0.02 | Spread: %0.007
+13. DOGEUSDT | Skor: 103.8 | FVG Mesafe: %0.01 | Spread: %0.010
+14. SUIUSDT | Skor: 103.7 | FVG Mesafe: %0.15 | Spread: %0.008
+15. QNTUSDT | Skor: 103.7 | FVG Mesafe: %0.02 | Spread: %0.004
+16. BNBUSDT | Skor: 103.0 | FVG Mesafe: %0.00 | Spread: %0.001
+17. HYPEUSDT | Skor: 102.7 | FVG Mesafe: %0.13 | Spread: %0.001
+18. ADAUSDT | Skor: 102.5 | FVG Mesafe: %0.04 | Spread: %0.038
+19. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.09 | Spread: %0.017
+20. BEAMXUSDT | Skor: 101.9 | FVG Mesafe: %0.31 | Spread: %0.039
+21. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.01 | Spread: %0.004
+22. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.43 | Spread: %0.022
+23. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.32 | Spread: %0.003
+24. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.15 | Spread: %0.007
+25. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.01 | Spread: %0.009
+26. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.20 | Spread: %0.037
+27. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.15 | Spread: %0.003
+28. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.07 | Spread: %0.025
+29. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.31 | Spread: %0.039
+30. SANDUSDT | Skor: 54.3 | FVG Mesafe: %0.52 | Spread: %0.014
+31. ZROUSDT | Skor: 50.7 | FVG Mesafe: %0.87 | Spread: %0.010
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[01:05:34] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 43
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 35 COIN BULUNDU ---
+1. ZECUSDT | Skor: 210.4 | FVG Mesafe: %0.00 | Spread: %0.001
+2. HYPEUSDT | Skor: 202.7 | FVG Mesafe: %0.00 | Spread: %0.001
+3. BTWUSDT | Skor: 201.8 | FVG Mesafe: %0.00 | Spread: %0.008
+4. BCHUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.003
+5. PONSUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.025
+6. ATHUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.013
+7. BTCUSDT | Skor: 161.5 | FVG Mesafe: %0.01 | Spread: %0.000
+8. ETHUSDT | Skor: 136.1 | FVG Mesafe: %0.01 | Spread: %0.000
+9. SOLUSDT | Skor: 110.7 | FVG Mesafe: %0.02 | Spread: %0.008
+10. XRPUSDT | Skor: 104.8 | FVG Mesafe: %0.15 | Spread: %0.007
+11. AINUSDT | Skor: 104.3 | FVG Mesafe: %0.37 | Spread: %0.036
+12. SANDUSDT | Skor: 104.2 | FVG Mesafe: %0.38 | Spread: %0.014
+13. DOGEUSDT | Skor: 103.8 | FVG Mesafe: %0.24 | Spread: %0.010
+14. SUIUSDT | Skor: 103.8 | FVG Mesafe: %0.28 | Spread: %0.008
+15. QNTUSDT | Skor: 103.6 | FVG Mesafe: %0.13 | Spread: %0.004
+16. BNBUSDT | Skor: 103.0 | FVG Mesafe: %0.01 | Spread: %0.001
+17. STRKUSDT | Skor: 102.6 | FVG Mesafe: %0.05 | Spread: %0.017
+18. WLDUSDT | Skor: 102.2 | FVG Mesafe: %0.05 | Spread: %0.017
+19. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.02 | Spread: %0.004
+20. 1000PEPEUSDT | Skor: 101.2 | FVG Mesafe: %0.30 | Spread: %0.002
+21. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.05 | Spread: %0.003
+22. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.24 | Spread: %0.006
+23. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.35 | Spread: %0.015
+24. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.03 | Spread: %0.011
+25. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.22 | Spread: %0.007
+26. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.09 | Spread: %0.046
+27. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.03 | Spread: %0.014
+28. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.26 | Spread: %0.009
+29. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.14 | Spread: %0.005
+30. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.05 | Spread: %0.048
+31. PENGUUSDT | Skor: 100.5 | FVG Mesafe: %0.19 | Spread: %0.010
+32. ADAUSDT | Skor: 52.6 | FVG Mesafe: %0.72 | Spread: %0.038
+33. FETUSDT | Skor: 51.3 | FVG Mesafe: %0.93 | Spread: %0.039
+34. USUSDT | Skor: 0.9 | FVG Mesafe: %1.19 | Spread: %0.051
+35. MOVRUSDT | Skor: 0.5 | FVG Mesafe: %1.19 | Spread: %0.018
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[01:21:09] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 42
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 32 COIN BULUNDU ---
+1. BTCUSDT | Skor: 163.3 | FVG Mesafe: %0.12 | Spread: %0.000
+2. ETHUSDT | Skor: 136.3 | FVG Mesafe: %0.32 | Spread: %0.000
+3. XRPUSDT | Skor: 104.8 | FVG Mesafe: %0.14 | Spread: %0.007
+4. DOGEUSDT | Skor: 103.9 | FVG Mesafe: %0.12 | Spread: %0.010
+5. SUIUSDT | Skor: 103.8 | FVG Mesafe: %0.15 | Spread: %0.008
+6. QNTUSDT | Skor: 103.6 | FVG Mesafe: %0.47 | Spread: %0.004
+7. BNBUSDT | Skor: 103.1 | FVG Mesafe: %0.02 | Spread: %0.001
+8. HYPEUSDT | Skor: 102.7 | FVG Mesafe: %0.06 | Spread: %0.001
+9. ADAUSDT | Skor: 102.6 | FVG Mesafe: %0.49 | Spread: %0.037
+10. WLDUSDT | Skor: 102.2 | FVG Mesafe: %0.26 | Spread: %0.017
+11. MUBARAKUSDT | Skor: 101.4 | FVG Mesafe: %0.10 | Spread: %0.030
+12. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.21 | Spread: %0.046
+13. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.34 | Spread: %0.011
+14. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.01 | Spread: %0.037
+15. USUSDT | Skor: 100.9 | FVG Mesafe: %0.10 | Spread: %0.007
+16. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.41 | Spread: %0.046
+17. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.01 | Spread: %0.014
+18. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.05 | Spread: %0.009
+19. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.02 | Spread: %0.020
+20. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.28 | Spread: %0.030
+21. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.009
+22. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.37 | Spread: %0.025
+23. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.35 | Spread: %0.024
+24. SANDUSDT | Skor: 54.2 | FVG Mesafe: %0.62 | Spread: %0.014
+25. BEAMXUSDT | Skor: 51.9 | FVG Mesafe: %0.80 | Spread: %0.040
+26. 1000PEPEUSDT | Skor: 51.2 | FVG Mesafe: %0.81 | Spread: %0.002
+27. TAOUSDT | Skor: 51.1 | FVG Mesafe: %0.68 | Spread: %0.003
+28. AAVEUSDT | Skor: 51.0 | FVG Mesafe: %0.74 | Spread: %0.006
+29. PENGUUSDT | Skor: 50.5 | FVG Mesafe: %0.71 | Spread: %0.010
+30. ATHUSDT | Skor: 50.5 | FVG Mesafe: %0.90 | Spread: %0.013
+31. FETUSDT | Skor: 1.3 | FVG Mesafe: %1.04 | Spread: %0.039
+32. ZROUSDT | Skor: 0.7 | FVG Mesafe: %1.26 | Spread: %0.010
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[01:36:44] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 43
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 36 COIN BULUNDU ---
+1. BTCUSDT | Skor: 166.2 | FVG Mesafe: %0.07 | Spread: %0.000
+2. ETHUSDT | Skor: 137.0 | FVG Mesafe: %0.04 | Spread: %0.000
+3. SOLUSDT | Skor: 110.8 | FVG Mesafe: %0.07 | Spread: %0.008
+4. ZECUSDT | Skor: 110.7 | FVG Mesafe: %0.27 | Spread: %0.001
+5. XRPUSDT | Skor: 105.0 | FVG Mesafe: %0.09 | Spread: %0.007
+6. NEARUSDT | Skor: 104.1 | FVG Mesafe: %0.12 | Spread: %0.021
+7. DOGEUSDT | Skor: 103.9 | FVG Mesafe: %0.15 | Spread: %0.010
+8. SUIUSDT | Skor: 103.9 | FVG Mesafe: %0.17 | Spread: %0.008
+9. QNTUSDT | Skor: 103.5 | FVG Mesafe: %0.15 | Spread: %0.016
+10. BNBUSDT | Skor: 103.2 | FVG Mesafe: %0.04 | Spread: %0.001
+11. HYPEUSDT | Skor: 102.8 | FVG Mesafe: %0.07 | Spread: %0.001
+12. ADAUSDT | Skor: 102.7 | FVG Mesafe: %0.19 | Spread: %0.038
+13. WLDUSDT | Skor: 102.2 | FVG Mesafe: %0.16 | Spread: %0.017
+14. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.16 | Spread: %0.004
+15. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.33 | Spread: %0.022
+16. 1000PEPEUSDT | Skor: 101.2 | FVG Mesafe: %0.13 | Spread: %0.002
+17. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.08 | Spread: %0.003
+18. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.10 | Spread: %0.006
+19. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.11 | Spread: %0.011
+20. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.17 | Spread: %0.023
+21. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.007
+22. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.10 | Spread: %0.014
+23. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.04 | Spread: %0.009
+24. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.12 | Spread: %0.020
+25. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.08 | Spread: %0.005
+26. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.049
+27. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.07 | Spread: %0.006
+28. PENGUUSDT | Skor: 100.5 | FVG Mesafe: %0.15 | Spread: %0.010
+29. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.20 | Spread: %0.025
+30. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.14 | Spread: %0.052
+31. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.17 | Spread: %0.005
+32. AINUSDT | Skor: 54.2 | FVG Mesafe: %0.83 | Spread: %0.017
+33. SANDUSDT | Skor: 54.2 | FVG Mesafe: %0.72 | Spread: %0.014
+34. FETUSDT | Skor: 51.3 | FVG Mesafe: %0.77 | Spread: %0.039
+35. USUSDT | Skor: 50.9 | FVG Mesafe: %0.57 | Spread: %0.059
+36. BEAMXUSDT | Skor: 1.9 | FVG Mesafe: %1.04 | Spread: %0.040
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[01:52:19] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 31 COIN BULUNDU ---
+1. BTCUSDT | Skor: 167.2 | FVG Mesafe: %0.03 | Spread: %0.000
+2. ETHUSDT | Skor: 137.2 | FVG Mesafe: %0.04 | Spread: %0.000
+3. ZECUSDT | Skor: 110.8 | FVG Mesafe: %0.41 | Spread: %0.001
+4. XRPUSDT | Skor: 105.0 | FVG Mesafe: %0.14 | Spread: %0.007
+5. DOGEUSDT | Skor: 103.9 | FVG Mesafe: %0.35 | Spread: %0.010
+6. SUIUSDT | Skor: 103.9 | FVG Mesafe: %0.24 | Spread: %0.008
+7. BNBUSDT | Skor: 103.3 | FVG Mesafe: %0.26 | Spread: %0.001
+8. HYPEUSDT | Skor: 102.8 | FVG Mesafe: %0.14 | Spread: %0.001
+9. STRKUSDT | Skor: 102.6 | FVG Mesafe: %0.21 | Spread: %0.017
+10. MUBARAKUSDT | Skor: 101.4 | FVG Mesafe: %0.22 | Spread: %0.029
+11. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.37 | Spread: %0.004
+12. 1000PEPEUSDT | Skor: 101.2 | FVG Mesafe: %0.46 | Spread: %0.002
+13. LYNUSDT | Skor: 101.1 | FVG Mesafe: %0.22 | Spread: %0.037
+14. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.23 | Spread: %0.003
+15. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.23 | Spread: %0.006
+16. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.26 | Spread: %0.015
+17. USUSDT | Skor: 100.9 | FVG Mesafe: %0.24 | Spread: %0.051
+18. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.18 | Spread: %0.007
+19. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.34 | Spread: %0.014
+20. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.29 | Spread: %0.021
+21. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.048
+22. PENGUUSDT | Skor: 100.5 | FVG Mesafe: %0.14 | Spread: %0.010
+23. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.003
+24. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.039
+25. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.04 | Spread: %0.004
+26. QNTUSDT | Skor: 53.5 | FVG Mesafe: %0.70 | Spread: %0.004
+27. ADAUSDT | Skor: 52.7 | FVG Mesafe: %0.53 | Spread: %0.038
+28. WLDUSDT | Skor: 52.2 | FVG Mesafe: %0.72 | Spread: %0.017
+29. 龙虾USDT | Skor: 51.2 | FVG Mesafe: %0.83 | Spread: %0.024
+30. PONSUSDT | Skor: 50.5 | FVG Mesafe: %0.77 | Spread: %0.026
+31. AVAXUSDT | Skor: 0.8 | FVG Mesafe: %1.03 | Spread: %0.009
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[02:07:55] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 42
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 39 COIN BULUNDU ---
+1. BTCUSDT | Skor: 268.0 | FVG Mesafe: %0.00 | Spread: %0.000
+2. SOLUSDT | Skor: 210.9 | FVG Mesafe: %0.00 | Spread: %0.008
+3. DOGEUSDT | Skor: 203.9 | FVG Mesafe: %0.00 | Spread: %0.010
+4. ETHUSDT | Skor: 137.3 | FVG Mesafe: %0.00 | Spread: %0.000
+5. ZECUSDT | Skor: 110.8 | FVG Mesafe: %0.21 | Spread: %0.001
+6. XRPUSDT | Skor: 105.0 | FVG Mesafe: %0.03 | Spread: %0.007
+7. NEARUSDT | Skor: 104.1 | FVG Mesafe: %0.08 | Spread: %0.020
+8. SUIUSDT | Skor: 103.9 | FVG Mesafe: %0.02 | Spread: %0.008
+9. BNBUSDT | Skor: 103.4 | FVG Mesafe: %0.26 | Spread: %0.001
+10. HYPEUSDT | Skor: 102.7 | FVG Mesafe: %0.05 | Spread: %0.001
+11. ADAUSDT | Skor: 102.7 | FVG Mesafe: %0.19 | Spread: %0.038
+12. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.02 | Spread: %0.017
+13. MUBARAKUSDT | Skor: 101.4 | FVG Mesafe: %0.44 | Spread: %0.015
+14. FETUSDT | Skor: 101.3 | FVG Mesafe: %0.19 | Spread: %0.038
+15. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.08 | Spread: %0.004
+16. 1000PEPEUSDT | Skor: 101.2 | FVG Mesafe: %0.07 | Spread: %0.002
+17. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.47 | Spread: %0.023
+18. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.07 | Spread: %0.003
+19. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.43 | Spread: %0.006
+20. UNIUSDT | Skor: 101.0 | FVG Mesafe: %0.09 | Spread: %0.011
+21. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.07 | Spread: %0.023
+22. USUSDT | Skor: 100.9 | FVG Mesafe: %0.43 | Spread: %0.044
+23. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.007
+24. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.03 | Spread: %0.014
+25. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.03 | Spread: %0.009
+26. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.12 | Spread: %0.020
+27. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.21 | Spread: %0.010
+28. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.05 | Spread: %0.048
+29. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.46 | Spread: %0.021
+30. PENGUUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.010
+31. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.19 | Spread: %0.003
+32. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.025
+33. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.018
+34. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.18 | Spread: %0.013
+35. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.005
+36. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.004
+37. SANDUSDT | Skor: 54.1 | FVG Mesafe: %0.68 | Spread: %0.014
+38. STRKUSDT | Skor: 52.5 | FVG Mesafe: %0.70 | Spread: %0.017
+39. BEAMXUSDT | Skor: 51.9 | FVG Mesafe: %0.72 | Spread: %0.040
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[02:23:27] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. BTCUSDT | Skor: 168.9 | FVG Mesafe: %0.05 | Spread: %0.000
+2. ETHUSDT | Skor: 139.3 | FVG Mesafe: %0.24 | Spread: %0.000
+3. SOLUSDT | Skor: 111.0 | FVG Mesafe: %0.02 | Spread: %0.008
+4. ZECUSDT | Skor: 110.9 | FVG Mesafe: %0.02 | Spread: %0.001
+5. XRPUSDT | Skor: 105.1 | FVG Mesafe: %0.05 | Spread: %0.007
+6. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.42 | Spread: %0.020
+7. SUIUSDT | Skor: 104.0 | FVG Mesafe: %0.10 | Spread: %0.008
+8. DOGEUSDT | Skor: 104.0 | FVG Mesafe: %0.17 | Spread: %0.010
+9. BNBUSDT | Skor: 103.7 | FVG Mesafe: %0.00 | Spread: %0.001
+10. ADAUSDT | Skor: 102.8 | FVG Mesafe: %0.19 | Spread: %0.037
+11. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.45 | Spread: %0.017
+12. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.36 | Spread: %0.040
+13. MUBARAKUSDT | Skor: 101.4 | FVG Mesafe: %0.28 | Spread: %0.015
+14. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.05 | Spread: %0.004
+15. FETUSDT | Skor: 101.3 | FVG Mesafe: %0.08 | Spread: %0.038
+16. 1000PEPEUSDT | Skor: 101.3 | FVG Mesafe: %0.40 | Spread: %0.002
+17. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.03 | Spread: %0.003
+18. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.06 | Spread: %0.015
+19. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.03 | Spread: %0.007
+20. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.19 | Spread: %0.047
+21. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.14 | Spread: %0.014
+22. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.05 | Spread: %0.009
+23. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.30 | Spread: %0.020
+24. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.20 | Spread: %0.005
+25. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.46 | Spread: %0.016
+26. PENGUUSDT | Skor: 100.5 | FVG Mesafe: %0.22 | Spread: %0.010
+27. BCHUSDT | Skor: 100.5 | FVG Mesafe: %0.12 | Spread: %0.003
+28. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.06 | Spread: %0.004
+29. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.34 | Spread: %0.026
+30. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.01 | Spread: %0.005
+31. DOTUSDT | Skor: 100.5 | FVG Mesafe: %0.02 | Spread: %0.008
+32. QNTUSDT | Skor: 53.3 | FVG Mesafe: %0.66 | Spread: %0.012
+33. HYPEUSDT | Skor: 52.9 | FVG Mesafe: %0.53 | Spread: %0.001
+34. GTCUSDT | Skor: 52.6 | FVG Mesafe: %0.82 | Spread: %0.054
+35. BTWUSDT | Skor: 51.6 | FVG Mesafe: %0.78 | Spread: %0.008
+36. UNIUSDT | Skor: 51.1 | FVG Mesafe: %0.92 | Spread: %0.011
+37. AAVEUSDT | Skor: 51.0 | FVG Mesafe: %0.84 | Spread: %0.005
+38. TRUMPUSDT | Skor: 50.6 | FVG Mesafe: %0.53 | Spread: %0.048
+39. PONSUSDT | Skor: 50.5 | FVG Mesafe: %0.51 | Spread: %0.025
+40. STRKUSDT | Skor: 2.5 | FVG Mesafe: %1.44 | Spread: %0.017
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[02:39:01] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 38 COIN BULUNDU ---
+1. SANDUSDT | Skor: 204.1 | FVG Mesafe: %0.00 | Spread: %0.014
+2. TRUMPUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.048
+3. BTCUSDT | Skor: 170.6 | FVG Mesafe: %0.15 | Spread: %0.000
+4. ETHUSDT | Skor: 140.4 | FVG Mesafe: %0.25 | Spread: %0.000
+5. ZECUSDT | Skor: 110.9 | FVG Mesafe: %0.24 | Spread: %0.001
+6. XRPUSDT | Skor: 105.1 | FVG Mesafe: %0.41 | Spread: %0.007
+7. SUIUSDT | Skor: 104.0 | FVG Mesafe: %0.04 | Spread: %0.008
+8. BNBUSDT | Skor: 103.7 | FVG Mesafe: %0.16 | Spread: %0.001
+9. HYPEUSDT | Skor: 102.9 | FVG Mesafe: %0.15 | Spread: %0.001
+10. ADAUSDT | Skor: 102.8 | FVG Mesafe: %0.07 | Spread: %0.037
+11. STRKUSDT | Skor: 102.5 | FVG Mesafe: %0.03 | Spread: %0.017
+12. WLDUSDT | Skor: 102.1 | FVG Mesafe: %0.34 | Spread: %0.017
+13. BTWUSDT | Skor: 101.6 | FVG Mesafe: %0.12 | Spread: %0.017
+14. FETUSDT | Skor: 101.3 | FVG Mesafe: %0.23 | Spread: %0.038
+15. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.08 | Spread: %0.004
+16. 1000PEPEUSDT | Skor: 101.3 | FVG Mesafe: %0.02 | Spread: %0.007
+17. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.26 | Spread: %0.024
+18. UNIUSDT | Skor: 101.1 | FVG Mesafe: %0.33 | Spread: %0.011
+19. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.03 | Spread: %0.003
+20. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.14 | Spread: %0.006
+21. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.015
+22. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.05 | Spread: %0.046
+23. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.20 | Spread: %0.009
+24. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.03 | Spread: %0.014
+25. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.18 | Spread: %0.020
+26. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.24 | Spread: %0.019
+27. PENGUUSDT | Skor: 100.6 | FVG Mesafe: %0.48 | Spread: %0.010
+28. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.003
+29. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.16 | Spread: %0.004
+30. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.00 | Spread: %0.005
+31. DOTUSDT | Skor: 100.5 | FVG Mesafe: %0.11 | Spread: %0.008
+32. NEARUSDT | Skor: 54.2 | FVG Mesafe: %0.58 | Spread: %0.020
+33. AINUSDT | Skor: 54.1 | FVG Mesafe: %0.69 | Spread: %0.015
+34. DOGEUSDT | Skor: 54.0 | FVG Mesafe: %0.59 | Spread: %0.010
+35. QNTUSDT | Skor: 53.3 | FVG Mesafe: %0.77 | Spread: %0.004
+36. PONSUSDT | Skor: 50.5 | FVG Mesafe: %0.63 | Spread: %0.025
+37. ATHUSDT | Skor: 50.5 | FVG Mesafe: %0.51 | Spread: %0.026
+38. MUBARAKUSDT | Skor: 1.4 | FVG Mesafe: %1.04 | Spread: %0.014
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[02:54:38] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 35 COIN BULUNDU ---
+1. 龙虾USDT | Skor: 201.1 | FVG Mesafe: %0.00 | Spread: %0.048
+2. PONSUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.025
+3. ATHUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.052
+4. BTCUSDT | Skor: 171.2 | FVG Mesafe: %0.16 | Spread: %0.000
+5. ETHUSDT | Skor: 140.7 | FVG Mesafe: %0.02 | Spread: %0.000
+6. SOLUSDT | Skor: 111.1 | FVG Mesafe: %0.01 | Spread: %0.008
+7. ZECUSDT | Skor: 110.9 | FVG Mesafe: %0.03 | Spread: %0.001
+8. XRPUSDT | Skor: 105.1 | FVG Mesafe: %0.03 | Spread: %0.007
+9. NEARUSDT | Skor: 104.2 | FVG Mesafe: %0.14 | Spread: %0.020
+10. SUIUSDT | Skor: 104.1 | FVG Mesafe: %0.08 | Spread: %0.008
+11. DOGEUSDT | Skor: 104.0 | FVG Mesafe: %0.04 | Spread: %0.010
+12. BNBUSDT | Skor: 103.8 | FVG Mesafe: %0.05 | Spread: %0.001
+13. HYPEUSDT | Skor: 102.9 | FVG Mesafe: %0.37 | Spread: %0.001
+14. ADAUSDT | Skor: 102.9 | FVG Mesafe: %0.19 | Spread: %0.037
+15. STRKUSDT | Skor: 102.5 | FVG Mesafe: %0.48 | Spread: %0.017
+16. WLDUSDT | Skor: 102.0 | FVG Mesafe: %0.07 | Spread: %0.017
+17. MUBARAKUSDT | Skor: 101.4 | FVG Mesafe: %0.13 | Spread: %0.029
+18. FETUSDT | Skor: 101.4 | FVG Mesafe: %0.15 | Spread: %0.038
+19. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.10 | Spread: %0.004
+20. UNIUSDT | Skor: 101.1 | FVG Mesafe: %0.39 | Spread: %0.011
+21. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.13 | Spread: %0.003
+22. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.31 | Spread: %0.006
+23. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.31 | Spread: %0.008
+24. AVAXUSDT | Skor: 100.8 | FVG Mesafe: %0.05 | Spread: %0.009
+25. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.06 | Spread: %0.014
+26. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.40 | Spread: %0.020
+27. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.09 | Spread: %0.010
+28. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.11 | Spread: %0.003
+29. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.04 | Spread: %0.004
+30. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.26 | Spread: %0.005
+31. QNTUSDT | Skor: 53.2 | FVG Mesafe: %0.69 | Spread: %0.004
+32. 1000PEPEUSDT | Skor: 51.3 | FVG Mesafe: %0.78 | Spread: %0.002
+33. TRUMPUSDT | Skor: 50.6 | FVG Mesafe: %0.53 | Spread: %0.048
+34. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.50 | Spread: %0.009
+35. DOTUSDT | Skor: 50.5 | FVG Mesafe: %0.52 | Spread: %0.008
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[03:10:12] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 37 COIN BULUNDU ---
+1. BTCUSDT | Skor: 171.7 | FVG Mesafe: %0.00 | Spread: %0.000
+2. ETHUSDT | Skor: 141.1 | FVG Mesafe: %0.01 | Spread: %0.000
+3. SOLUSDT | Skor: 111.0 | FVG Mesafe: %0.01 | Spread: %0.008
+4. XRPUSDT | Skor: 105.2 | FVG Mesafe: %0.02 | Spread: %0.007
+5. NEARUSDT | Skor: 104.3 | FVG Mesafe: %0.10 | Spread: %0.020
+6. SUIUSDT | Skor: 104.1 | FVG Mesafe: %0.15 | Spread: %0.008
+7. SANDUSDT | Skor: 104.1 | FVG Mesafe: %0.47 | Spread: %0.014
+8. DOGEUSDT | Skor: 104.0 | FVG Mesafe: %0.02 | Spread: %0.010
+9. BNBUSDT | Skor: 103.9 | FVG Mesafe: %0.15 | Spread: %0.001
+10. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.40 | Spread: %0.004
+11. HYPEUSDT | Skor: 102.9 | FVG Mesafe: %0.00 | Spread: %0.001
+12. STRKUSDT | Skor: 102.5 | FVG Mesafe: %0.22 | Spread: %0.017
+13. WLDUSDT | Skor: 102.0 | FVG Mesafe: %0.10 | Spread: %0.017
+14. MUBARAKUSDT | Skor: 101.3 | FVG Mesafe: %0.19 | Spread: %0.014
+15. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.13 | Spread: %0.004
+16. 1000PEPEUSDT | Skor: 101.3 | FVG Mesafe: %0.11 | Spread: %0.002
+17. UNIUSDT | Skor: 101.1 | FVG Mesafe: %0.08 | Spread: %0.011
+18. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.10 | Spread: %0.003
+19. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.32 | Spread: %0.006
+20. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.29 | Spread: %0.008
+21. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.08 | Spread: %0.007
+22. AVAXUSDT | Skor: 100.9 | FVG Mesafe: %0.25 | Spread: %0.009
+23. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.37 | Spread: %0.047
+24. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.10 | Spread: %0.014
+25. ONDOUSDT | Skor: 100.7 | FVG Mesafe: %0.06 | Spread: %0.020
+26. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.13 | Spread: %0.010
+27. PENGUUSDT | Skor: 100.6 | FVG Mesafe: %0.08 | Spread: %0.010
+28. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.04 | Spread: %0.003
+29. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.01 | Spread: %0.004
+30. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.19 | Spread: %0.005
+31. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.10 | Spread: %0.025
+32. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.012
+33. DOTUSDT | Skor: 100.5 | FVG Mesafe: %0.09 | Spread: %0.008
+34. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.16 | Spread: %0.039
+35. ADAUSDT | Skor: 53.0 | FVG Mesafe: %0.86 | Spread: %0.037
+36. TRUMPUSDT | Skor: 50.6 | FVG Mesafe: %0.53 | Spread: %0.048
+37. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.73 | Spread: %0.014
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[03:26:05] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 46
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 38 COIN BULUNDU ---
+1. BTCUSDT | Skor: 172.9 | FVG Mesafe: %0.09 | Spread: %0.000
+2. ETHUSDT | Skor: 142.0 | FVG Mesafe: %0.17 | Spread: %0.000
+3. ZECUSDT | Skor: 111.1 | FVG Mesafe: %0.09 | Spread: %0.001
+4. XRPUSDT | Skor: 105.3 | FVG Mesafe: %0.11 | Spread: %0.007
+5. NEARUSDT | Skor: 104.4 | FVG Mesafe: %0.14 | Spread: %0.020
+6. SUIUSDT | Skor: 104.2 | FVG Mesafe: %0.04 | Spread: %0.008
+7. BNBUSDT | Skor: 104.1 | FVG Mesafe: %0.06 | Spread: %0.001
+8. DOGEUSDT | Skor: 104.0 | FVG Mesafe: %0.20 | Spread: %0.010
+9. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.19 | Spread: %0.012
+10. HYPEUSDT | Skor: 103.0 | FVG Mesafe: %0.09 | Spread: %0.001
+11. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.41 | Spread: %0.041
+12. FETUSDT | Skor: 101.4 | FVG Mesafe: %0.31 | Spread: %0.039
+13. ENAUSDT | Skor: 101.3 | FVG Mesafe: %0.13 | Spread: %0.004
+14. UNIUSDT | Skor: 101.2 | FVG Mesafe: %0.19 | Spread: %0.011
+15. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.29 | Spread: %0.036
+16. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.23 | Spread: %0.003
+17. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.08 | Spread: %0.006
+18. AXSUSDT | Skor: 101.0 | FVG Mesafe: %0.13 | Spread: %0.008
+19. AVAXUSDT | Skor: 100.9 | FVG Mesafe: %0.14 | Spread: %0.018
+20. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.20 | Spread: %0.014
+21. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.18 | Spread: %0.020
+22. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.13 | Spread: %0.005
+23. PENGUUSDT | Skor: 100.6 | FVG Mesafe: %0.39 | Spread: %0.010
+24. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.17 | Spread: %0.003
+25. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.49 | Spread: %0.004
+26. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.11 | Spread: %0.005
+27. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.30 | Spread: %0.025
+28. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.12 | Spread: %0.012
+29. DOTUSDT | Skor: 100.5 | FVG Mesafe: %0.31 | Spread: %0.008
+30. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.040
+31. AINUSDT | Skor: 54.2 | FVG Mesafe: %0.79 | Spread: %0.043
+32. SANDUSDT | Skor: 54.0 | FVG Mesafe: %0.94 | Spread: %0.014
+33. WLDUSDT | Skor: 52.1 | FVG Mesafe: %0.52 | Spread: %0.017
+34. 1000PEPEUSDT | Skor: 51.3 | FVG Mesafe: %0.92 | Spread: %0.002
+35. USUSDT | Skor: 50.9 | FVG Mesafe: %0.79 | Spread: %0.023
+36. BRUSDT | Skor: 50.5 | FVG Mesafe: %0.55 | Spread: %0.023
+37. ADAUSDT | Skor: 3.0 | FVG Mesafe: %1.45 | Spread: %0.037
+38. STRKUSDT | Skor: 2.5 | FVG Mesafe: %1.06 | Spread: %0.017
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[03:41:40] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 32 COIN BULUNDU ---
+1. HYPEUSDT | Skor: 203.0 | FVG Mesafe: %0.00 | Spread: %0.001
+2. STRKUSDT | Skor: 202.5 | FVG Mesafe: %0.00 | Spread: %0.017
+3. ENAUSDT | Skor: 201.3 | FVG Mesafe: %0.00 | Spread: %0.004
+4. 1000PEPEUSDT | Skor: 201.3 | FVG Mesafe: %0.00 | Spread: %0.002
+5. TAOUSDT | Skor: 201.1 | FVG Mesafe: %0.00 | Spread: %0.003
+6. LINKUSDT | Skor: 200.9 | FVG Mesafe: %0.00 | Spread: %0.007
+7. PENGUUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.010
+8. PONSUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.025
+9. BTCUSDT | Skor: 173.6 | FVG Mesafe: %0.10 | Spread: %0.000
+10. ETHUSDT | Skor: 142.3 | FVG Mesafe: %0.30 | Spread: %0.000
+11. XRPUSDT | Skor: 105.4 | FVG Mesafe: %0.19 | Spread: %0.007
+12. NEARUSDT | Skor: 104.4 | FVG Mesafe: %0.31 | Spread: %0.021
+13. BNBUSDT | Skor: 104.1 | FVG Mesafe: %0.14 | Spread: %0.001
+14. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.28 | Spread: %0.016
+15. WLDUSDT | Skor: 102.2 | FVG Mesafe: %0.44 | Spread: %0.017
+16. BTWUSDT | Skor: 101.8 | FVG Mesafe: %0.32 | Spread: %0.026
+17. MUBARAKUSDT | Skor: 101.3 | FVG Mesafe: %0.06 | Spread: %0.014
+18. UNIUSDT | Skor: 101.2 | FVG Mesafe: %0.41 | Spread: %0.011
+19. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.29 | Spread: %0.036
+20. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.30 | Spread: %0.006
+21. AVAXUSDT | Skor: 100.9 | FVG Mesafe: %0.12 | Spread: %0.009
+22. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.21 | Spread: %0.014
+23. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.24 | Spread: %0.020
+24. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.02 | Spread: %0.016
+25. XLMUSDT | Skor: 100.5 | FVG Mesafe: %0.08 | Spread: %0.004
+26. ARBUSDT | Skor: 100.5 | FVG Mesafe: %0.24 | Spread: %0.005
+27. BRUSDT | Skor: 100.5 | FVG Mesafe: %0.35 | Spread: %0.026
+28. DOTUSDT | Skor: 100.5 | FVG Mesafe: %0.35 | Spread: %0.008
+29. BEAMXUSDT | Skor: 52.0 | FVG Mesafe: %0.62 | Spread: %0.041
+30. FETUSDT | Skor: 51.4 | FVG Mesafe: %0.61 | Spread: %0.038
+31. AXSUSDT | Skor: 50.9 | FVG Mesafe: %0.79 | Spread: %0.015
+32. ATHUSDT | Skor: 50.5 | FVG Mesafe: %0.98 | Spread: %0.040
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[03:57:17] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 39 COIN BULUNDU ---
+1. STRKUSDT | Skor: 202.5 | FVG Mesafe: %0.00 | Spread: %0.034
+2. BCHUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.003
+3. ARBUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.005
+4. BTCUSDT | Skor: 174.4 | FVG Mesafe: %0.05 | Spread: %0.000
+5. ETHUSDT | Skor: 142.8 | FVG Mesafe: %0.05 | Spread: %0.000
+6. SOLUSDT | Skor: 111.0 | FVG Mesafe: %0.07 | Spread: %0.008
+7. XRPUSDT | Skor: 105.4 | FVG Mesafe: %0.05 | Spread: %0.007
+8. NEARUSDT | Skor: 104.4 | FVG Mesafe: %0.43 | Spread: %0.021
+9. BNBUSDT | Skor: 104.2 | FVG Mesafe: %0.03 | Spread: %0.001
+10. DOGEUSDT | Skor: 104.1 | FVG Mesafe: %0.15 | Spread: %0.010
+11. SANDUSDT | Skor: 103.9 | FVG Mesafe: %0.07 | Spread: %0.014
+12. ADAUSDT | Skor: 103.2 | FVG Mesafe: %0.33 | Spread: %0.037
+13. HYPEUSDT | Skor: 103.0 | FVG Mesafe: %0.07 | Spread: %0.001
+14. WLDUSDT | Skor: 102.2 | FVG Mesafe: %0.05 | Spread: %0.018
+15. FETUSDT | Skor: 101.4 | FVG Mesafe: %0.12 | Spread: %0.039
+16. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.11 | Spread: %0.004
+17. 1000PEPEUSDT | Skor: 101.3 | FVG Mesafe: %0.27 | Spread: %0.002
+18. UNIUSDT | Skor: 101.2 | FVG Mesafe: %0.37 | Spread: %0.011
+19. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.26 | Spread: %0.037
+20. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.10 | Spread: %0.003
+21. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.30 | Spread: %0.006
+22. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.007
+23. AVAXUSDT | Skor: 100.9 | FVG Mesafe: %0.08 | Spread: %0.009
+24. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.09 | Spread: %0.046
+25. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.06 | Spread: %0.014
+26. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.22 | Spread: %0.020
+27. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.14 | Spread: %0.010
+28. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.15 | Spread: %0.048
+29. PENGUUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.010
+30. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.22 | Spread: %0.004
+31. DOTUSDT | Skor: 100.5 | FVG Mesafe: %0.07 | Spread: %0.008
+32. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.15 | Spread: %0.026
+33. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.04 | Spread: %0.040
+34. GTCUSDT | Skor: 53.1 | FVG Mesafe: %0.77 | Spread: %0.005
+35. QNTUSDT | Skor: 53.1 | FVG Mesafe: %0.57 | Spread: %0.004
+36. 龙虾USDT | Skor: 51.3 | FVG Mesafe: %0.58 | Spread: %0.024
+37. BRUSDT | Skor: 50.5 | FVG Mesafe: %0.84 | Spread: %0.039
+38. AINUSDT | Skor: 4.3 | FVG Mesafe: %1.40 | Spread: %0.035
+39. AXSUSDT | Skor: 0.9 | FVG Mesafe: %1.07 | Spread: %0.015
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[04:12:50] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 35 COIN BULUNDU ---
+1. FETUSDT | Skor: 201.4 | FVG Mesafe: %0.00 | Spread: %0.039
+2. BTCUSDT | Skor: 177.4 | FVG Mesafe: %0.19 | Spread: %0.000
+3. ETHUSDT | Skor: 144.0 | FVG Mesafe: %0.16 | Spread: %0.000
+4. SOLUSDT | Skor: 111.2 | FVG Mesafe: %0.22 | Spread: %0.008
+5. XRPUSDT | Skor: 105.5 | FVG Mesafe: %0.12 | Spread: %0.007
+6. NEARUSDT | Skor: 104.5 | FVG Mesafe: %0.14 | Spread: %0.021
+7. AINUSDT | Skor: 104.4 | FVG Mesafe: %0.31 | Spread: %0.037
+8. BNBUSDT | Skor: 104.3 | FVG Mesafe: %0.22 | Spread: %0.001
+9. DOGEUSDT | Skor: 104.1 | FVG Mesafe: %0.36 | Spread: %0.010
+10. SANDUSDT | Skor: 103.9 | FVG Mesafe: %0.17 | Spread: %0.014
+11. STRKUSDT | Skor: 102.5 | FVG Mesafe: %0.10 | Spread: %0.034
+12. 1000PEPEUSDT | Skor: 101.4 | FVG Mesafe: %0.49 | Spread: %0.002
+13. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.24 | Spread: %0.024
+14. UNIUSDT | Skor: 101.2 | FVG Mesafe: %0.39 | Spread: %0.011
+15. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.38 | Spread: %0.003
+16. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.03 | Spread: %0.006
+17. USUSDT | Skor: 100.9 | FVG Mesafe: %0.11 | Spread: %0.053
+18. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.20 | Spread: %0.007
+19. AXSUSDT | Skor: 100.9 | FVG Mesafe: %0.20 | Spread: %0.008
+20. AVAXUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.009
+21. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.04 | Spread: %0.014
+22. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.38 | Spread: %0.020
+23. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.19 | Spread: %0.048
+24. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.02 | Spread: %0.003
+25. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.21 | Spread: %0.004
+26. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.12 | Spread: %0.029
+27. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.01 | Spread: %0.053
+28. ADAUSDT | Skor: 53.3 | FVG Mesafe: %0.97 | Spread: %0.037
+29. QNTUSDT | Skor: 53.1 | FVG Mesafe: %0.55 | Spread: %0.024
+30. WLDUSDT | Skor: 52.2 | FVG Mesafe: %0.84 | Spread: %0.018
+31. LYNUSDT | Skor: 51.1 | FVG Mesafe: %0.90 | Spread: %0.036
+32. ZROUSDT | Skor: 50.7 | FVG Mesafe: %0.87 | Spread: %0.005
+33. PENGUUSDT | Skor: 50.6 | FVG Mesafe: %0.59 | Spread: %0.010
+34. ARBUSDT | Skor: 50.5 | FVG Mesafe: %0.77 | Spread: %0.005
+35. DOTUSDT | Skor: 50.5 | FVG Mesafe: %0.70 | Spread: %0.008
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[04:28:27] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 44
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 30 COIN BULUNDU ---
+1. BTCUSDT | Skor: 180.9 | FVG Mesafe: %0.16 | Spread: %0.000
+2. ETHUSDT | Skor: 145.6 | FVG Mesafe: %0.27 | Spread: %0.000
+3. SOLUSDT | Skor: 111.5 | FVG Mesafe: %0.03 | Spread: %0.008
+4. XRPUSDT | Skor: 105.6 | FVG Mesafe: %0.27 | Spread: %0.007
+5. BNBUSDT | Skor: 104.4 | FVG Mesafe: %0.34 | Spread: %0.001
+6. SANDUSDT | Skor: 103.9 | FVG Mesafe: %0.49 | Spread: %0.014
+7. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.08 | Spread: %0.041
+8. FETUSDT | Skor: 101.4 | FVG Mesafe: %0.31 | Spread: %0.039
+9. TAOUSDT | Skor: 101.1 | FVG Mesafe: %0.44 | Spread: %0.003
+10. USUSDT | Skor: 100.9 | FVG Mesafe: %0.24 | Spread: %0.030
+11. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.30 | Spread: %0.007
+12. AVAXUSDT | Skor: 100.9 | FVG Mesafe: %0.42 | Spread: %0.009
+13. AXSUSDT | Skor: 100.9 | FVG Mesafe: %0.06 | Spread: %0.008
+14. LTCUSDT | Skor: 100.8 | FVG Mesafe: %0.44 | Spread: %0.014
+15. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.48 | Spread: %0.020
+16. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.048
+17. BRUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.037
+18. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.10 | Spread: %0.026
+19. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.43 | Spread: %0.040
+20. NEARUSDT | Skor: 54.5 | FVG Mesafe: %0.97 | Spread: %0.021
+21. DOGEUSDT | Skor: 54.2 | FVG Mesafe: %0.50 | Spread: %0.010
+22. 1000PEPEUSDT | Skor: 51.4 | FVG Mesafe: %0.98 | Spread: %0.002
+23. UNIUSDT | Skor: 51.2 | FVG Mesafe: %0.91 | Spread: %0.011
+24. AAVEUSDT | Skor: 51.0 | FVG Mesafe: %0.62 | Spread: %0.006
+25. XLMUSDT | Skor: 50.6 | FVG Mesafe: %0.53 | Spread: %0.004
+26. DOTUSDT | Skor: 50.5 | FVG Mesafe: %0.70 | Spread: %0.008
+27. ADAUSDT | Skor: 3.3 | FVG Mesafe: %1.16 | Spread: %0.037
+28. WLDUSDT | Skor: 2.2 | FVG Mesafe: %1.21 | Spread: %0.018
+29. ARBUSDT | Skor: 0.6 | FVG Mesafe: %1.07 | Spread: %0.005
+30. MOVRUSDT | Skor: 0.5 | FVG Mesafe: %1.16 | Spread: %0.018
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[04:44:04] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. BTCUSDT | Skor: 184.0 | FVG Mesafe: %0.07 | Spread: %0.000
+2. ETHUSDT | Skor: 147.6 | FVG Mesafe: %0.06 | Spread: %0.000
+3. ZECUSDT | Skor: 111.9 | FVG Mesafe: %0.22 | Spread: %0.001
+4. SOLUSDT | Skor: 111.8 | FVG Mesafe: %0.09 | Spread: %0.008
+5. XRPUSDT | Skor: 105.8 | FVG Mesafe: %0.05 | Spread: %0.007
+6. NEARUSDT | Skor: 104.6 | FVG Mesafe: %0.08 | Spread: %0.021
+7. BNBUSDT | Skor: 104.5 | FVG Mesafe: %0.09 | Spread: %0.001
+8. SUIUSDT | Skor: 104.3 | FVG Mesafe: %0.11 | Spread: %0.008
+9. DOGEUSDT | Skor: 104.3 | FVG Mesafe: %0.12 | Spread: %0.011
+10. SANDUSDT | Skor: 103.9 | FVG Mesafe: %0.30 | Spread: %0.014
+11. ADAUSDT | Skor: 103.4 | FVG Mesafe: %0.08 | Spread: %0.038
+12. HYPEUSDT | Skor: 103.1 | FVG Mesafe: %0.06 | Spread: %0.001
+13. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.35 | Spread: %0.018
+14. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.20 | Spread: %0.040
+15. 1000PEPEUSDT | Skor: 101.5 | FVG Mesafe: %0.25 | Spread: %0.002
+16. FETUSDT | Skor: 101.4 | FVG Mesafe: %0.27 | Spread: %0.039
+17. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.46 | Spread: %0.004
+18. UNIUSDT | Skor: 101.3 | FVG Mesafe: %0.07 | Spread: %0.011
+19. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.16 | Spread: %0.003
+20. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.41 | Spread: %0.024
+21. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.07 | Spread: %0.006
+22. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.009
+23. LINKUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.007
+24. AXSUSDT | Skor: 100.9 | FVG Mesafe: %0.15 | Spread: %0.008
+25. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.09 | Spread: %0.014
+26. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.22 | Spread: %0.020
+27. PENGUUSDT | Skor: 100.7 | FVG Mesafe: %0.33 | Spread: %0.010
+28. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.049
+29. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.35 | Spread: %0.003
+30. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.15 | Spread: %0.004
+31. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.15 | Spread: %0.008
+32. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.27 | Spread: %0.012
+33. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.04 | Spread: %0.040
+34. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.04 | Spread: %0.010
+35. AINUSDT | Skor: 54.4 | FVG Mesafe: %0.93 | Spread: %0.018
+36. USUSDT | Skor: 51.0 | FVG Mesafe: %0.64 | Spread: %0.044
+37. COLLECTUSDT | Skor: 50.8 | FVG Mesafe: %0.85 | Spread: %0.045
+38. ARBUSDT | Skor: 50.6 | FVG Mesafe: %0.58 | Spread: %0.005
+39. PONSUSDT | Skor: 50.5 | FVG Mesafe: %0.52 | Spread: %0.026
+40. QNTUSDT | Skor: 3.2 | FVG Mesafe: %1.48 | Spread: %0.004
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[04:59:41] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. STRKUSDT | Skor: 202.4 | FVG Mesafe: %0.00 | Spread: %0.017
+2. 龙虾USDT | Skor: 201.2 | FVG Mesafe: %0.00 | Spread: %0.024
+3. BTCUSDT | Skor: 185.1 | FVG Mesafe: %0.06 | Spread: %0.000
+4. ETHUSDT | Skor: 148.2 | FVG Mesafe: %0.24 | Spread: %0.000
+5. NEARUSDT | Skor: 104.6 | FVG Mesafe: %0.06 | Spread: %0.021
+6. BNBUSDT | Skor: 104.5 | FVG Mesafe: %0.04 | Spread: %0.001
+7. DOGEUSDT | Skor: 104.3 | FVG Mesafe: %0.38 | Spread: %0.011
+8. SANDUSDT | Skor: 103.7 | FVG Mesafe: %0.34 | Spread: %0.014
+9. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.42 | Spread: %0.028
+10. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.18 | Spread: %0.018
+11. BTWUSDT | Skor: 102.1 | FVG Mesafe: %0.27 | Spread: %0.037
+12. 1000PEPEUSDT | Skor: 101.5 | FVG Mesafe: %0.27 | Spread: %0.002
+13. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.17 | Spread: %0.004
+14. UNIUSDT | Skor: 101.3 | FVG Mesafe: %0.18 | Spread: %0.011
+15. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.43 | Spread: %0.036
+16. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.07 | Spread: %0.006
+17. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.10 | Spread: %0.009
+18. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.21 | Spread: %0.014
+19. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.44 | Spread: %0.020
+20. PENGUUSDT | Skor: 100.7 | FVG Mesafe: %0.15 | Spread: %0.010
+21. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.09 | Spread: %0.016
+22. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.31 | Spread: %0.003
+23. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.47 | Spread: %0.005
+24. MOVRUSDT | Skor: 100.5 | FVG Mesafe: %0.03 | Spread: %0.018
+25. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.13 | Spread: %0.010
+26. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.25 | Spread: %0.013
+27. ZECUSDT | Skor: 61.9 | FVG Mesafe: %0.61 | Spread: %0.001
+28. XRPUSDT | Skor: 55.9 | FVG Mesafe: %0.60 | Spread: %0.007
+29. AINUSDT | Skor: 54.4 | FVG Mesafe: %0.73 | Spread: %0.055
+30. ADAUSDT | Skor: 53.4 | FVG Mesafe: %0.64 | Spread: %0.038
+31. GTCUSDT | Skor: 53.3 | FVG Mesafe: %0.61 | Spread: %0.016
+32. MUBARAKUSDT | Skor: 51.4 | FVG Mesafe: %0.50 | Spread: %0.027
+33. LINKUSDT | Skor: 51.0 | FVG Mesafe: %0.59 | Spread: %0.007
+34. USUSDT | Skor: 51.0 | FVG Mesafe: %0.74 | Spread: %0.015
+35. AXSUSDT | Skor: 50.8 | FVG Mesafe: %0.77 | Spread: %0.008
+36. TRUMPUSDT | Skor: 50.6 | FVG Mesafe: %0.73 | Spread: %0.049
+37. TAOUSDT | Skor: 1.2 | FVG Mesafe: %1.15 | Spread: %0.003
+38. XLMUSDT | Skor: 0.6 | FVG Mesafe: %1.07 | Spread: %0.004
+39. BRUSDT | Skor: 0.5 | FVG Mesafe: %1.20 | Spread: %0.050
+40. PONSUSDT | Skor: 0.5 | FVG Mesafe: %1.32 | Spread: %0.026
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[05:15:22] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 39 COIN BULUNDU ---
+1. DOGEUSDT | Skor: 204.4 | FVG Mesafe: %0.00 | Spread: %0.011
+2. BTCUSDT | Skor: 186.4 | FVG Mesafe: %0.31 | Spread: %0.000
+3. ETHUSDT | Skor: 148.9 | FVG Mesafe: %0.34 | Spread: %0.000
+4. SOLUSDT | Skor: 112.0 | FVG Mesafe: %0.02 | Spread: %0.008
+5. ZECUSDT | Skor: 111.9 | FVG Mesafe: %0.08 | Spread: %0.001
+6. NEARUSDT | Skor: 104.9 | FVG Mesafe: %0.10 | Spread: %0.020
+7. BNBUSDT | Skor: 104.6 | FVG Mesafe: %0.02 | Spread: %0.001
+8. SUIUSDT | Skor: 104.4 | FVG Mesafe: %0.07 | Spread: %0.008
+9. AINUSDT | Skor: 104.3 | FVG Mesafe: %0.40 | Spread: %0.036
+10. ADAUSDT | Skor: 103.5 | FVG Mesafe: %0.07 | Spread: %0.037
+11. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.35 | Spread: %0.004
+12. STRKUSDT | Skor: 102.4 | FVG Mesafe: %0.12 | Spread: %0.017
+13. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.07 | Spread: %0.018
+14. BTWUSDT | Skor: 102.1 | FVG Mesafe: %0.21 | Spread: %0.028
+15. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.28 | Spread: %0.040
+16. 1000PEPEUSDT | Skor: 101.5 | FVG Mesafe: %0.05 | Spread: %0.002
+17. UNIUSDT | Skor: 101.3 | FVG Mesafe: %0.11 | Spread: %0.011
+18. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.17 | Spread: %0.024
+19. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.07 | Spread: %0.006
+20. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.29 | Spread: %0.009
+21. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.014
+22. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.12 | Spread: %0.020
+23. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.48 | Spread: %0.005
+24. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.00 | Spread: %0.003
+25. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.03 | Spread: %0.005
+26. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.06 | Spread: %0.008
+27. NILUSDT | Skor: 100.5 | FVG Mesafe: %0.48 | Spread: %0.039
+28. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.01 | Spread: %0.010
+29. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.14 | Spread: %0.026
+30. XRPUSDT | Skor: 55.9 | FVG Mesafe: %0.72 | Spread: %0.007
+31. ENAUSDT | Skor: 51.4 | FVG Mesafe: %0.64 | Spread: %0.004
+32. LINKUSDT | Skor: 51.0 | FVG Mesafe: %0.53 | Spread: %0.007
+33. AXSUSDT | Skor: 50.8 | FVG Mesafe: %0.53 | Spread: %0.008
+34. TRUMPUSDT | Skor: 50.6 | FVG Mesafe: %0.63 | Spread: %0.049
+35. TAOUSDT | Skor: 1.2 | FVG Mesafe: %1.04 | Spread: %0.003
+36. LYNUSDT | Skor: 1.2 | FVG Mesafe: %1.25 | Spread: %0.036
+37. USUSDT | Skor: 1.0 | FVG Mesafe: %1.19 | Spread: %0.044
+38. XLMUSDT | Skor: 0.6 | FVG Mesafe: %1.11 | Spread: %0.004
+39. MOVRUSDT | Skor: 0.6 | FVG Mesafe: %1.05 | Spread: %0.006
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[05:30:59] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 33 COIN BULUNDU ---
+1. BTCUSDT | Skor: 187.6 | FVG Mesafe: %0.35 | Spread: %0.000
+2. ETHUSDT | Skor: 149.7 | FVG Mesafe: %0.17 | Spread: %0.000
+3. SOLUSDT | Skor: 112.3 | FVG Mesafe: %0.23 | Spread: %0.008
+4. ZECUSDT | Skor: 111.9 | FVG Mesafe: %0.06 | Spread: %0.001
+5. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.26 | Spread: %0.011
+6. SANDUSDT | Skor: 103.5 | FVG Mesafe: %0.29 | Spread: %0.014
+7. ADAUSDT | Skor: 103.5 | FVG Mesafe: %0.15 | Spread: %0.038
+8. GTCUSDT | Skor: 103.3 | FVG Mesafe: %0.20 | Spread: %0.050
+9. 1000PEPEUSDT | Skor: 101.6 | FVG Mesafe: %0.30 | Spread: %0.002
+10. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.35 | Spread: %0.004
+11. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.29 | Spread: %0.003
+12. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.24 | Spread: %0.024
+13. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.19 | Spread: %0.009
+14. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.21 | Spread: %0.007
+15. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.17 | Spread: %0.014
+16. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.32 | Spread: %0.020
+17. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.01 | Spread: %0.005
+18. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.13 | Spread: %0.005
+19. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.23 | Spread: %0.003
+20. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.14 | Spread: %0.008
+21. NILUSDT | Skor: 100.6 | FVG Mesafe: %0.21 | Spread: %0.038
+22. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.40 | Spread: %0.026
+23. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.010
+24. ATHUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.027
+25. XRPUSDT | Skor: 56.0 | FVG Mesafe: %0.88 | Spread: %0.007
+26. BNBUSDT | Skor: 54.6 | FVG Mesafe: %0.54 | Spread: %0.001
+27. FETUSDT | Skor: 51.5 | FVG Mesafe: %0.63 | Spread: %0.039
+28. AXSUSDT | Skor: 50.8 | FVG Mesafe: %0.84 | Spread: %0.008
+29. TRUMPUSDT | Skor: 50.6 | FVG Mesafe: %0.83 | Spread: %0.049
+30. BRUSDT | Skor: 50.6 | FVG Mesafe: %0.86 | Spread: %0.028
+31. WLDUSDT | Skor: 2.3 | FVG Mesafe: %1.30 | Spread: %0.018
+32. COLLECTUSDT | Skor: 0.8 | FVG Mesafe: %1.33 | Spread: %0.043
+33. MOVRUSDT | Skor: 0.5 | FVG Mesafe: %1.13 | Spread: %0.005
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[05:46:35] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 32 COIN BULUNDU ---
+1. SOLUSDT | Skor: 212.5 | FVG Mesafe: %0.00 | Spread: %0.008
+2. BTCUSDT | Skor: 189.7 | FVG Mesafe: %0.06 | Spread: %0.000
+3. ETHUSDT | Skor: 150.5 | FVG Mesafe: %0.18 | Spread: %0.000
+4. XRPUSDT | Skor: 106.1 | FVG Mesafe: %0.09 | Spread: %0.007
+5. NEARUSDT | Skor: 105.3 | FVG Mesafe: %0.38 | Spread: %0.020
+6. BNBUSDT | Skor: 104.6 | FVG Mesafe: %0.02 | Spread: %0.001
+7. SUIUSDT | Skor: 104.4 | FVG Mesafe: %0.32 | Spread: %0.008
+8. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.04 | Spread: %0.011
+9. SANDUSDT | Skor: 103.5 | FVG Mesafe: %0.30 | Spread: %0.028
+10. HYPEUSDT | Skor: 103.2 | FVG Mesafe: %0.27 | Spread: %0.001
+11. 1000PEPEUSDT | Skor: 101.6 | FVG Mesafe: %0.23 | Spread: %0.002
+12. FETUSDT | Skor: 101.5 | FVG Mesafe: %0.39 | Spread: %0.039
+13. TAOUSDT | Skor: 101.2 | FVG Mesafe: %0.20 | Spread: %0.003
+14. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.10 | Spread: %0.009
+15. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.09 | Spread: %0.007
+16. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.014
+17. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.06 | Spread: %0.020
+18. AXSUSDT | Skor: 100.8 | FVG Mesafe: %0.15 | Spread: %0.008
+19. ZROUSDT | Skor: 100.7 | FVG Mesafe: %0.15 | Spread: %0.005
+20. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.29 | Spread: %0.049
+21. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.44 | Spread: %0.003
+22. NILUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.009
+23. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.032
+24. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.35 | Spread: %0.005
+25. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.008
+26. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.40 | Spread: %0.010
+27. VIRTUALUSDT | Skor: 100.5 | FVG Mesafe: %0.10 | Spread: %0.023
+28. ADAUSDT | Skor: 53.6 | FVG Mesafe: %0.71 | Spread: %0.037
+29. ENAUSDT | Skor: 51.4 | FVG Mesafe: %0.78 | Spread: %0.004
+30. USUSDT | Skor: 50.9 | FVG Mesafe: %0.58 | Spread: %0.037
+31. QNTUSDT | Skor: 3.2 | FVG Mesafe: %1.16 | Spread: %0.004
+32. XLMUSDT | Skor: 0.6 | FVG Mesafe: %1.37 | Spread: %0.005
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[06:02:10] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 46
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 35 COIN BULUNDU ---
+1. BTCUSDT | Skor: 190.6 | FVG Mesafe: %0.11 | Spread: %0.000
+2. ETHUSDT | Skor: 150.8 | FVG Mesafe: %0.15 | Spread: %0.000
+3. XRPUSDT | Skor: 106.1 | FVG Mesafe: %0.06 | Spread: %0.007
+4. BNBUSDT | Skor: 104.6 | FVG Mesafe: %0.15 | Spread: %0.001
+5. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.32 | Spread: %0.010
+6. GTCUSDT | Skor: 103.4 | FVG Mesafe: %0.47 | Spread: %0.038
+7. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.28 | Spread: %0.040
+8. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.44 | Spread: %0.004
+9. UNIUSDT | Skor: 101.4 | FVG Mesafe: %0.35 | Spread: %0.011
+10. 龙虾USDT | Skor: 101.2 | FVG Mesafe: %0.35 | Spread: %0.024
+11. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.46 | Spread: %0.006
+12. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.33 | Spread: %0.009
+13. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.30 | Spread: %0.007
+14. USUSDT | Skor: 100.9 | FVG Mesafe: %0.37 | Spread: %0.007
+15. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.10 | Spread: %0.014
+16. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.40 | Spread: %0.020
+17. AXSUSDT | Skor: 100.8 | FVG Mesafe: %0.24 | Spread: %0.008
+18. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.48 | Spread: %0.048
+19. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.33 | Spread: %0.004
+20. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.19 | Spread: %0.003
+21. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.49 | Spread: %0.009
+22. NEARUSDT | Skor: 55.3 | FVG Mesafe: %0.56 | Spread: %0.020
+23. SUIUSDT | Skor: 54.4 | FVG Mesafe: %0.75 | Spread: %0.008
+24. AINUSDT | Skor: 53.9 | FVG Mesafe: %0.77 | Spread: %0.053
+25. HYPEUSDT | Skor: 53.2 | FVG Mesafe: %0.61 | Spread: %0.001
+26. 1000PEPEUSDT | Skor: 51.6 | FVG Mesafe: %0.51 | Spread: %0.002
+27. TAOUSDT | Skor: 51.2 | FVG Mesafe: %0.59 | Spread: %0.003
+28. ARBUSDT | Skor: 50.6 | FVG Mesafe: %0.84 | Spread: %0.005
+29. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.72 | Spread: %0.008
+30. PONSUSDT | Skor: 50.5 | FVG Mesafe: %0.62 | Spread: %0.026
+31. VIRTUALUSDT | Skor: 50.5 | FVG Mesafe: %0.65 | Spread: %0.023
+32. SANDUSDT | Skor: 3.4 | FVG Mesafe: %1.39 | Spread: %0.014
+33. QNTUSDT | Skor: 3.2 | FVG Mesafe: %1.01 | Spread: %0.008
+34. MUBARAKUSDT | Skor: 1.5 | FVG Mesafe: %1.04 | Spread: %0.013
+35. ZROUSDT | Skor: 0.7 | FVG Mesafe: %1.37 | Spread: %0.010
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[06:17:56] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 46
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 36 COIN BULUNDU ---
+1. SOLUSDT | Skor: 212.7 | FVG Mesafe: %0.00 | Spread: %0.008
+2. SUIUSDT | Skor: 204.5 | FVG Mesafe: %0.00 | Spread: %0.008
+3. AINUSDT | Skor: 203.6 | FVG Mesafe: %0.00 | Spread: %0.018
+4. TAOUSDT | Skor: 201.3 | FVG Mesafe: %0.00 | Spread: %0.003
+5. AVAXUSDT | Skor: 201.0 | FVG Mesafe: %0.00 | Spread: %0.009
+6. PENGUUSDT | Skor: 200.7 | FVG Mesafe: %0.00 | Spread: %0.010
+7. ARBUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.005
+8. FILUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.009
+9. VIRTUALUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.011
+10. BTCUSDT | Skor: 191.6 | FVG Mesafe: %0.09 | Spread: %0.000
+11. ETHUSDT | Skor: 151.6 | FVG Mesafe: %0.10 | Spread: %0.000
+12. XRPUSDT | Skor: 106.2 | FVG Mesafe: %0.10 | Spread: %0.007
+13. NEARUSDT | Skor: 105.4 | FVG Mesafe: %0.18 | Spread: %0.020
+14. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.26 | Spread: %0.001
+15. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.15 | Spread: %0.010
+16. HYPEUSDT | Skor: 103.3 | FVG Mesafe: %0.07 | Spread: %0.001
+17. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.10 | Spread: %0.012
+18. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.07 | Spread: %0.017
+19. BEAMXUSDT | Skor: 102.0 | FVG Mesafe: %0.15 | Spread: %0.038
+20. 1000PEPEUSDT | Skor: 101.6 | FVG Mesafe: %0.02 | Spread: %0.002
+21. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.20 | Spread: %0.004
+22. UNIUSDT | Skor: 101.4 | FVG Mesafe: %0.35 | Spread: %0.011
+23. 龙虾USDT | Skor: 101.1 | FVG Mesafe: %0.10 | Spread: %0.024
+24. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.27 | Spread: %0.005
+25. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.25 | Spread: %0.007
+26. USUSDT | Skor: 100.9 | FVG Mesafe: %0.24 | Spread: %0.045
+27. COLLECTUSDT | Skor: 100.9 | FVG Mesafe: %0.04 | Spread: %0.042
+28. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.06 | Spread: %0.014
+29. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.08 | Spread: %0.020
+30. AXSUSDT | Skor: 100.8 | FVG Mesafe: %0.44 | Spread: %0.008
+31. TRUMPUSDT | Skor: 100.6 | FVG Mesafe: %0.05 | Spread: %0.048
+32. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.34 | Spread: %0.010
+33. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.26 | Spread: %0.004
+34. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.24 | Spread: %0.003
+35. ADAUSDT | Skor: 53.7 | FVG Mesafe: %0.62 | Spread: %0.037
+36. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.98 | Spread: %0.024
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[06:33:32] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 35 COIN BULUNDU ---
+1. BTCUSDT | Skor: 191.6 | FVG Mesafe: %0.07 | Spread: %0.000
+2. ETHUSDT | Skor: 152.0 | FVG Mesafe: %0.07 | Spread: %0.000
+3. SOLUSDT | Skor: 112.7 | FVG Mesafe: %0.08 | Spread: %0.008
+4. XRPUSDT | Skor: 106.2 | FVG Mesafe: %0.02 | Spread: %0.007
+5. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.05 | Spread: %0.001
+6. SUIUSDT | Skor: 104.5 | FVG Mesafe: %0.41 | Spread: %0.008
+7. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.14 | Spread: %0.010
+8. SANDUSDT | Skor: 103.4 | FVG Mesafe: %0.37 | Spread: %0.014
+9. HYPEUSDT | Skor: 103.3 | FVG Mesafe: %0.03 | Spread: %0.001
+10. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.07 | Spread: %0.012
+11. 1000PEPEUSDT | Skor: 101.6 | FVG Mesafe: %0.18 | Spread: %0.002
+12. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.37 | Spread: %0.004
+13. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.46 | Spread: %0.010
+14. 龙虾USDT | Skor: 101.1 | FVG Mesafe: %0.10 | Spread: %0.024
+15. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.09 | Spread: %0.006
+16. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.20 | Spread: %0.009
+17. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.24 | Spread: %0.007
+18. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.31 | Spread: %0.014
+19. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.42 | Spread: %0.020
+20. AXSUSDT | Skor: 100.7 | FVG Mesafe: %0.39 | Spread: %0.008
+21. PENGUUSDT | Skor: 100.7 | FVG Mesafe: %0.38 | Spread: %0.020
+22. TRUMPUSDT | Skor: 100.7 | FVG Mesafe: %0.19 | Spread: %0.049
+23. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.06 | Spread: %0.005
+24. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.30 | Spread: %0.004
+25. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.27 | Spread: %0.005
+26. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.05 | Spread: %0.003
+27. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.48 | Spread: %0.008
+28. VIRTUALUSDT | Skor: 100.5 | FVG Mesafe: %0.44 | Spread: %0.023
+29. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.40 | Spread: %0.009
+30. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.34 | Spread: %0.026
+31. NEARUSDT | Skor: 55.4 | FVG Mesafe: %0.83 | Spread: %0.020
+32. NILUSDT | Skor: 50.6 | FVG Mesafe: %0.59 | Spread: %0.010
+33. MOVRUSDT | Skor: 50.6 | FVG Mesafe: %0.84 | Spread: %0.022
+34. USUSDT | Skor: 0.9 | FVG Mesafe: %1.48 | Spread: %0.052
+35. ARBUSDT | Skor: 0.6 | FVG Mesafe: %1.07 | Spread: %0.005
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[06:49:10] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 45
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 39 COIN BULUNDU ---
+1. XRPUSDT | Skor: 206.3 | FVG Mesafe: %0.00 | Spread: %0.007
+2. ADAUSDT | Skor: 203.8 | FVG Mesafe: %0.00 | Spread: %0.037
+3. TRUMPUSDT | Skor: 200.7 | FVG Mesafe: %0.00 | Spread: %0.048
+4. BTCUSDT | Skor: 192.9 | FVG Mesafe: %0.05 | Spread: %0.000
+5. ETHUSDT | Skor: 152.7 | FVG Mesafe: %0.02 | Spread: %0.000
+6. SOLUSDT | Skor: 112.8 | FVG Mesafe: %0.03 | Spread: %0.008
+7. ZECUSDT | Skor: 111.3 | FVG Mesafe: %0.09 | Spread: %0.001
+8. NEARUSDT | Skor: 105.4 | FVG Mesafe: %0.04 | Spread: %0.020
+9. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.02 | Spread: %0.001
+10. SUIUSDT | Skor: 104.5 | FVG Mesafe: %0.07 | Spread: %0.008
+11. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.02 | Spread: %0.010
+12. SANDUSDT | Skor: 103.4 | FVG Mesafe: %0.27 | Spread: %0.014
+13. HYPEUSDT | Skor: 103.4 | FVG Mesafe: %0.04 | Spread: %0.001
+14. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.05 | Spread: %0.018
+15. 1000PEPEUSDT | Skor: 101.6 | FVG Mesafe: %0.04 | Spread: %0.002
+16. FETUSDT | Skor: 101.5 | FVG Mesafe: %0.08 | Spread: %0.039
+17. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.04 | Spread: %0.004
+18. UNIUSDT | Skor: 101.4 | FVG Mesafe: %0.06 | Spread: %0.011
+19. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.03 | Spread: %0.003
+20. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.13 | Spread: %0.006
+21. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.05 | Spread: %0.009
+22. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.007
+23. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.03 | Spread: %0.014
+24. ONDOUSDT | Skor: 100.8 | FVG Mesafe: %0.06 | Spread: %0.040
+25. PENGUUSDT | Skor: 100.7 | FVG Mesafe: %0.06 | Spread: %0.010
+26. AXSUSDT | Skor: 100.7 | FVG Mesafe: %0.05 | Spread: %0.008
+27. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.09 | Spread: %0.005
+28. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.36 | Spread: %0.004
+29. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.16 | Spread: %0.003
+30. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.05 | Spread: %0.005
+31. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.08 | Spread: %0.008
+32. VIRTUALUSDT | Skor: 100.5 | FVG Mesafe: %0.36 | Spread: %0.012
+33. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.02 | Spread: %0.009
+34. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.26 | Spread: %0.025
+35. GTCUSDT | Skor: 53.4 | FVG Mesafe: %0.75 | Spread: %0.042
+36. AINUSDT | Skor: 53.0 | FVG Mesafe: %0.92 | Spread: %0.036
+37. STRKUSDT | Skor: 52.4 | FVG Mesafe: %0.65 | Spread: %0.017
+38. BTWUSDT | Skor: 2.2 | FVG Mesafe: %1.49 | Spread: %0.031
+39. USUSDT | Skor: 0.9 | FVG Mesafe: %1.07 | Spread: %0.007
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[07:04:46] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 46
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 37 COIN BULUNDU ---
+1. SANDUSDT | Skor: 203.4 | FVG Mesafe: %0.00 | Spread: %0.014
+2. STRKUSDT | Skor: 202.3 | FVG Mesafe: %0.00 | Spread: %0.017
+3. LYNUSDT | Skor: 201.2 | FVG Mesafe: %0.00 | Spread: %0.035
+4. BRUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.047
+5. BTCUSDT | Skor: 194.5 | FVG Mesafe: %0.26 | Spread: %0.000
+6. ETHUSDT | Skor: 154.1 | FVG Mesafe: %0.06 | Spread: %0.000
+7. SOLUSDT | Skor: 113.0 | FVG Mesafe: %0.38 | Spread: %0.008
+8. XRPUSDT | Skor: 106.3 | FVG Mesafe: %0.46 | Spread: %0.007
+9. NEARUSDT | Skor: 105.6 | FVG Mesafe: %0.26 | Spread: %0.020
+10. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.20 | Spread: %0.001
+11. DOGEUSDT | Skor: 104.4 | FVG Mesafe: %0.15 | Spread: %0.010
+12. HYPEUSDT | Skor: 103.4 | FVG Mesafe: %0.03 | Spread: %0.001
+13. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.09 | Spread: %0.018
+14. BEAMXUSDT | Skor: 102.1 | FVG Mesafe: %0.08 | Spread: %0.038
+15. FETUSDT | Skor: 101.5 | FVG Mesafe: %0.04 | Spread: %0.039
+16. ENAUSDT | Skor: 101.4 | FVG Mesafe: %0.05 | Spread: %0.004
+17. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.00 | Spread: %0.003
+18. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.17 | Spread: %0.006
+19. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.28 | Spread: %0.009
+20. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.07 | Spread: %0.007
+21. USUSDT | Skor: 100.9 | FVG Mesafe: %0.23 | Spread: %0.015
+22. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.13 | Spread: %0.014
+23. NILUSDT | Skor: 100.7 | FVG Mesafe: %0.28 | Spread: %0.010
+24. ARBUSDT | Skor: 100.6 | FVG Mesafe: %0.16 | Spread: %0.005
+25. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.37 | Spread: %0.003
+26. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.04 | Spread: %0.008
+27. PONSUSDT | Skor: 100.5 | FVG Mesafe: %0.05 | Spread: %0.024
+28. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.28 | Spread: %0.009
+29. ZECUSDT | Skor: 61.3 | FVG Mesafe: %0.52 | Spread: %0.001
+30. SUIUSDT | Skor: 54.5 | FVG Mesafe: %0.71 | Spread: %0.008
+31. 1000PEPEUSDT | Skor: 51.6 | FVG Mesafe: %0.76 | Spread: %0.002
+32. UNIUSDT | Skor: 51.4 | FVG Mesafe: %0.63 | Spread: %0.011
+33. 龙虾USDT | Skor: 51.2 | FVG Mesafe: %0.72 | Spread: %0.023
+34. TRUMPUSDT | Skor: 50.7 | FVG Mesafe: %0.63 | Spread: %0.048
+35. ZROUSDT | Skor: 50.6 | FVG Mesafe: %0.72 | Spread: %0.016
+36. XLMUSDT | Skor: 50.6 | FVG Mesafe: %0.63 | Spread: %0.004
+37. LITUSDT | Skor: 50.5 | FVG Mesafe: %0.53 | Spread: %0.003
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[07:20:24] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 49
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. LINKUSDT | Skor: 201.0 | FVG Mesafe: %0.00 | Spread: %0.007
+2. BTCUSDT | Skor: 197.3 | FVG Mesafe: %0.30 | Spread: %0.000
+3. ETHUSDT | Skor: 155.1 | FVG Mesafe: %0.00 | Spread: %0.000
+4. SOLUSDT | Skor: 113.2 | FVG Mesafe: %0.02 | Spread: %0.008
+5. ZECUSDT | Skor: 111.4 | FVG Mesafe: %0.04 | Spread: %0.001
+6. XRPUSDT | Skor: 106.5 | FVG Mesafe: %0.09 | Spread: %0.007
+7. NEARUSDT | Skor: 105.6 | FVG Mesafe: %0.20 | Spread: %0.020
+8. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.03 | Spread: %0.001
+9. DOGEUSDT | Skor: 104.5 | FVG Mesafe: %0.19 | Spread: %0.010
+10. SANDUSDT | Skor: 103.4 | FVG Mesafe: %0.11 | Spread: %0.014
+11. WLDUSDT | Skor: 102.3 | FVG Mesafe: %0.16 | Spread: %0.017
+12. ENAUSDT | Skor: 101.5 | FVG Mesafe: %0.39 | Spread: %0.004
+13. UNIUSDT | Skor: 101.4 | FVG Mesafe: %0.19 | Spread: %0.011
+14. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.05 | Spread: %0.003
+15. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.07 | Spread: %0.035
+16. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.24 | Spread: %0.009
+17. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.006
+18. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.07 | Spread: %0.014
+19. ONDOUSDT | Skor: 100.9 | FVG Mesafe: %0.16 | Spread: %0.020
+20. COLLECTUSDT | Skor: 100.8 | FVG Mesafe: %0.41 | Spread: %0.041
+21. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.03 | Spread: %0.004
+22. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.28 | Spread: %0.005
+23. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.00 | Spread: %0.003
+24. MOVRUSDT | Skor: 100.6 | FVG Mesafe: %0.36 | Spread: %0.005
+25. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.08 | Spread: %0.019
+26. FILUSDT | Skor: 100.5 | FVG Mesafe: %0.02 | Spread: %0.009
+27. VIRTUALUSDT | Skor: 100.5 | FVG Mesafe: %0.03 | Spread: %0.011
+28. LITUSDT | Skor: 100.5 | FVG Mesafe: %0.43 | Spread: %0.003
+29. HYPEUSDT | Skor: 53.5 | FVG Mesafe: %0.57 | Spread: %0.001
+30. GTCUSDT | Skor: 53.5 | FVG Mesafe: %0.67 | Spread: %0.025
+31. AINUSDT | Skor: 52.9 | FVG Mesafe: %0.55 | Spread: %0.035
+32. STRKUSDT | Skor: 52.3 | FVG Mesafe: %0.98 | Spread: %0.018
+33. 1000PEPEUSDT | Skor: 51.7 | FVG Mesafe: %0.63 | Spread: %0.002
+34. 龙虾USDT | Skor: 51.1 | FVG Mesafe: %0.75 | Spread: %0.047
+35. PENGUUSDT | Skor: 50.8 | FVG Mesafe: %0.69 | Spread: %0.010
+36. NILUSDT | Skor: 50.7 | FVG Mesafe: %0.83 | Spread: %0.041
+37. TRUMPUSDT | Skor: 50.7 | FVG Mesafe: %0.72 | Spread: %0.048
+38. ARBUSDT | Skor: 50.6 | FVG Mesafe: %0.53 | Spread: %0.005
+39. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.68 | Spread: %0.008
+40. PONSUSDT | Skor: 50.6 | FVG Mesafe: %0.55 | Spread: %0.025
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[07:36:03] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 48
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 36 COIN BULUNDU ---
+1. BNBUSDT | Skor: 204.7 | FVG Mesafe: %0.00 | Spread: %0.001
+2. VIRTUALUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.011
+3. BTCUSDT | Skor: 198.2 | FVG Mesafe: %0.01 | Spread: %0.000
+4. ETHUSDT | Skor: 155.3 | FVG Mesafe: %0.00 | Spread: %0.000
+5. SOLUSDT | Skor: 113.2 | FVG Mesafe: %0.12 | Spread: %0.008
+6. ZECUSDT | Skor: 111.5 | FVG Mesafe: %0.41 | Spread: %0.001
+7. NEARUSDT | Skor: 105.8 | FVG Mesafe: %0.16 | Spread: %0.019
+8. DOGEUSDT | Skor: 104.5 | FVG Mesafe: %0.02 | Spread: %0.010
+9. HYPEUSDT | Skor: 103.6 | FVG Mesafe: %0.01 | Spread: %0.001
+10. SANDUSDT | Skor: 103.3 | FVG Mesafe: %0.03 | Spread: %0.014
+11. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.30 | Spread: %0.004
+12. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.16 | Spread: %0.017
+13. STRKUSDT | Skor: 102.3 | FVG Mesafe: %0.24 | Spread: %0.017
+14. 1000PEPEUSDT | Skor: 101.7 | FVG Mesafe: %0.04 | Spread: %0.002
+15. MUBARAKUSDT | Skor: 101.7 | FVG Mesafe: %0.17 | Spread: %0.026
+16. FETUSDT | Skor: 101.6 | FVG Mesafe: %0.15 | Spread: %0.039
+17. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.01 | Spread: %0.003
+18. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.006
+19. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.16 | Spread: %0.009
+20. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.30 | Spread: %0.007
+21. ONDOUSDT | Skor: 100.9 | FVG Mesafe: %0.38 | Spread: %0.020
+22. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.22 | Spread: %0.010
+23. TRUMPUSDT | Skor: 100.7 | FVG Mesafe: %0.14 | Spread: %0.048
+24. AXSUSDT | Skor: 100.7 | FVG Mesafe: %0.02 | Spread: %0.008
+25. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.06 | Spread: %0.004
+26. PONSUSDT | Skor: 100.6 | FVG Mesafe: %0.30 | Spread: %0.049
+27. LITUSDT | Skor: 100.5 | FVG Mesafe: %0.17 | Spread: %0.003
+28. XRPUSDT | Skor: 56.4 | FVG Mesafe: %0.60 | Spread: %0.007
+29. AINUSDT | Skor: 52.8 | FVG Mesafe: %0.55 | Spread: %0.055
+30. ENAUSDT | Skor: 51.5 | FVG Mesafe: %0.61 | Spread: %0.004
+31. UNIUSDT | Skor: 51.4 | FVG Mesafe: %0.86 | Spread: %0.011
+32. ARBUSDT | Skor: 50.6 | FVG Mesafe: %0.92 | Spread: %0.005
+33. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.62 | Spread: %0.008
+34. FILUSDT | Skor: 50.6 | FVG Mesafe: %0.56 | Spread: %0.009
+35. SUIUSDT | Skor: 4.6 | FVG Mesafe: %1.21 | Spread: %0.008
+36. NILUSDT | Skor: 0.8 | FVG Mesafe: %1.16 | Spread: %0.021
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[07:51:42] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 48
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 35 COIN BULUNDU ---
+1. XRPUSDT | Skor: 206.5 | FVG Mesafe: %0.00 | Spread: %0.007
+2. BTCUSDT | Skor: 199.2 | FVG Mesafe: %0.01 | Spread: %0.000
+3. ETHUSDT | Skor: 156.0 | FVG Mesafe: %0.01 | Spread: %0.000
+4. SOLUSDT | Skor: 113.3 | FVG Mesafe: %0.13 | Spread: %0.008
+5. ZECUSDT | Skor: 111.4 | FVG Mesafe: %0.48 | Spread: %0.001
+6. NEARUSDT | Skor: 105.8 | FVG Mesafe: %0.19 | Spread: %0.019
+7. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.15 | Spread: %0.001
+8. DOGEUSDT | Skor: 104.6 | FVG Mesafe: %0.13 | Spread: %0.010
+9. ADAUSDT | Skor: 103.9 | FVG Mesafe: %0.33 | Spread: %0.037
+10. HYPEUSDT | Skor: 103.7 | FVG Mesafe: %0.20 | Spread: %0.001
+11. SANDUSDT | Skor: 103.3 | FVG Mesafe: %0.29 | Spread: %0.028
+12. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.26 | Spread: %0.017
+13. STRKUSDT | Skor: 102.3 | FVG Mesafe: %0.12 | Spread: %0.017
+14. BEAMXUSDT | Skor: 102.1 | FVG Mesafe: %0.32 | Spread: %0.039
+15. 1000PEPEUSDT | Skor: 101.7 | FVG Mesafe: %0.16 | Spread: %0.002
+16. MUBARAKUSDT | Skor: 101.7 | FVG Mesafe: %0.09 | Spread: %0.027
+17. ENAUSDT | Skor: 101.7 | FVG Mesafe: %0.30 | Spread: %0.004
+18. FETUSDT | Skor: 101.6 | FVG Mesafe: %0.34 | Spread: %0.038
+19. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.38 | Spread: %0.013
+20. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.38 | Spread: %0.035
+21. AVAXUSDT | Skor: 101.1 | FVG Mesafe: %0.29 | Spread: %0.009
+22. AAVEUSDT | Skor: 101.0 | FVG Mesafe: %0.12 | Spread: %0.006
+23. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.39 | Spread: %0.007
+24. ONDOUSDT | Skor: 100.9 | FVG Mesafe: %0.10 | Spread: %0.020
+25. TRUMPUSDT | Skor: 100.7 | FVG Mesafe: %0.14 | Spread: %0.048
+26. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.00 | Spread: %0.004
+27. LITUSDT | Skor: 100.5 | FVG Mesafe: %0.21 | Spread: %0.005
+28. QNTUSDT | Skor: 53.2 | FVG Mesafe: %0.66 | Spread: %0.004
+29. PENGUUSDT | Skor: 50.8 | FVG Mesafe: %0.73 | Spread: %0.010
+30. ARBUSDT | Skor: 50.6 | FVG Mesafe: %0.93 | Spread: %0.005
+31. FILUSDT | Skor: 50.6 | FVG Mesafe: %0.75 | Spread: %0.009
+32. SUIUSDT | Skor: 4.6 | FVG Mesafe: %1.50 | Spread: %0.008
+33. GTCUSDT | Skor: 3.6 | FVG Mesafe: %1.19 | Spread: %0.034
+34. COLLECTUSDT | Skor: 0.7 | FVG Mesafe: %1.22 | Spread: %0.042
+35. DOTUSDT | Skor: 0.6 | FVG Mesafe: %1.08 | Spread: %0.016
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[08:07:18] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 37 COIN BULUNDU ---
+1. BNBUSDT | Skor: 204.7 | FVG Mesafe: %0.00 | Spread: %0.001
+2. BTCUSDT | Skor: 199.0 | FVG Mesafe: %0.01 | Spread: %0.000
+3. ETHUSDT | Skor: 154.9 | FVG Mesafe: %0.03 | Spread: %0.000
+4. SOLUSDT | Skor: 113.3 | FVG Mesafe: %0.02 | Spread: %0.008
+5. ZECUSDT | Skor: 111.4 | FVG Mesafe: %0.16 | Spread: %0.001
+6. XRPUSDT | Skor: 106.5 | FVG Mesafe: %0.02 | Spread: %0.007
+7. NEARUSDT | Skor: 105.8 | FVG Mesafe: %0.35 | Spread: %0.019
+8. DOGEUSDT | Skor: 104.6 | FVG Mesafe: %0.11 | Spread: %0.010
+9. ADAUSDT | Skor: 104.0 | FVG Mesafe: %0.04 | Spread: %0.037
+10. HYPEUSDT | Skor: 103.8 | FVG Mesafe: %0.03 | Spread: %0.001
+11. SANDUSDT | Skor: 103.3 | FVG Mesafe: %0.10 | Spread: %0.014
+12. QNTUSDT | Skor: 103.2 | FVG Mesafe: %0.11 | Spread: %0.004
+13. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.14 | Spread: %0.017
+14. STRKUSDT | Skor: 102.2 | FVG Mesafe: %0.14 | Spread: %0.018
+15. ENAUSDT | Skor: 101.8 | FVG Mesafe: %0.26 | Spread: %0.004
+16. 1000PEPEUSDT | Skor: 101.8 | FVG Mesafe: %0.13 | Spread: %0.002
+17. FETUSDT | Skor: 101.6 | FVG Mesafe: %0.19 | Spread: %0.038
+18. TAOUSDT | Skor: 101.3 | FVG Mesafe: %0.07 | Spread: %0.003
+19. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.22 | Spread: %0.009
+20. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.30 | Spread: %0.007
+21. ONDOUSDT | Skor: 100.9 | FVG Mesafe: %0.08 | Spread: %0.020
+22. NILUSDT | Skor: 100.8 | FVG Mesafe: %0.21 | Spread: %0.020
+23. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.28 | Spread: %0.010
+24. AXSUSDT | Skor: 100.6 | FVG Mesafe: %0.06 | Spread: %0.008
+25. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.005
+26. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.22 | Spread: %0.037
+27. PONSUSDT | Skor: 100.6 | FVG Mesafe: %0.29 | Spread: %0.024
+28. VIRTUALUSDT | Skor: 100.5 | FVG Mesafe: %0.07 | Spread: %0.011
+29. LITUSDT | Skor: 100.5 | FVG Mesafe: %0.27 | Spread: %0.003
+30. GTCUSDT | Skor: 53.6 | FVG Mesafe: %0.63 | Spread: %0.040
+31. BTWUSDT | Skor: 52.2 | FVG Mesafe: %0.95 | Spread: %0.047
+32. USUSDT | Skor: 51.0 | FVG Mesafe: %0.67 | Spread: %0.016
+33. TRUMPUSDT | Skor: 50.7 | FVG Mesafe: %0.77 | Spread: %0.048
+34. XLMUSDT | Skor: 50.6 | FVG Mesafe: %0.70 | Spread: %0.004
+35. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.84 | Spread: %0.008
+36. FILUSDT | Skor: 50.6 | FVG Mesafe: %0.65 | Spread: %0.009
+37. ARBUSDT | Skor: 0.6 | FVG Mesafe: %1.15 | Spread: %0.005
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[08:22:54] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 48
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 34 COIN BULUNDU ---
+1. PENGUUSDT | Skor: 200.8 | FVG Mesafe: %0.00 | Spread: %0.010
+2. BTCUSDT | Skor: 199.6 | FVG Mesafe: %0.17 | Spread: %0.000
+3. SOLUSDT | Skor: 113.5 | FVG Mesafe: %0.28 | Spread: %0.008
+4. ETHUSDT | Skor: 106.1 | FVG Mesafe: %0.51 | Spread: %0.000
+5. NEARUSDT | Skor: 105.9 | FVG Mesafe: %0.19 | Spread: %0.019
+6. BNBUSDT | Skor: 104.8 | FVG Mesafe: %0.16 | Spread: %0.001
+7. SUIUSDT | Skor: 104.7 | FVG Mesafe: %0.14 | Spread: %0.008
+8. DOGEUSDT | Skor: 104.6 | FVG Mesafe: %0.04 | Spread: %0.010
+9. HYPEUSDT | Skor: 103.9 | FVG Mesafe: %0.27 | Spread: %0.001
+10. AVAXUSDT | Skor: 101.0 | FVG Mesafe: %0.04 | Spread: %0.009
+11. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.05 | Spread: %0.007
+12. ONDOUSDT | Skor: 100.9 | FVG Mesafe: %0.06 | Spread: %0.020
+13. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.14 | Spread: %0.014
+14. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.06 | Spread: %0.010
+15. XLMUSDT | Skor: 100.6 | FVG Mesafe: %0.01 | Spread: %0.004
+16. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.02 | Spread: %0.008
+17. BCHUSDT | Skor: 100.6 | FVG Mesafe: %0.01 | Spread: %0.003
+18. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.38 | Spread: %0.005
+19. AXSUSDT | Skor: 100.6 | FVG Mesafe: %0.07 | Spread: %0.008
+20. PONSUSDT | Skor: 100.6 | FVG Mesafe: %0.32 | Spread: %0.049
+21. FILUSDT | Skor: 100.6 | FVG Mesafe: %0.41 | Spread: %0.009
+22. ZECUSDT | Skor: 61.6 | FVG Mesafe: %0.71 | Spread: %0.001
+23. XRPUSDT | Skor: 56.5 | FVG Mesafe: %0.68 | Spread: %0.007
+24. ADAUSDT | Skor: 54.0 | FVG Mesafe: %0.55 | Spread: %0.037
+25. GTCUSDT | Skor: 53.7 | FVG Mesafe: %0.54 | Spread: %0.054
+26. SANDUSDT | Skor: 53.3 | FVG Mesafe: %0.91 | Spread: %0.014
+27. QNTUSDT | Skor: 53.2 | FVG Mesafe: %0.51 | Spread: %0.004
+28. STRKUSDT | Skor: 52.2 | FVG Mesafe: %0.74 | Spread: %0.017
+29. TAOUSDT | Skor: 51.4 | FVG Mesafe: %0.53 | Spread: %0.003
+30. USUSDT | Skor: 51.0 | FVG Mesafe: %0.82 | Spread: %0.016
+31. TRUMPUSDT | Skor: 50.7 | FVG Mesafe: %0.77 | Spread: %0.048
+32. LITUSDT | Skor: 50.5 | FVG Mesafe: %0.67 | Spread: %0.015
+33. ENAUSDT | Skor: 1.9 | FVG Mesafe: %1.25 | Spread: %0.004
+34. 1000PEPEUSDT | Skor: 1.8 | FVG Mesafe: %1.24 | Spread: %0.002
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[08:38:30] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. BTCUSDT | Skor: 199.8 | FVG Mesafe: %0.11 | Spread: %0.000
+2. ETHUSDT | Skor: 156.1 | FVG Mesafe: %0.13 | Spread: %0.000
+3. SOLUSDT | Skor: 113.6 | FVG Mesafe: %0.12 | Spread: %0.008
+4. ZECUSDT | Skor: 111.7 | FVG Mesafe: %0.46 | Spread: %0.001
+5. XRPUSDT | Skor: 106.5 | FVG Mesafe: %0.42 | Spread: %0.007
+6. NEARUSDT | Skor: 105.9 | FVG Mesafe: %0.24 | Spread: %0.020
+7. BNBUSDT | Skor: 104.8 | FVG Mesafe: %0.10 | Spread: %0.001
+8. DOGEUSDT | Skor: 104.7 | FVG Mesafe: %0.12 | Spread: %0.010
+9. HYPEUSDT | Skor: 103.9 | FVG Mesafe: %0.20 | Spread: %0.001
+10. STRKUSDT | Skor: 102.1 | FVG Mesafe: %0.12 | Spread: %0.017
+11. ENAUSDT | Skor: 101.9 | FVG Mesafe: %0.46 | Spread: %0.004
+12. BEAMXUSDT | Skor: 101.9 | FVG Mesafe: %0.40 | Spread: %0.040
+13. 1000PEPEUSDT | Skor: 101.8 | FVG Mesafe: %0.04 | Spread: %0.002
+14. FETUSDT | Skor: 101.8 | FVG Mesafe: %0.45 | Spread: %0.038
+15. UNIUSDT | Skor: 101.4 | FVG Mesafe: %0.38 | Spread: %0.011
+16. TAOUSDT | Skor: 101.4 | FVG Mesafe: %0.41 | Spread: %0.003
+17. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.06 | Spread: %0.006
+18. AVAXUSDT | Skor: 101.1 | FVG Mesafe: %0.27 | Spread: %0.009
+19. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.16 | Spread: %0.007
+20. USUSDT | Skor: 101.0 | FVG Mesafe: %0.36 | Spread: %0.032
+21. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.20 | Spread: %0.014
+22. TRUMPUSDT | Skor: 100.7 | FVG Mesafe: %0.39 | Spread: %0.048
+23. BCHUSDT | Skor: 100.7 | FVG Mesafe: %0.30 | Spread: %0.003
+24. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.29 | Spread: %0.005
+25. XLMUSDT | Skor: 100.7 | FVG Mesafe: %0.37 | Spread: %0.004
+26. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.38 | Spread: %0.008
+27. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.39 | Spread: %0.005
+28. AXSUSDT | Skor: 100.6 | FVG Mesafe: %0.40 | Spread: %0.008
+29. PONSUSDT | Skor: 100.6 | FVG Mesafe: %0.17 | Spread: %0.050
+30. FILUSDT | Skor: 100.6 | FVG Mesafe: %0.38 | Spread: %0.009
+31. LITUSDT | Skor: 100.5 | FVG Mesafe: %0.26 | Spread: %0.016
+32. SUIUSDT | Skor: 54.7 | FVG Mesafe: %0.58 | Spread: %0.008
+33. GTCUSDT | Skor: 53.7 | FVG Mesafe: %0.69 | Spread: %0.020
+34. WLDUSDT | Skor: 52.4 | FVG Mesafe: %0.55 | Spread: %0.017
+35. BTWUSDT | Skor: 52.2 | FVG Mesafe: %0.95 | Spread: %0.044
+36. LYNUSDT | Skor: 51.2 | FVG Mesafe: %0.68 | Spread: %0.036
+37. ONDOUSDT | Skor: 51.0 | FVG Mesafe: %0.83 | Spread: %0.020
+38. PENGUUSDT | Skor: 50.8 | FVG Mesafe: %0.94 | Spread: %0.010
+39. SANDUSDT | Skor: 3.2 | FVG Mesafe: %1.04 | Spread: %0.014
+40. QNTUSDT | Skor: 3.1 | FVG Mesafe: %1.05 | Spread: %0.012
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[08:54:08] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 50
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. BTCUSDT | Skor: 201.7 | FVG Mesafe: %0.17 | Spread: %0.000
+2. ETHUSDT | Skor: 157.5 | FVG Mesafe: %0.18 | Spread: %0.000
+3. SOLUSDT | Skor: 113.8 | FVG Mesafe: %0.09 | Spread: %0.008
+4. ZECUSDT | Skor: 111.8 | FVG Mesafe: %0.18 | Spread: %0.001
+5. XRPUSDT | Skor: 106.7 | FVG Mesafe: %0.17 | Spread: %0.007
+6. NEARUSDT | Skor: 106.1 | FVG Mesafe: %0.26 | Spread: %0.020
+7. BNBUSDT | Skor: 104.8 | FVG Mesafe: %0.16 | Spread: %0.001
+8. DOGEUSDT | Skor: 104.7 | FVG Mesafe: %0.44 | Spread: %0.010
+9. HYPEUSDT | Skor: 104.0 | FVG Mesafe: %0.03 | Spread: %0.001
+10. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.24 | Spread: %0.017
+11. BTWUSDT | Skor: 102.2 | FVG Mesafe: %0.37 | Spread: %0.043
+12. ENAUSDT | Skor: 102.0 | FVG Mesafe: %0.05 | Spread: %0.004
+13. BEAMXUSDT | Skor: 101.8 | FVG Mesafe: %0.32 | Spread: %0.040
+14. FETUSDT | Skor: 101.8 | FVG Mesafe: %0.11 | Spread: %0.037
+15. UNIUSDT | Skor: 101.5 | FVG Mesafe: %0.19 | Spread: %0.011
+16. TAOUSDT | Skor: 101.4 | FVG Mesafe: %0.20 | Spread: %0.003
+17. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.14 | Spread: %0.036
+18. AVAXUSDT | Skor: 101.1 | FVG Mesafe: %0.11 | Spread: %0.009
+19. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.47 | Spread: %0.006
+20. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.35 | Spread: %0.007
+21. USUSDT | Skor: 101.0 | FVG Mesafe: %0.47 | Spread: %0.024
+22. ONDOUSDT | Skor: 101.0 | FVG Mesafe: %0.16 | Spread: %0.020
+23. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.06 | Spread: %0.014
+24. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.46 | Spread: %0.010
+25. COLLECTUSDT | Skor: 100.7 | FVG Mesafe: %0.13 | Spread: %0.042
+26. BCHUSDT | Skor: 100.7 | FVG Mesafe: %0.20 | Spread: %0.003
+27. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.20 | Spread: %0.005
+28. XLMUSDT | Skor: 100.7 | FVG Mesafe: %0.47 | Spread: %0.005
+29. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.44 | Spread: %0.005
+30. AXSUSDT | Skor: 100.6 | FVG Mesafe: %0.08 | Spread: %0.008
+31. PONSUSDT | Skor: 100.6 | FVG Mesafe: %0.30 | Spread: %0.025
+32. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.12 | Spread: %0.008
+33. LITUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.003
+34. SUIUSDT | Skor: 54.8 | FVG Mesafe: %0.80 | Spread: %0.008
+35. SANDUSDT | Skor: 53.2 | FVG Mesafe: %0.68 | Spread: %0.014
+36. 1000SHIBUSDT | Skor: 50.5 | FVG Mesafe: %0.72 | Spread: %0.017
+37. QNTUSDT | Skor: 3.1 | FVG Mesafe: %1.27 | Spread: %0.012
+38. 1000PEPEUSDT | Skor: 1.9 | FVG Mesafe: %1.13 | Spread: %0.002
+39. 龙虾USDT | Skor: 1.0 | FVG Mesafe: %1.14 | Spread: %0.024
+40. NILUSDT | Skor: 0.8 | FVG Mesafe: %1.37 | Spread: %0.010
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[09:09:48] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 50
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. BTCUSDT | Skor: 202.2 | FVG Mesafe: %0.02 | Spread: %0.000
+2. ENAUSDT | Skor: 202.1 | FVG Mesafe: %0.00 | Spread: %0.004
+3. FETUSDT | Skor: 201.8 | FVG Mesafe: %0.00 | Spread: %0.037
+4. ONDOUSDT | Skor: 201.0 | FVG Mesafe: %0.00 | Spread: %0.020
+5. NILUSDT | Skor: 200.8 | FVG Mesafe: %0.00 | Spread: %0.040
+6. MOVRUSDT | Skor: 200.8 | FVG Mesafe: %0.00 | Spread: %0.022
+7. 1000SHIBUSDT | Skor: 200.5 | FVG Mesafe: %0.00 | Spread: %0.017
+8. ETHUSDT | Skor: 157.9 | FVG Mesafe: %0.14 | Spread: %0.000
+9. SOLUSDT | Skor: 113.9 | FVG Mesafe: %0.08 | Spread: %0.008
+10. XRPUSDT | Skor: 106.7 | FVG Mesafe: %0.15 | Spread: %0.007
+11. NEARUSDT | Skor: 106.1 | FVG Mesafe: %0.30 | Spread: %0.020
+12. BNBUSDT | Skor: 104.8 | FVG Mesafe: %0.09 | Spread: %0.001
+13. DOGEUSDT | Skor: 104.7 | FVG Mesafe: %0.40 | Spread: %0.010
+14. HYPEUSDT | Skor: 104.1 | FVG Mesafe: %0.20 | Spread: %0.001
+15. SANDUSDT | Skor: 103.1 | FVG Mesafe: %0.43 | Spread: %0.014
+16. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.03 | Spread: %0.017
+17. STRKUSDT | Skor: 102.1 | FVG Mesafe: %0.26 | Spread: %0.017
+18. MUBARAKUSDT | Skor: 101.8 | FVG Mesafe: %0.20 | Spread: %0.013
+19. UNIUSDT | Skor: 101.5 | FVG Mesafe: %0.10 | Spread: %0.011
+20. LYNUSDT | Skor: 101.2 | FVG Mesafe: %0.11 | Spread: %0.036
+21. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.09 | Spread: %0.006
+22. AVAXUSDT | Skor: 101.1 | FVG Mesafe: %0.42 | Spread: %0.009
+23. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.07 | Spread: %0.007
+24. USUSDT | Skor: 101.0 | FVG Mesafe: %0.27 | Spread: %0.008
+25. 龙虾USDT | Skor: 101.0 | FVG Mesafe: %0.49 | Spread: %0.023
+26. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.11 | Spread: %0.014
+27. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.11 | Spread: %0.010
+28. BCHUSDT | Skor: 100.7 | FVG Mesafe: %0.26 | Spread: %0.003
+29. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.18 | Spread: %0.005
+30. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.24 | Spread: %0.005
+31. BRUSDT | Skor: 100.6 | FVG Mesafe: %0.14 | Spread: %0.026
+32. PONSUSDT | Skor: 100.6 | FVG Mesafe: %0.37 | Spread: %0.050
+33. FILUSDT | Skor: 100.6 | FVG Mesafe: %0.08 | Spread: %0.009
+34. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.11 | Spread: %0.008
+35. LITUSDT | Skor: 100.6 | FVG Mesafe: %0.28 | Spread: %0.013
+36. ZECUSDT | Skor: 61.7 | FVG Mesafe: %0.80 | Spread: %0.001
+37. SUIUSDT | Skor: 54.8 | FVG Mesafe: %0.89 | Spread: %0.008
+38. QNTUSDT | Skor: 53.1 | FVG Mesafe: %0.93 | Spread: %0.012
+39. 1000PEPEUSDT | Skor: 51.9 | FVG Mesafe: %0.72 | Spread: %0.002
+40. XLMUSDT | Skor: 50.7 | FVG Mesafe: %0.60 | Spread: %0.005
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[09:25:26] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 50
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 39 COIN BULUNDU ---
+1. BTCUSDT | Skor: 205.5 | FVG Mesafe: %0.07 | Spread: %0.000
+2. ETHUSDT | Skor: 158.4 | FVG Mesafe: %0.18 | Spread: %0.000
+3. SOLUSDT | Skor: 114.0 | FVG Mesafe: %0.15 | Spread: %0.008
+4. XRPUSDT | Skor: 106.8 | FVG Mesafe: %0.09 | Spread: %0.007
+5. NEARUSDT | Skor: 106.1 | FVG Mesafe: %0.02 | Spread: %0.020
+6. DOGEUSDT | Skor: 104.8 | FVG Mesafe: %0.18 | Spread: %0.010
+7. SUIUSDT | Skor: 104.8 | FVG Mesafe: %0.02 | Spread: %0.008
+8. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.02 | Spread: %0.001
+9. HYPEUSDT | Skor: 104.2 | FVG Mesafe: %0.30 | Spread: %0.001
+10. ADAUSDT | Skor: 104.1 | FVG Mesafe: %0.07 | Spread: %0.037
+11. SANDUSDT | Skor: 103.1 | FVG Mesafe: %0.17 | Spread: %0.014
+12. AINUSDT | Skor: 102.6 | FVG Mesafe: %0.49 | Spread: %0.035
+13. ENAUSDT | Skor: 102.1 | FVG Mesafe: %0.14 | Spread: %0.004
+14. STRKUSDT | Skor: 102.1 | FVG Mesafe: %0.40 | Spread: %0.017
+15. 1000PEPEUSDT | Skor: 101.9 | FVG Mesafe: %0.22 | Spread: %0.002
+16. BEAMXUSDT | Skor: 101.6 | FVG Mesafe: %0.12 | Spread: %0.039
+17. UNIUSDT | Skor: 101.5 | FVG Mesafe: %0.19 | Spread: %0.011
+18. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.03 | Spread: %0.006
+19. USUSDT | Skor: 101.0 | FVG Mesafe: %0.39 | Spread: %0.016
+20. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.24 | Spread: %0.007
+21. ONDOUSDT | Skor: 101.0 | FVG Mesafe: %0.08 | Spread: %0.020
+22. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.42 | Spread: %0.010
+23. BCHUSDT | Skor: 100.7 | FVG Mesafe: %0.35 | Spread: %0.003
+24. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.32 | Spread: %0.005
+25. XLMUSDT | Skor: 100.7 | FVG Mesafe: %0.05 | Spread: %0.005
+26. COLLECTUSDT | Skor: 100.7 | FVG Mesafe: %0.37 | Spread: %0.041
+27. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.07 | Spread: %0.005
+28. FILUSDT | Skor: 100.6 | FVG Mesafe: %0.03 | Spread: %0.009
+29. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.31 | Spread: %0.008
+30. LITUSDT | Skor: 100.6 | FVG Mesafe: %0.04 | Spread: %0.003
+31. 1000SHIBUSDT | Skor: 100.5 | FVG Mesafe: %0.02 | Spread: %0.017
+32. ZECUSDT | Skor: 61.7 | FVG Mesafe: %0.63 | Spread: %0.001
+33. QNTUSDT | Skor: 53.1 | FVG Mesafe: %0.92 | Spread: %0.012
+34. AVAXUSDT | Skor: 51.1 | FVG Mesafe: %0.65 | Spread: %0.009
+35. MOVRUSDT | Skor: 51.0 | FVG Mesafe: %0.64 | Spread: %0.018
+36. NILUSDT | Skor: 50.8 | FVG Mesafe: %0.97 | Spread: %0.010
+37. VIRTUALUSDT | Skor: 50.6 | FVG Mesafe: %0.84 | Spread: %0.011
+38. PONSUSDT | Skor: 50.6 | FVG Mesafe: %0.70 | Spread: %0.050
+39. WLDUSDT | Skor: 2.4 | FVG Mesafe: %1.16 | Spread: %0.017
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[09:41:05] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 49
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 38 COIN BULUNDU ---
+1. BTCUSDT | Skor: 205.5 | FVG Mesafe: %0.02 | Spread: %0.000
+2. ETHUSDT | Skor: 158.8 | FVG Mesafe: %0.02 | Spread: %0.000
+3. SOLUSDT | Skor: 114.1 | FVG Mesafe: %0.02 | Spread: %0.008
+4. ZECUSDT | Skor: 111.6 | FVG Mesafe: %0.08 | Spread: %0.001
+5. XRPUSDT | Skor: 106.8 | FVG Mesafe: %0.03 | Spread: %0.007
+6. NEARUSDT | Skor: 106.1 | FVG Mesafe: %0.10 | Spread: %0.020
+7. DOGEUSDT | Skor: 104.8 | FVG Mesafe: %0.02 | Spread: %0.010
+8. SUIUSDT | Skor: 104.8 | FVG Mesafe: %0.06 | Spread: %0.008
+9. BNBUSDT | Skor: 104.7 | FVG Mesafe: %0.13 | Spread: %0.001
+10. HYPEUSDT | Skor: 104.2 | FVG Mesafe: %0.27 | Spread: %0.001
+11. SANDUSDT | Skor: 103.1 | FVG Mesafe: %0.12 | Spread: %0.014
+12. AINUSDT | Skor: 102.5 | FVG Mesafe: %0.30 | Spread: %0.035
+13. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.36 | Spread: %0.017
+14. ENAUSDT | Skor: 102.2 | FVG Mesafe: %0.33 | Spread: %0.004
+15. STRKUSDT | Skor: 102.1 | FVG Mesafe: %0.21 | Spread: %0.017
+16. 1000PEPEUSDT | Skor: 101.9 | FVG Mesafe: %0.05 | Spread: %0.002
+17. BEAMXUSDT | Skor: 101.6 | FVG Mesafe: %0.15 | Spread: %0.039
+18. UNIUSDT | Skor: 101.5 | FVG Mesafe: %0.33 | Spread: %0.011
+19. TAOUSDT | Skor: 101.4 | FVG Mesafe: %0.10 | Spread: %0.003
+20. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.05 | Spread: %0.006
+21. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.08 | Spread: %0.007
+22. ONDOUSDT | Skor: 101.0 | FVG Mesafe: %0.47 | Spread: %0.020
+23. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.01 | Spread: %0.014
+24. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.46 | Spread: %0.010
+25. BCHUSDT | Skor: 100.7 | FVG Mesafe: %0.28 | Spread: %0.003
+26. TRUMPUSDT | Skor: 100.7 | FVG Mesafe: %0.10 | Spread: %0.048
+27. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.16 | Spread: %0.005
+28. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.03 | Spread: %0.035
+29. LITUSDT | Skor: 100.6 | FVG Mesafe: %0.14 | Spread: %0.003
+30. 1000SHIBUSDT | Skor: 100.5 | FVG Mesafe: %0.07 | Spread: %0.017
+31. GTCUSDT | Skor: 54.0 | FVG Mesafe: %0.90 | Spread: %0.037
+32. QNTUSDT | Skor: 53.0 | FVG Mesafe: %0.73 | Spread: %0.004
+33. MUBARAKUSDT | Skor: 51.8 | FVG Mesafe: %0.52 | Spread: %0.027
+34. AVAXUSDT | Skor: 51.1 | FVG Mesafe: %0.63 | Spread: %0.009
+35. XLMUSDT | Skor: 50.7 | FVG Mesafe: %0.89 | Spread: %0.005
+36. COLLECTUSDT | Skor: 50.7 | FVG Mesafe: %0.90 | Spread: %0.041
+37. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.53 | Spread: %0.008
+38. USUSDT | Skor: 1.1 | FVG Mesafe: %1.29 | Spread: %0.016
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[09:56:43] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 49
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 37 COIN BULUNDU ---
+1. BTCUSDT | Skor: 205.6 | FVG Mesafe: %0.10 | Spread: %0.000
+2. TAOUSDT | Skor: 201.4 | FVG Mesafe: %0.00 | Spread: %0.003
+3. LYNUSDT | Skor: 201.2 | FVG Mesafe: %0.00 | Spread: %0.035
+4. ZROUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.010
+5. VIRTUALUSDT | Skor: 200.6 | FVG Mesafe: %0.00 | Spread: %0.011
+6. ETHUSDT | Skor: 158.7 | FVG Mesafe: %0.29 | Spread: %0.000
+7. SOLUSDT | Skor: 114.0 | FVG Mesafe: %0.27 | Spread: %0.008
+8. ZECUSDT | Skor: 111.7 | FVG Mesafe: %0.37 | Spread: %0.001
+9. XRPUSDT | Skor: 106.7 | FVG Mesafe: %0.42 | Spread: %0.007
+10. SUIUSDT | Skor: 104.8 | FVG Mesafe: %0.45 | Spread: %0.008
+11. DOGEUSDT | Skor: 104.8 | FVG Mesafe: %0.33 | Spread: %0.010
+12. BNBUSDT | Skor: 104.6 | FVG Mesafe: %0.29 | Spread: %0.001
+13. HYPEUSDT | Skor: 104.2 | FVG Mesafe: %0.02 | Spread: %0.001
+14. SANDUSDT | Skor: 103.1 | FVG Mesafe: %0.12 | Spread: %0.014
+15. QNTUSDT | Skor: 103.0 | FVG Mesafe: %0.29 | Spread: %0.004
+16. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.19 | Spread: %0.017
+17. ENAUSDT | Skor: 102.3 | FVG Mesafe: %0.06 | Spread: %0.004
+18. 1000PEPEUSDT | Skor: 102.0 | FVG Mesafe: %0.04 | Spread: %0.002
+19. MUBARAKUSDT | Skor: 101.8 | FVG Mesafe: %0.19 | Spread: %0.040
+20. BEAMXUSDT | Skor: 101.5 | FVG Mesafe: %0.19 | Spread: %0.038
+21. USUSDT | Skor: 101.1 | FVG Mesafe: %0.20 | Spread: %0.016
+22. LINKUSDT | Skor: 101.0 | FVG Mesafe: %0.42 | Spread: %0.007
+23. ONDOUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.020
+24. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.10 | Spread: %0.014
+25. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.42 | Spread: %0.010
+26. BCHUSDT | Skor: 100.7 | FVG Mesafe: %0.23 | Spread: %0.003
+27. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.42 | Spread: %0.005
+28. XLMUSDT | Skor: 100.7 | FVG Mesafe: %0.03 | Spread: %0.005
+29. LITUSDT | Skor: 100.6 | FVG Mesafe: %0.05 | Spread: %0.005
+30. 1000SHIBUSDT | Skor: 100.5 | FVG Mesafe: %0.25 | Spread: %0.017
+31. UNIUSDT | Skor: 51.5 | FVG Mesafe: %0.58 | Spread: %0.011
+32. AVAXUSDT | Skor: 51.1 | FVG Mesafe: %0.79 | Spread: %0.009
+33. DOTUSDT | Skor: 50.6 | FVG Mesafe: %0.54 | Spread: %0.008
+34. NEARUSDT | Skor: 6.1 | FVG Mesafe: %1.08 | Spread: %0.020
+35. AINUSDT | Skor: 2.5 | FVG Mesafe: %1.01 | Spread: %0.035
+36. STRKUSDT | Skor: 2.1 | FVG Mesafe: %1.15 | Spread: %0.017
+37. BTWUSDT | Skor: 2.1 | FVG Mesafe: %1.03 | Spread: %0.017
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[10:12:21] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 47
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
+
+--- DINAMIK ESIK: FVG'YE YAKIN 40 COIN BULUNDU ---
+1. ETHUSDT | Skor: 258.9 | FVG Mesafe: %0.00 | Spread: %0.000
+2. BTCUSDT | Skor: 206.1 | FVG Mesafe: %0.08 | Spread: %0.000
+3. BNBUSDT | Skor: 204.6 | FVG Mesafe: %0.00 | Spread: %0.001
+4. TAOUSDT | Skor: 201.4 | FVG Mesafe: %0.00 | Spread: %0.003
+5. BCHUSDT | Skor: 200.7 | FVG Mesafe: %0.00 | Spread: %0.003
+6. SOLUSDT | Skor: 114.0 | FVG Mesafe: %0.01 | Spread: %0.008
+7. ZECUSDT | Skor: 111.5 | FVG Mesafe: %0.40 | Spread: %0.001
+8. XRPUSDT | Skor: 106.7 | FVG Mesafe: %0.05 | Spread: %0.007
+9. SUIUSDT | Skor: 104.9 | FVG Mesafe: %0.15 | Spread: %0.008
+10. DOGEUSDT | Skor: 104.8 | FVG Mesafe: %0.02 | Spread: %0.010
+11. ADAUSDT | Skor: 104.2 | FVG Mesafe: %0.33 | Spread: %0.037
+12. HYPEUSDT | Skor: 104.2 | FVG Mesafe: %0.01 | Spread: %0.001
+13. SANDUSDT | Skor: 103.1 | FVG Mesafe: %0.03 | Spread: %0.014
+14. QNTUSDT | Skor: 103.0 | FVG Mesafe: %0.10 | Spread: %0.012
+15. WLDUSDT | Skor: 102.4 | FVG Mesafe: %0.02 | Spread: %0.017
+16. STRKUSDT | Skor: 102.1 | FVG Mesafe: %0.14 | Spread: %0.017
+17. BTWUSDT | Skor: 102.0 | FVG Mesafe: %0.16 | Spread: %0.008
+18. 1000PEPEUSDT | Skor: 102.0 | FVG Mesafe: %0.12 | Spread: %0.002
+19. FETUSDT | Skor: 101.9 | FVG Mesafe: %0.27 | Spread: %0.038
+20. MUBARAKUSDT | Skor: 101.8 | FVG Mesafe: %0.17 | Spread: %0.040
+21. AVAXUSDT | Skor: 101.1 | FVG Mesafe: %0.11 | Spread: %0.009
+22. AAVEUSDT | Skor: 101.1 | FVG Mesafe: %0.22 | Spread: %0.006
+23. ONDOUSDT | Skor: 101.0 | FVG Mesafe: %0.02 | Spread: %0.020
+24. LTCUSDT | Skor: 100.9 | FVG Mesafe: %0.03 | Spread: %0.014
+25. PENGUUSDT | Skor: 100.8 | FVG Mesafe: %0.05 | Spread: %0.010
+26. ARBUSDT | Skor: 100.7 | FVG Mesafe: %0.13 | Spread: %0.005
+27. TRUMPUSDT | Skor: 100.7 | FVG Mesafe: %0.10 | Spread: %0.048
+28. XLMUSDT | Skor: 100.7 | FVG Mesafe: %0.02 | Spread: %0.005
+29. FILUSDT | Skor: 100.6 | FVG Mesafe: %0.15 | Spread: %0.009
+30. ZROUSDT | Skor: 100.6 | FVG Mesafe: %0.10 | Spread: %0.005
+31. VIRTUALUSDT | Skor: 100.6 | FVG Mesafe: %0.03 | Spread: %0.011
+32. LITUSDT | Skor: 100.6 | FVG Mesafe: %0.18 | Spread: %0.003
+33. DOTUSDT | Skor: 100.6 | FVG Mesafe: %0.07 | Spread: %0.008
+34. AXSUSDT | Skor: 100.6 | FVG Mesafe: %0.17 | Spread: %0.008
+35. GTCUSDT | Skor: 54.1 | FVG Mesafe: %0.68 | Spread: %0.019
+36. UNIUSDT | Skor: 51.5 | FVG Mesafe: %0.79 | Spread: %0.011
+37. USUSDT | Skor: 51.1 | FVG Mesafe: %0.85 | Spread: %0.032
+38. LINKUSDT | Skor: 51.0 | FVG Mesafe: %0.60 | Spread: %0.007
+39. AINUSDT | Skor: 2.5 | FVG Mesafe: %1.25 | Spread: %0.051
+40. ENAUSDT | Skor: 2.4 | FVG Mesafe: %1.22 | Spread: %0.004
+
+[OK] Yeni liste 'data/active_screener.json' dosyasina asenkron olarak yazildi.
+Siradaki tarama 15 dakika sonra otomatik baslayacak...
+
+[10:27:57] Dinamik Screener Taramasi Basliyor...
+Asama 1: Spread ve Hacim testini gecen 'Kaliteli' Coin sayisi: 49
+Asama 2: SMC Yaklasim (Proximity) Skorlari analiz ediliyor... (~10-15 saniye)
