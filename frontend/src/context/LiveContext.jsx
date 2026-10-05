@@ -131,10 +131,13 @@ export function LiveProvider({ children }) {
         const price = parseFloat(d.p);
         const qty = parseFloat(d.q);
         const isMaker = d.m; 
-        const netQty = isMaker ? -qty : qty;
+        
+        // USD cinsinden hesapla (Miktar * Fiyat) boylece BTC gibi pahali coinlerde CVD 0 kalmaz
+        const usdVolume = qty * price;
+        const netUsd = isMaker ? -usdVolume : usdVolume;
         
         const now = Date.now();
-        buf.cvd_arr.push({ time: now, qty: netQty });
+        buf.cvd_arr.push({ time: now, qty: netUsd });
         
         buf.cvd_arr = buf.cvd_arr.filter(t => (now - t.time) <= 60000);
         const cvd_1m = buf.cvd_arr.reduce((sum, t) => sum + t.qty, 0);
