@@ -107,7 +107,7 @@ export default function App() {
           <div className="flex flex-1 overflow-hidden">
             <Sidebar />
             <main className="flex-1 overflow-y-auto bg-[#0B0E11] p-4 md:p-8 pb-24 md:pb-8">
-              <div className="max-w-7xl mx-auto">
+              <div className="w-full max-w-[1800px] mx-auto">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/screener" element={<Screener />} />

@@ -50,7 +50,7 @@ export default function LiveTerminal() {
 
       <div className="flex flex-col xl:flex-row gap-6 flex-1 min-h-[500px]">
         {/* Main Table */}
-        <div className={`bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl overflow-hidden flex-1 transition-all duration-300 ${selectedSymbol ? 'xl:w-[55%]' : 'w-full'}`}>
+        <div className={`bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl overflow-hidden flex-1 transition-all duration-300 ${selectedSymbol ? 'xl:w-[35%]' : 'w-full'}`}>
           <div className="overflow-x-auto h-full">
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="bg-[#121822] border-b border-[#1f2937]">
@@ -77,7 +77,7 @@ export default function LiveTerminal() {
                     FVG Derinlik <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
-                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
+                <th className={`px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-center ${selectedSymbol ? 'hidden' : ''}`}>
                   <Tooltip text={`Screener algoritması tarafından FVG (Boşluk) derinliği ve konumu uygun görülüp izlemeye alınan coinleri temsil eder.\n\nİŞLEME GİRİŞ:\nOBI ve CVD şartları aynı anda onaylandığında bot otomatik olarak pozisyon açar.`}>
                     Referans Durumu <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
@@ -162,7 +162,7 @@ export default function LiveTerminal() {
                           </span>
                         ) : <span className="text-gray-500">-</span>}
                       </td>
-                      <td className="px-6 py-5 text-center">
+                      <td className={`px-6 py-5 text-center ${selectedSymbol ? 'hidden' : ''}`}>
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] uppercase font-black bg-[#1E2329] text-gray-400 border border-[#2B3139]">
                           Screener Onaylı
                         </span>
@@ -178,7 +178,7 @@ export default function LiveTerminal() {
 
       {/* Embedded TradingView Chart (Right Side) */}
       {selectedSymbol && (
-        <div className="h-[500px] xl:h-auto xl:w-[45%] bg-[#0B0E11] rounded-xl border border-[#1f2937] shrink-0 overflow-hidden relative shadow-lg flex flex-col animate-in slide-in-from-right-4 fade-in duration-300">
+        <div className="h-[500px] xl:h-auto xl:w-[65%] bg-[#0B0E11] rounded-xl border border-[#1f2937] shrink-0 overflow-hidden relative shadow-lg flex flex-col animate-in slide-in-from-right-4 fade-in duration-300">
           <div className="bg-[#121822] text-xs font-bold px-4 py-3 text-gray-300 border-b border-[#1f2937] flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#0ECB81] animate-pulse" />
