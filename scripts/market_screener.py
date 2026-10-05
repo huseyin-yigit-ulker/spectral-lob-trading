@@ -131,8 +131,8 @@ def run_screener():
         
     # --- YENI: BACKTEST ICIN SCREENER TARIHCESINI LOGLA ---
     os.makedirs('logs', exist_ok=True)
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    log_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    date_str = datetime.utcnow().strftime("%Y-%m-%d")
+    log_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     history_file = f'logs/screener_history_{date_str}.csv'
     
     file_exists = os.path.isfile(history_file)

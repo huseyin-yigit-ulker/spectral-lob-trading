@@ -38,9 +38,6 @@ export function LiveProvider({ children }) {
       
       if (data && data.length > 0) {
         unique = [...new Set(data.map(d => d.sembol.toLowerCase()))].slice(0, 15);
-      } else {
-        // Local ortamda Supabase hatasi varsa veya KABUL listesi bossa test icin varsayilan coinleri ekle
-        unique = ['btcusdt', 'ethusdt', 'solusdt', 'bnbusdt'];
       }
 
       setSymbols(unique);

@@ -77,7 +77,7 @@ export default function LiveTerminal() {
             <tbody className="divide-y divide-[#1f2937]/50">
               {symbols.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-16 text-center">
+                  <td colSpan="7" className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center justify-center text-gray-500">
                       <Activity size={32} className="mb-3 opacity-50" />
                       <p className="text-base font-medium text-gray-400">Canlı izlenecek "KABUL" onaylı coin bulunamadı.</p>

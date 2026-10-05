@@ -264,7 +264,7 @@ async def binance_ws():
                                 now = time.time()
                                 if now - agent.last_log_time > 2:
                                     agent.last_log_time = now
-                                    dt_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                    dt_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
                                     with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
                                         b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                     b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
