@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Clock, CheckCircle2, XCircle, Filter, Info, Activity } from 'lucide-react';
+import Tooltip from '../components/Tooltip';
 
 const PERIODS = [
   { id: 'active', label: 'Aktif Periyot' },
@@ -16,46 +16,6 @@ const STATUSES = [
   { id: 'KABUL', label: 'Sadece KABUL' },
   { id: 'RED', label: 'Sadece RED' },
 ];
-
-// Production-grade Portal Tooltip (overflow-hidden sorununu tamamen cozer)
-const Tooltip = ({ text, children }) => {
-  const [show, setShow] = useState(false);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const ref = useRef(null);
-
-  const handleMouseEnter = () => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      setPos({ x: rect.left + rect.width / 2, y: rect.top - 10 });
-      setShow(true);
-    }
-  };
-
-  return (
-    <>
-      <div 
-        ref={ref} 
-        onMouseEnter={handleMouseEnter} 
-        onMouseLeave={() => setShow(false)} 
-        className="inline-flex cursor-help items-center gap-1.5 transition-colors hover:text-gray-200"
-      >
-        {children}
-      </div>
-      {show && createPortal(
-        <div 
-          className="fixed z-[99999] w-64 bg-[#1E2329] text-gray-200 text-xs p-3.5 rounded-lg border border-[#2B3139] shadow-2xl pointer-events-none transform -translate-x-1/2 -translate-y-full leading-relaxed font-medium"
-          style={{ left: pos.x, top: pos.y }}
-        >
-          {text}
-          {/* Tooltip Ok ucu */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-[6px] border-transparent border-t-[#2B3139]"></div>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[2px] border-[5px] border-transparent border-t-[#1E2329]"></div>
-        </div>,
-        document.body
-      )}
-    </>
-  );
-};
 
 export default function Screener() {
   const [logs, setLogs] = useState([]);

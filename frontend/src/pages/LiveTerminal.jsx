@@ -1,5 +1,6 @@
-import { Activity, TerminalSquare, Wifi } from 'lucide-react';
+import { Activity, TerminalSquare, Wifi, Info } from 'lucide-react';
 import { useLive } from '../context/LiveContext';
+import Tooltip from '../components/Tooltip';
 
 export default function LiveTerminal() {
   const { symbols, metrics, wsStatus } = useLive();
@@ -35,9 +36,21 @@ export default function LiveTerminal() {
               <tr>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">Sembol</th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Fiyat</th>
-                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Canlı OBI (Depth)</th>
-                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">CVD (Son 1dk)</th>
-                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Referans Durumu</th>
+                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                  <Tooltip text="Emir Defteri Dengesizliği (Order Book Imbalance). Limit emirlerdeki alıcı/satıcı baskısını ölçer.\n\nSİNYAL ŞARTI:\nLONG (AL) için: > +0.40\nSHORT (SAT) için: < -0.40">
+                    Canlı OBI (Depth) <Info size={14} className="text-[#F0B90B]" />
+                  </Tooltip>
+                </th>
+                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                  <Tooltip text="Kümülatif Hacim Deltası. Market (Piyasa) emirleriyle gerçekleşen anlık alım-satım baskısıdır.\n\nSİNYAL ŞARTI:\nLONG (AL) için: Pozitif (> 0)\nSHORT (SAT) için: Negatif (< 0)">
+                    CVD (Son 1dk) <Info size={14} className="text-[#F0B90B]" />
+                  </Tooltip>
+                </th>
+                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
+                  <Tooltip text="Screener algoritması tarafından FVG (Boşluk) derinliği ve konumu uygun görülüp izlemeye alınan coinleri temsil eder.\n\nİŞLEME GİRİŞ:\nOBI ve CVD şartları aynı anda onaylandığında bot otomatik olarak pozisyon açar.">
+                    Referans Durumu <Info size={14} className="text-[#F0B90B]" />
+                  </Tooltip>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1f2937]/50">
