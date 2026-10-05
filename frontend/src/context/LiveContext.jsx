@@ -7,18 +7,32 @@ export function LiveProvider({ children }) {
   const [symbols, setSymbols] = useState([]);
   const [metrics, setMetrics] = useState({});
   const [wsStatus, setWsStatus] = useState('CONNECTING');
+  const [activePeriodString, setActivePeriodString] = useState('');
   
   const wsRef = useRef(null);
   const buffers = useRef({});
 
   useEffect(() => {
     async function fetchSymbols() {
-      const past = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+      const now = new Date();
+      // 15 dakikalik periyodun baslangicini bul (ornegin 14:12 -> 14:00)
+      const periodStartMs = Math.floor(now.getTime() / (15 * 60 * 1000)) * (15 * 60 * 1000);
+      const periodStart = new Date(periodStartMs);
+      
+      const endMs = periodStartMs + (15 * 60 * 1000);
+      const periodEnd = new Date(endMs);
+      
+      const pad = n => n.toString().padStart(2, '0');
+      const pStr = `${pad(periodStart.getHours())}:${pad(periodStart.getMinutes())} - ${pad(periodEnd.getHours())}:${pad(periodEnd.getMinutes())}`;
+      setActivePeriodString(pStr);
+
+      const pastISO = periodStart.toISOString();
+
       const { data } = await supabase
         .from('screener_history')
         .select('sembol')
         .eq('durum', 'KABUL')
-        .gte('zaman', past);
+        .gte('zaman', pastISO);
 
       if (data) {
         const unique = [...new Set(data.map(d => d.sembol.toLowerCase()))].slice(0, 15);
@@ -27,14 +41,10 @@ export function LiveProvider({ children }) {
         const initMetrics = {};
         unique.forEach(sym => {
           initMetrics[sym] = { price: 0, obi: 0, cvd: 0 };
-          buffers.current[sym] = {
-            obi_arr: [],
-            cvd_arr: [],
-          };
+          buffers.current[sym] = { obi_arr: [], cvd_arr: [] };
         });
         setMetrics(initMetrics);
 
-        // REST Snapshot (İlk fiyatlar aninda dolsun diye)
         if (unique.length > 0) {
           try {
             const symsString = JSON.stringify(unique.map(s => s.toUpperCase()));
@@ -56,8 +66,8 @@ export function LiveProvider({ children }) {
     
     fetchSymbols();
     
-    // Her 5 dakikada bir kabul alan sembolleri yenile
-    const interval = setInterval(fetchSymbols, 5 * 60 * 1000);
+    // Screener yeni periyotta calistiginda hizla yakalamasi icin 1 dakikada bir kontrol et
+    const interval = setInterval(fetchSymbols, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -156,7 +166,7 @@ export function LiveProvider({ children }) {
   }, [symbols]);
 
   return (
-    <LiveContext.Provider value={{ symbols, metrics, wsStatus }}>
+    <LiveContext.Provider value={{ symbols, metrics, wsStatus, activePeriodString }}>
       {children}
     </LiveContext.Provider>
   );

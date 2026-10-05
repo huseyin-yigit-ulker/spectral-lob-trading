@@ -30,7 +30,9 @@ export default function Screener() {
       
       const now = new Date();
       if (period === 'active') {
-        query = query.limit(100);
+        const periodStartMs = Math.floor(now.getTime() / (15 * 60 * 1000)) * (15 * 60 * 1000);
+        const past = new Date(periodStartMs).toISOString();
+        query = query.gte('zaman', past);
       } else if (period === '1h') {
         const past = new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString();
         query = query.gte('zaman', past).limit(500);

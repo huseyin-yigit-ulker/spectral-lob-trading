@@ -3,7 +3,7 @@ import { useLive } from '../context/LiveContext';
 import Tooltip from '../components/Tooltip';
 
 export default function LiveTerminal() {
-  const { symbols, metrics, wsStatus } = useLive();
+  const { symbols, metrics, wsStatus, activePeriodString } = useLive();
 
   return (
     <div className="space-y-6 h-full flex flex-col">
@@ -15,17 +15,28 @@ export default function LiveTerminal() {
           <p className="text-sm text-gray-500 mt-1.5">Screener'dan KABUL alan coinlerin canlı emir defteri verisi</p>
         </div>
         
-        <div className="flex items-center gap-2 px-4 py-2 bg-[#121822] border border-[#1f2937] rounded-xl shadow-sm">
-          {wsStatus === 'CONNECTED' ? (
-            <Wifi size={16} className="text-[#0ECB81] animate-pulse" />
-          ) : wsStatus === 'CONNECTING' ? (
-            <Wifi size={16} className="text-[#F0B90B] animate-pulse" />
-          ) : (
-            <Wifi size={16} className="text-[#F6465D]" />
+        <div className="flex flex-col md:flex-row items-end md:items-center gap-3">
+          {/* Active Period Badge */}
+          {activePeriodString && (
+            <div className="px-3 py-1.5 bg-[#1E2329] border border-[#2B3139] rounded-lg shadow-sm">
+              <span className="text-xs font-bold text-[#F0B90B]">
+                PERİYOT: <span className="text-gray-300 ml-1">{activePeriodString}</span>
+              </span>
+            </div>
           )}
-          <span className="text-xs font-bold text-gray-300">
-            WS: {wsStatus}
-          </span>
+
+          <div className="flex items-center gap-2 px-4 py-2 bg-[#121822] border border-[#1f2937] rounded-xl shadow-sm">
+            {wsStatus === 'CONNECTED' ? (
+              <Wifi size={16} className="text-[#0ECB81] animate-pulse" />
+            ) : wsStatus === 'CONNECTING' ? (
+              <Wifi size={16} className="text-[#F0B90B] animate-pulse" />
+            ) : (
+              <Wifi size={16} className="text-[#F6465D]" />
+            )}
+            <span className="text-xs font-bold text-gray-300">
+              WS: {wsStatus}
+            </span>
+          </div>
         </div>
       </div>
 
