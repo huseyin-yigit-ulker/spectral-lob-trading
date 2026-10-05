@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import SignalCard from '../components/SignalCard';
 import ChartModal from '../components/ChartModal';
 import { reconstructTrades } from '../utils/tradeLogic';
-import { Filter } from 'lucide-react';
+import { Filter, List } from 'lucide-react';
 
 const PERIODS = [
   { id: 'all', label: 'Tüm Zamanlar' },
@@ -21,7 +21,6 @@ export default function TradeLogs() {
   useEffect(() => {
     async function fetchLogs() {
       setLoading(true);
-      // PnL ve islem butunlugu (Entry-Exit eslesmesi) bozulmamasi icin once tum veriyi cekiyoruz
       const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: true });
       if (data) {
         const parsed = reconstructTrades(data);
@@ -32,7 +31,6 @@ export default function TradeLogs() {
     fetchLogs();
   }, []);
 
-  // Tarih filtresini (Frontend tarafinda) uygula
   const filteredTrades = useMemo(() => {
     if (period === 'all') return allReconstructedTrades;
     
@@ -51,28 +49,31 @@ export default function TradeLogs() {
 
   return (
     <div className="space-y-6 relative h-full flex flex-col">
-      <div className="border-b border-[#1f2937] pb-4 flex flex-col md:flex-row md:justify-between md:items-end gap-4 shrink-0">
+      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-6 border-b border-[#1f2937] pb-6 shrink-0">
         <div>
-          <h2 className="text-2xl font-black text-gray-100 tracking-tight">Signal Terminal</h2>
-          <p className="text-sm text-gray-500 mt-1">Live V5 SMC Execution Logs</p>
+          <h2 className="text-2xl font-black text-gray-100 tracking-tight flex items-center gap-2">
+            <List className="text-[#F0B90B]" size={24} /> Signal Terminal
+          </h2>
+          <p className="text-sm text-gray-500 mt-1.5">Live V5 SMC Execution Logs & PnL History</p>
         </div>
         
-        {/* Period Selector */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
-          <Filter size={14} className="text-gray-500 hidden md:block mr-1" />
-          {PERIODS.map(p => (
-            <button
-              key={p.id}
-              onClick={() => setPeriod(p.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
-                period === p.id 
-                  ? 'bg-[#1E2329] text-[#F0B90B] border border-[#2B3139]' 
-                  : 'text-gray-400 hover:text-white hover:bg-[#121822] border border-transparent'
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
+        {/* Production-Grade Segmented Period Filter */}
+        <div className="flex items-center gap-3 bg-[#121822] p-1.5 rounded-xl border border-[#1f2937] shadow-sm overflow-x-auto w-full xl:w-auto">
+          <div className="flex bg-[#0B0E11] p-1 rounded-lg border border-[#1f2937] w-full shrink-0">
+            {PERIODS.map(p => (
+              <button
+                key={p.id}
+                onClick={() => setPeriod(p.id)}
+                className={`px-6 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap flex-1 text-center ${
+                  period === p.id 
+                    ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-[#1E2329]'
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       
@@ -81,8 +82,12 @@ export default function TradeLogs() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-10">
           {filteredTrades.length === 0 ? (
-            <div className="col-span-full py-12 text-center text-gray-500 font-medium bg-[#0B0E11] border border-[#1f2937] rounded-xl">
-              Seçilen tarih aralığında işlem bulunamadı.
+            <div className="col-span-full py-16 text-center bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-lg">
+              <div className="flex flex-col items-center justify-center text-gray-500">
+                <Filter size={32} className="mb-3 opacity-50" />
+                <p className="text-base font-medium text-gray-400">Bu periyotta hiç işlem yapılmamış.</p>
+                <p className="text-xs mt-1">Bot şu an piyasayı taramaya devam ediyor.</p>
+              </div>
             </div>
           ) : (
             filteredTrades.map((log, i) => (

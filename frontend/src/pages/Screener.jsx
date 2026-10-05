@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
-import { Clock, CheckCircle2, XCircle, Filter, Info } from 'lucide-react';
+import { Clock, CheckCircle2, XCircle, Filter, Info, Activity } from 'lucide-react';
 
 const PERIODS = [
   { id: 'active', label: 'Aktif Periyot' },
@@ -16,14 +17,45 @@ const STATUSES = [
   { id: 'RED', label: 'Sadece RED' },
 ];
 
-const Tooltip = ({ text, children }) => (
-  <div className="group relative inline-flex items-center gap-1 cursor-help">
-    {children}
-    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-56 bg-[#1E2329] text-gray-300 text-[11px] p-2.5 rounded-lg border border-[#2B3139] shadow-2xl z-50 whitespace-normal normal-case leading-relaxed font-medium">
-      {text}
-    </div>
-  </div>
-);
+// Production-grade Portal Tooltip (overflow-hidden sorununu tamamen cozer)
+const Tooltip = ({ text, children }) => {
+  const [show, setShow] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const ref = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setPos({ x: rect.left + rect.width / 2, y: rect.top - 10 });
+      setShow(true);
+    }
+  };
+
+  return (
+    <>
+      <div 
+        ref={ref} 
+        onMouseEnter={handleMouseEnter} 
+        onMouseLeave={() => setShow(false)} 
+        className="inline-flex cursor-help items-center gap-1.5 transition-colors hover:text-gray-200"
+      >
+        {children}
+      </div>
+      {show && createPortal(
+        <div 
+          className="fixed z-[99999] w-64 bg-[#1E2329] text-gray-200 text-xs p-3.5 rounded-lg border border-[#2B3139] shadow-2xl pointer-events-none transform -translate-x-1/2 -translate-y-full leading-relaxed font-medium"
+          style={{ left: pos.x, top: pos.y }}
+        >
+          {text}
+          {/* Tooltip Ok ucu */}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-[6px] border-transparent border-t-[#2B3139]"></div>
+          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[2px] border-[5px] border-transparent border-t-[#1E2329]"></div>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+};
 
 export default function Screener() {
   const [logs, setLogs] = useState([]);
@@ -65,24 +97,27 @@ export default function Screener() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#1f2937] pb-4 flex flex-col xl:flex-row xl:justify-between xl:items-end gap-4">
+      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-6 border-b border-[#1f2937] pb-6">
         <div>
-          <h2 className="text-2xl font-black text-gray-100 tracking-tight">Market Scanner</h2>
-          <p className="text-sm text-gray-500 mt-1">Live Volatility & FVG Proximity Screening</p>
+          <h2 className="text-2xl font-black text-gray-100 tracking-tight flex items-center gap-2">
+            <Activity className="text-[#F0B90B]" size={24} /> Market Scanner
+          </h2>
+          <p className="text-sm text-gray-500 mt-1.5">Canlı Volatilite ve FVG (Adil Değer Boşluğu) Tarama Motoru</p>
         </div>
         
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 pb-1 md:pb-0">
-          <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
-            <Filter size={14} className="text-gray-500 hidden md:block mr-1" />
+        {/* Production-Grade Segmented Filters */}
+        <div className="flex flex-col md:flex-row items-center gap-3 bg-[#121822] p-1.5 rounded-xl border border-[#1f2937] shadow-sm overflow-x-auto w-full xl:w-auto">
+          
+          {/* Status Filter */}
+          <div className="flex bg-[#0B0E11] p-1 rounded-lg border border-[#1f2937] shrink-0">
             {STATUSES.map(s => (
               <button
                 key={s.id}
                 onClick={() => setStatusFilter(s.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
+                className={`px-4 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
                   statusFilter === s.id 
-                    ? 'bg-[#1E2329] text-[#F0B90B] border border-[#2B3139]' 
-                    : 'text-gray-400 hover:text-white hover:bg-[#121822] border border-transparent'
+                    ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-[#1E2329]'
                 }`}
               >
                 {s.label}
@@ -90,80 +125,92 @@ export default function Screener() {
             ))}
           </div>
           
-          <div className="hidden md:block w-px h-6 bg-[#1f2937]"></div>
+          <div className="hidden md:block w-px h-6 bg-[#2B3139] shrink-0"></div>
           
-          <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
-            <Clock size={14} className="text-gray-500 hidden md:block mr-1" />
+          {/* Period Filter */}
+          <div className="flex bg-[#0B0E11] p-1 rounded-lg border border-[#1f2937] shrink-0">
             {PERIODS.map(p => (
               <button
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
+                className={`px-4 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                   period === p.id 
-                    ? 'bg-[#1E2329] text-[#F0B90B] border border-[#2B3139]' 
-                    : 'text-gray-400 hover:text-white hover:bg-[#121822] border border-transparent'
+                    ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-[#1E2329]'
                 }`}
               >
+                {p.id === 'active' && <Clock size={12} className={period === 'active' ? 'text-[#F0B90B]' : 'text-gray-500'} />}
                 {p.label}
               </button>
             ))}
           </div>
+
         </div>
       </div>
       
       {loading ? (
         <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#F0B90B] border-t-transparent rounded-full animate-spin"></div></div>
       ) : (
-        <div className="bg-[#0B0E11] border border-[#1f2937] rounded-xl overflow-hidden shadow-xl pb-32">
+        <div className="bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl relative">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="bg-[#121822] border-b border-[#1f2937]">
                 <tr>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Zaman</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Sembol</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    <Tooltip text="KABUL: Coin hacimli, spready düşük ve bir FVG bölgesine çok yakın. (Bot bu coini izlemeye alır) | RED: Coin hacimli ama şu an herhangi bir FVG bölgesinde değil.">
-                      Durum <Info size={12} className="text-[#F0B90B]" />
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">Zaman</th>
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">Sembol</th>
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <Tooltip text="KABUL: Coin hacimli, spready düşük ve bir FVG bölgesine çok yakın. (Bot bu coini izlemeye alır) 
+
+RED: Coin hacimli ama şu an herhangi bir FVG bölgesinde değil veya şartları karşılamıyor.">
+                      Durum <Info size={14} className="text-[#F0B90B]" />
                     </Tooltip>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                    <Tooltip text="Screener Algoritmasının coine verdiği volatilite ve hacim puanı. Genelde 100 üzeri skorlar işlem için uygundur.">
-                      Skor <Info size={12} className="text-[#F0B90B]" />
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                    <Tooltip text="Screener Algoritmasının coine verdiği volatilite ve hacim puanı. Genelde 100 üzeri skorlar işlem için idealdir.">
+                      Skor <Info size={14} className="text-[#F0B90B]" />
                     </Tooltip>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                    <Tooltip text="Son 24 saatlik kümülatif işlem hacmi (Dolar). Likiditeyi gösterir.">
-                      Hacim <Info size={12} className="text-[#F0B90B]" />
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                    <Tooltip text="Son 24 saatlik kümülatif işlem hacmi (Dolar bazında). Tahtadaki likiditeyi gösterir.">
+                      Hacim <Info size={14} className="text-[#F0B90B]" />
                     </Tooltip>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                    <Tooltip text="Alış ve Satış tahtası arasındaki fiyat farkı. Çok yüksekse (örneğin %0.5) bot komisyon kaybını önlemek için coini reddeder.">
-                      Spread <Info size={12} className="text-[#F0B90B]" />
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                    <Tooltip text="Alış ve Satış fiyatı arasındaki fark. Çok yüksekse (örneğin %0.5) bot komisyon kaybını önlemek için coini reddeder.">
+                      Spread <Info size={14} className="text-[#F0B90B]" />
                     </Tooltip>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                  <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
                     <Tooltip text="Fiyatın en yakın FVG (Adil Değer Boşluğu) merkezine olan % uzaklığı. KABUL alabilmesi için çok yakın (%0.15 altı) olması istenir.">
-                      FVG Mesafe <Info size={12} className="text-[#F0B90B]" />
+                      FVG Mesafe <Info size={14} className="text-[#F0B90B]" />
                     </Tooltip>
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1f2937]">
+              <tbody className="divide-y divide-[#1f2937]/50">
                 {logs.length === 0 ? (
-                  <tr><td colSpan="7" className="px-6 py-12 text-center text-gray-500 font-medium">Bu periyotta tarama verisi bulunamadı.</td></tr>
+                  <tr>
+                    <td colSpan="7" className="px-6 py-16 text-center">
+                      <div className="flex flex-col items-center justify-center text-gray-500">
+                        <Filter size={32} className="mb-3 opacity-50" />
+                        <p className="text-base font-medium text-gray-400">Bu kriterlere uygun veri bulunamadı</p>
+                        <p className="text-xs mt-1">Farklı bir periyot veya durum filtresi seçmeyi deneyin.</p>
+                      </div>
+                    </td>
+                  </tr>
                 ) : (
                   logs.map(log => (
-                    <tr key={log.id} className="hover:bg-[#121822] transition-colors">
+                    <tr key={log.id} className="hover:bg-[#1A2027] transition-colors group">
                       <td className="px-6 py-4 text-gray-400 font-mono text-xs flex items-center gap-2">
-                        <Clock size={12} />
+                        <Clock size={12} className="opacity-50 group-hover:opacity-100 transition-opacity" />
                         {new Date(log.zaman).toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 font-bold text-gray-200">{log.sembol}</td>
+                      <td className="px-6 py-4 font-black text-gray-200 tracking-wide">{log.sembol}</td>
                       <td className="px-6 py-4">
                         {log.durum === 'KABUL' ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-green-500/10 text-[#0ECB81] border border-[#0ECB81]/20"><CheckCircle2 size={12}/> KABUL</span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] uppercase font-black bg-green-500/10 text-[#0ECB81] border border-[#0ECB81]/20 shadow-[0_0_10px_rgba(14,203,129,0.1)]"><CheckCircle2 size={12}/> KABUL</span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] uppercase font-black bg-red-500/10 text-[#F6465D] border border-[#F6465D]/20"><XCircle size={12}/> RED</span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] uppercase font-black bg-red-500/10 text-[#F6465D] border border-[#F6465D]/20"><XCircle size={12}/> RED</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-right font-mono text-[#F0B90B] font-bold">{Number(log.skor).toFixed(1)}</td>
