@@ -155,4 +155,13 @@ if __name__ == "__main__":
             run_screener()
         except Exception as e:
             print(f"Screener Hatasi: {e}")
-        time.sleep(900)
+            
+        # Bir sonraki 15 dakikalik tam dilime (00, 15, 30, 45) kadar bekle
+        now_ts = time.time()
+        period_secs = 900 # 15 dakika
+        next_period_ts = ((now_ts // period_secs) + 1) * period_secs
+        sleep_secs = next_period_ts - now_ts
+        
+        next_run_str = datetime.fromtimestamp(next_period_ts).strftime('%H:%M:%00')
+        print(f"\nBekleniyor... Siradaki tarama {next_run_str} (kalan: {int(sleep_secs)} saniye)")
+        time.sleep(sleep_secs)
