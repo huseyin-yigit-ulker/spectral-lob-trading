@@ -45,6 +45,7 @@ class SMCAgent:
         self.smc_status = "ISINIYOR"
         self.internal_signal_state = 0
         self.active_trade_sl = None
+        self.fvg_depth_pct = 0.0
         self.last_signal_text = "[!] BEKLE"
         self.last_signal_color = "gray"
         self.last_log_time = 0
@@ -92,12 +93,13 @@ def update_agents_from_screener():
         return False
 
 def generate_table():
-    table = Table(title="Dinamik V4 SMC + HFT (Oto-Tarayici Gucunde)", border_style="cyan")
+    table = Table(title="Dinamik V5 SMC + HFT (Oto-Tarayici Gucunde)", border_style="cyan")
     table.add_column("Sembol", justify="left", style="cyan", no_wrap=True)
     table.add_column("Fiyat", justify="right", style="magenta")
     table.add_column("Doluluk", justify="center", style="white")
     table.add_column("Macro OBI", justify="right", style="yellow")
     table.add_column("CVD (1m)", justify="right", style="blue")
+    table.add_column("FVG Derinlik", justify="right", style="cyan")
     table.add_column("SMC Likidite", justify="center", style="white")
     table.add_column("Sinyal", justify="center")
 
@@ -115,10 +117,11 @@ def generate_table():
         
         table.add_row(
             agent.symbol,
-            f"{agent.current_price:.4f}",
+            f"{agent.current_price:.6f}",
             f"% {(len(agent.obi_buffer)/600)*100:.0f}",
             f"[{obi_color}]{obi:+.4f}[/{obi_color}]",
             f"[{cvd_color}]{cvd:+.2f}[/{cvd_color}]",
+            f"[{ 'green' if agent.fvg_depth_pct >= 0.10 else 'red' }]% {agent.fvg_depth_pct:.2f}[/]",
             f"[{smc_color}]{smc}[/{smc_color}]",
             f"[{agent.last_signal_color}]{agent.last_signal_text}[/{agent.last_signal_color}]"
         )
@@ -210,6 +213,7 @@ async def binance_ws():
                             cur_b = b5 if b5 else b3
                             cur_t = t5 if t5 else t3
                             fvg_depth_ratio = ((cur_t - cur_b) / cur_b) if cur_b else 0.0
+                            agent.fvg_depth_pct = fvg_depth_ratio * 100
                             is_fvg_wide_enough = fvg_depth_ratio >= 0.001 # %0.10
                             
                             if agent.macro_obi > 0.40 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
