@@ -5,6 +5,7 @@ import TradeLogs from './pages/TradeLogs';
 import LiveTerminal from './pages/LiveTerminal';
 import { Activity, LayoutDashboard, List, Terminal, Globe, TerminalSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { LiveProvider } from './context/LiveContext';
 
 function Topbar() {
   const [utcTime, setUtcTime] = useState('');
@@ -99,25 +100,27 @@ function MobileNav() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="flex flex-col h-screen bg-[#0B0E11] text-[#EAECEF] overflow-hidden selection:bg-[#F0B90B]/30">
-        <Topbar />
-        <div className="flex flex-1 overflow-hidden">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-[#0B0E11] p-4 md:p-8 pb-24 md:pb-8">
-            <div className="max-w-7xl mx-auto">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/screener" element={<Screener />} />
-                <Route path="/live" element={<LiveTerminal />} />
-                <Route path="/trades" element={<TradeLogs />} />
-              </Routes>
-            </div>
-          </main>
+    <LiveProvider>
+      <BrowserRouter>
+        <div className="flex flex-col h-screen bg-[#0B0E11] text-[#EAECEF] overflow-hidden selection:bg-[#F0B90B]/30">
+          <Topbar />
+          <div className="flex flex-1 overflow-hidden">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto bg-[#0B0E11] p-4 md:p-8 pb-24 md:pb-8">
+              <div className="max-w-7xl mx-auto">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/screener" element={<Screener />} />
+                  <Route path="/live" element={<LiveTerminal />} />
+                  <Route path="/trades" element={<TradeLogs />} />
+                </Routes>
+              </div>
+            </main>
+          </div>
+          <MobileNav />
         </div>
-        <MobileNav />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </LiveProvider>
   );
 }
 
