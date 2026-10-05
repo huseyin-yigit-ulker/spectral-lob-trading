@@ -80,6 +80,33 @@ export function LiveProvider({ children }) {
   useEffect(() => {
     if (symbols.length === 0) return;
     
+    async function fetchSMC() {
+      const { data } = await supabase
+        .from('live_metrics')
+        .select('*');
+        
+      if (data) {
+        setMetrics(prev => {
+          const next = { ...prev };
+          data.forEach(d => {
+            if (next[d.sembol]) {
+              next[d.sembol].smc_status = d.smc_status;
+              next[d.sembol].fvg_depth = parseFloat(d.fvg_depth || 0);
+            }
+          });
+          return next;
+        });
+      }
+    }
+    
+    fetchSMC();
+    const interval = setInterval(fetchSMC, 3000);
+    return () => clearInterval(interval);
+  }, [symbols]);
+
+  useEffect(() => {
+    if (symbols.length === 0) return;
+    
     if (wsRef.current) {
       wsRef.current.close();
     }

@@ -78,3 +78,34 @@ def log_screener_to_supabase(zaman, sembol, fiyat, hacim, spread, fvg_mesafe_yuz
         print(f"  [Supabase Screener DB Yazma Hatasi] {e}")
     finally:
         conn.close()
+
+def update_live_metrics(states_dict):
+    conn = get_supabase_conn()
+    if not conn:
+        return
+        
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS quant_v5.live_metrics (
+                    sembol VARCHAR(50) PRIMARY KEY,
+                    smc_status VARCHAR(50),
+                    fvg_depth NUMERIC,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            
+            for sym, data in states_dict.items():
+                cur.execute("""
+                    INSERT INTO quant_v5.live_metrics (sembol, smc_status, fvg_depth, updated_at)
+                    VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
+                    ON CONFLICT (sembol) DO UPDATE SET 
+                        smc_status = EXCLUDED.smc_status,
+                        fvg_depth = EXCLUDED.fvg_depth,
+                        updated_at = EXCLUDED.updated_at
+                """, (sym, data['smc_status'], data['fvg_depth']))
+        conn.commit()
+    except Exception as e:
+        pass # print(f"  [Supabase Live Metrics Hatasi] {e}") # Sessizce yoksay
+    finally:
+        conn.close()

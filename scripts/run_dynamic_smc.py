@@ -4,10 +4,11 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from utils.notifier import send_telegram_message
-    from utils.database import log_trade_to_supabase
+    from utils.database import log_trade_to_supabase, update_live_metrics
 except ImportError:
     send_telegram_message = None
     log_trade_to_supabase = None
+    update_live_metrics = None
 import websockets
 import json
 import csv
@@ -125,6 +126,18 @@ def generate_table():
             f"[{smc_color}]{smc}[/{smc_color}]",
             f"[{agent.last_signal_color}]{agent.last_signal_text}[/{agent.last_signal_color}]"
         )
+    
+    if update_live_metrics:
+        states_dict = {}
+        for s in current_symbols:
+            if s in agents and agents[s].current_price > 0:
+                states_dict[s.lower()] = {
+                    'smc_status': agents[s].smc_status,
+                    'fvg_depth': round(agents[s].fvg_depth_pct, 4)
+                }
+        if states_dict:
+            update_live_metrics(states_dict)
+            
     return table
 
 async def binance_ws():

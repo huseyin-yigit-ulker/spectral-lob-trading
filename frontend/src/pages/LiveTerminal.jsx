@@ -57,6 +57,16 @@ export default function LiveTerminal() {
                     CVD (Son 1dk) <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
+                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                  <Tooltip text={`Smart Money Concepts (SMC) piyasa yönü.\n\nSİNYAL ŞARTI:\nLONG (AL) için: BULLISH_FVG\nSHORT (SAT) için: BEARISH_FVG`}>
+                    SMC DURUMU <Info size={14} className="text-[#F0B90B]" />
+                  </Tooltip>
+                </th>
+                <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                  <Tooltip text={`Fair Value Gap (Likidite Boşluğu) derinliği.\n\nSİNYAL ŞARTI:\nİki yön için de en az: %0.10`}>
+                    FVG Derinlik <Info size={14} className="text-[#F0B90B]" />
+                  </Tooltip>
+                </th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
                   <Tooltip text={`Screener algoritması tarafından FVG (Boşluk) derinliği ve konumu uygun görülüp izlemeye alınan coinleri temsil eder.\n\nİŞLEME GİRİŞ:\nOBI ve CVD şartları aynı anda onaylandığında bot otomatik olarak pozisyon açar.`}>
                     Referans Durumu <Info size={14} className="text-[#F0B90B]" />
@@ -118,6 +128,20 @@ export default function LiveTerminal() {
                             {formatCVD(m.cvd)}
                           </span>
                         ) : '...'}
+                      </td>
+                      <td className="px-6 py-5 text-right font-medium text-xs">
+                        {m?.smc_status ? (
+                          <span className={m.smc_status === 'BULLISH_FVG' ? 'text-[#0ECB81] font-bold' : m.smc_status === 'BEARISH_FVG' ? 'text-[#F6465D] font-bold' : 'text-gray-400'}>
+                            {m.smc_status}
+                          </span>
+                        ) : <span className="text-gray-500">BEKLENIYOR</span>}
+                      </td>
+                      <td className="px-6 py-5 text-right font-medium text-xs">
+                        {m?.fvg_depth !== undefined ? (
+                          <span className={m.fvg_depth >= 0.10 ? 'text-[#0ECB81]' : 'text-[#F6465D]'}>
+                            %{m.fvg_depth.toFixed(2)}
+                          </span>
+                        ) : <span className="text-gray-500">-</span>}
                       </td>
                       <td className="px-6 py-5 text-center">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] uppercase font-black bg-[#1E2329] text-gray-400 border border-[#2B3139]">
