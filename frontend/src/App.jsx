@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import Dashboard from './pages/Dashboard';
 import Screener from './pages/Screener';
 import TradeLogs from './pages/TradeLogs';
-import { Activity, LayoutDashboard, List, Terminal, Globe } from 'lucide-react';
+import LiveTerminal from './pages/LiveTerminal';
+import { Activity, LayoutDashboard, List, Terminal, Globe, TerminalSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 function Topbar() {
@@ -41,6 +42,7 @@ function Sidebar() {
   const links = [
     { to: '/', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
     { to: '/screener', icon: <Activity size={18} />, label: 'Market Scanner' },
+    { to: '/live', icon: <TerminalSquare size={18} />, label: 'Live Terminal' },
     { to: '/trades', icon: <List size={18} />, label: 'Signal Logs' },
   ];
 
@@ -74,6 +76,7 @@ function MobileNav() {
   const links = [
     { to: '/', icon: <LayoutDashboard size={20} /> },
     { to: '/screener', icon: <Activity size={20} /> },
+    { to: '/live', icon: <TerminalSquare size={20} /> },
     { to: '/trades', icon: <List size={20} /> },
   ];
 
@@ -106,6 +109,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/screener" element={<Screener />} />
+                <Route path="/live" element={<LiveTerminal />} />
                 <Route path="/trades" element={<TradeLogs />} />
               </Routes>
             </div>
