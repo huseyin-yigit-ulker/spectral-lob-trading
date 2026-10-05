@@ -46,7 +46,7 @@ export default function TradeChart({ trade }) {
     (async () => {
       try {
         setStatus('Grafik yukleniyor...');
-        const tradeTime = new Date(trade.zaman).getTime();
+        const tradeTime = new Date(trade.giris_zaman || trade.zaman).getTime();
         const pad = 2 * 3600e3; // 2 saat oncesi/sonrasi
         const from = tradeTime - pad;
         const to = Math.min(Date.now(), tradeTime + pad);
@@ -77,7 +77,7 @@ export default function TradeChart({ trade }) {
         candle.setData(candles);
 
         // Giris noktasi isareti
-        const isLong = (trade.sinyal || '').includes('AL') || (trade.sinyal || '').includes('LONG');
+        const isLong = (trade.yön === 'LONG') || (trade.sinyal || '').includes('AL') || (trade.sinyal || '').includes('LONG');
         const tradeSec = Math.floor(tradeTime / 1000);
         let bestTime = candles[0]?.time || tradeSec;
         for (const c of candles) {
@@ -123,7 +123,7 @@ export default function TradeChart({ trade }) {
         }
 
         // Giris fiyati cizgisi
-        const entryPrice = Number(trade.fiyat);
+        const entryPrice = Number(trade.giris_fiyat || trade.fiyat);
         if (Number.isFinite(entryPrice) && entryPrice > 0) {
           candle.createPriceLine({
             price: entryPrice,

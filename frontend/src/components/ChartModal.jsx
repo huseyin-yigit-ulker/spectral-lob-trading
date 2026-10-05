@@ -4,7 +4,7 @@ import TradeChart from './TradeChart';
 export default function ChartModal({ trade, onClose }) {
   if (!trade) return null;
 
-  const isLong = (trade.sinyal || '').includes('AL') || (trade.sinyal || '').includes('LONG');
+  const isLong = (trade.yön === 'LONG') || (trade.sinyal || '').includes('AL') || (trade.sinyal || '').includes('LONG');
   const badgeClass = isLong 
     ? 'bg-green-500/10 text-green-400 border-green-500/20' 
     : 'bg-red-500/10 text-red-400 border-red-500/20';
@@ -18,10 +18,10 @@ export default function ChartModal({ trade, onClose }) {
           <div className="flex items-center gap-4">
             <h2 className="text-2xl font-black text-white tracking-tight">{trade.sembol}</h2>
             <span className={`px-2.5 py-1 rounded text-xs font-bold border ${badgeClass}`}>
-              {trade.sinyal}
+              {trade.yön || trade.sinyal}
             </span>
             <span className="text-gray-400 text-sm font-mono bg-[#1E2329] px-2 py-1 rounded border border-[#2B3139]">
-              {new Date(trade.zaman).toLocaleString()}
+              {new Date(trade.giris_zaman || trade.zaman).toLocaleString()}
             </span>
           </div>
           <button 
@@ -41,7 +41,7 @@ export default function ChartModal({ trade, onClose }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-6 py-4 border-t border-[#1f2937] bg-[#121822]">
           <div>
             <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">Giriş Fiyatı</p>
-            <p className="text-lg font-mono text-gray-200">{Number(trade.fiyat).toLocaleString(undefined, {maximumFractionDigits:5})}</p>
+            <p className="text-lg font-mono text-gray-200">{Number(trade.giris_fiyat || trade.fiyat).toLocaleString(undefined, {maximumFractionDigits:5})}</p>
           </div>
           <div>
             <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">OBI (Orderbook)</p>
