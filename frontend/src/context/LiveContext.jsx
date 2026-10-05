@@ -34,16 +34,23 @@ export function LiveProvider({ children }) {
         .eq('durum', 'KABUL')
         .gte('zaman', pastISO);
 
-      if (data) {
-        const unique = [...new Set(data.map(d => d.sembol.toLowerCase()))].slice(0, 15);
-        setSymbols(unique);
-        
-        const initMetrics = {};
-        unique.forEach(sym => {
-          initMetrics[sym] = { price: 0, obi: 0, cvd: 0 };
-          buffers.current[sym] = { obi_arr: [], cvd_arr: [] };
-        });
-        setMetrics(initMetrics);
+      let unique = [];
+      
+      if (data && data.length > 0) {
+        unique = [...new Set(data.map(d => d.sembol.toLowerCase()))].slice(0, 15);
+      } else {
+        // Local ortamda Supabase hatasi varsa veya KABUL listesi bossa test icin varsayilan coinleri ekle
+        unique = ['btcusdt', 'ethusdt', 'solusdt', 'bnbusdt'];
+      }
+
+      setSymbols(unique);
+      
+      const initMetrics = {};
+      unique.forEach(sym => {
+        initMetrics[sym] = { price: 0, obi: 0, cvd: 0 };
+        buffers.current[sym] = { obi_arr: [], cvd_arr: [] };
+      });
+      setMetrics(initMetrics);
 
         if (unique.length > 0) {
           try {
@@ -61,7 +68,6 @@ export function LiveProvider({ children }) {
             });
           } catch(e) {}
         }
-      }
     }
     
     fetchSymbols();
@@ -87,7 +93,7 @@ export function LiveProvider({ children }) {
       const streams = [];
       symbols.forEach(sym => {
         streams.push(`${sym}@depth20@100ms`);
-        streams.push(`${sym}@aggTrade`);
+        streams.push(`${sym}@trade`);
       });
 
       ws.send(JSON.stringify({
@@ -114,6 +120,10 @@ export function LiveProvider({ children }) {
       if (!buffers.current[sym]) return;
       const buf = buffers.current[sym];
 
+      if (!streamType.includes('depth')) {
+         console.log("NON-DEPTH STREAM:", streamType, data);
+      }
+
       if (streamType.includes('depth')) {
         let b_qty = 0; let a_qty = 0;
         d.b.forEach(bid => b_qty += parseFloat(bid[1]));
@@ -127,7 +137,7 @@ export function LiveProvider({ children }) {
         if (!tempMetrics[sym]) tempMetrics[sym] = {};
         tempMetrics[sym].obi = avg_obi;
 
-      } else if (streamType === 'aggTrade') {
+      } else if (streamType === 'trade') {
         const price = parseFloat(d.p);
         const qty = parseFloat(d.q);
         const isMaker = d.m; 
@@ -136,7 +146,7 @@ export function LiveProvider({ children }) {
         const usdVolume = qty * price;
         const netUsd = isMaker ? -usdVolume : usdVolume;
         
-        console.log(`[aggTrade] ${sym} | Price: ${price} | Qty: ${qty} | isMaker: ${isMaker} | NetUsd: ${netUsd}`);
+        console.log(`[trade] ${sym} | Price: ${price} | Qty: ${qty} | isMaker: ${isMaker} | NetUsd: ${netUsd}`);
         
         const now = Date.now();
         buf.cvd_arr.push({ time: now, qty: netUsd });
