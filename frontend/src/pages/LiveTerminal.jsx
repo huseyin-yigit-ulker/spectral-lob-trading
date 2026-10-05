@@ -8,12 +8,10 @@ export default function LiveTerminal() {
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
   useEffect(() => {
-    if (symbols.length > 0 && !selectedSymbol) {
-      setSelectedSymbol(symbols[0]);
-    } else if (symbols.length === 0) {
+    if (symbols.length === 0) {
       setSelectedSymbol(null);
     }
-  }, [symbols, selectedSymbol]);
+  }, [symbols]);
 
   return (
     <div className="space-y-6 h-full flex flex-col">
@@ -50,28 +48,12 @@ export default function LiveTerminal() {
         </div>
       </div>
 
-      {/* Embedded TradingView Chart */}
-      {selectedSymbol && (
-        <div className="h-[400px] w-full bg-[#0B0E11] rounded-xl border border-[#1f2937] shrink-0 overflow-hidden relative shadow-lg">
-          <div className="absolute top-0 left-0 bg-[#0B0E11] text-xs font-bold px-3 py-1 text-gray-400 border-b border-r border-[#1f2937] z-10 rounded-br-lg">
-            {selectedSymbol.toUpperCase()} / USDT
-          </div>
-          <iframe
-            id="tradingview_chart"
-            src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3A${selectedSymbol.toUpperCase()}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
-            style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important' }}
-            frameBorder="0"
-            allowTransparency="true"
-            scrolling="no"
-            allowFullScreen
-          ></iframe>
-        </div>
-      )}
-
-      <div className="bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl overflow-hidden flex-1 min-h-[300px]">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-[#121822] border-b border-[#1f2937]">
+      <div className="flex flex-col xl:flex-row gap-6 flex-1 min-h-[500px]">
+        {/* Main Table */}
+        <div className={`bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl overflow-hidden flex-1 transition-all duration-300 ${selectedSymbol ? 'xl:w-[55%]' : 'w-full'}`}>
+          <div className="overflow-x-auto h-full">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-[#121822] border-b border-[#1f2937]">
               <tr>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">Sembol</th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Fiyat</th>
@@ -193,6 +175,35 @@ export default function LiveTerminal() {
           </table>
         </div>
       </div>
+
+      {/* Embedded TradingView Chart (Right Side) */}
+      {selectedSymbol && (
+        <div className="h-[500px] xl:h-auto xl:w-[45%] bg-[#0B0E11] rounded-xl border border-[#1f2937] shrink-0 overflow-hidden relative shadow-lg flex flex-col animate-in slide-in-from-right-4 fade-in duration-300">
+          <div className="bg-[#121822] text-xs font-bold px-4 py-3 text-gray-300 border-b border-[#1f2937] flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#0ECB81] animate-pulse" />
+              <span className="tracking-wider">{selectedSymbol.toUpperCase()} / USDT</span>
+            </div>
+            <button 
+              onClick={() => setSelectedSymbol(null)}
+              className="text-gray-500 hover:text-white transition-colors flex items-center gap-1"
+            >
+              Kapat ✕
+            </button>
+          </div>
+          <div className="flex-1 w-full relative">
+            <iframe
+              id="tradingview_chart"
+              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3A${selectedSymbol.toUpperCase()}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
+              style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important', position: 'absolute', top: 0, left: 0 }}
+              frameBorder="0"
+              allowTransparency="true"
+              scrolling="no"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
