@@ -1,9 +1,19 @@
+import React, { useState, useEffect } from 'react';
 import { Activity, TerminalSquare, Wifi, Info } from 'lucide-react';
 import { useLive } from '../context/LiveContext';
 import Tooltip from '../components/Tooltip';
 
 export default function LiveTerminal() {
   const { symbols, metrics, wsStatus, activePeriodString } = useLive();
+  const [selectedSymbol, setSelectedSymbol] = useState(null);
+
+  useEffect(() => {
+    if (symbols.length > 0 && !selectedSymbol) {
+      setSelectedSymbol(symbols[0]);
+    } else if (symbols.length === 0) {
+      setSelectedSymbol(null);
+    }
+  }, [symbols, selectedSymbol]);
 
   return (
     <div className="space-y-6 h-full flex flex-col">
@@ -40,7 +50,25 @@ export default function LiveTerminal() {
         </div>
       </div>
 
-      <div className="bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl overflow-hidden flex-1">
+      {/* Embedded TradingView Chart */}
+      {selectedSymbol && (
+        <div className="h-[400px] w-full bg-[#0B0E11] rounded-xl border border-[#1f2937] shrink-0 overflow-hidden relative shadow-lg">
+          <div className="absolute top-0 left-0 bg-[#0B0E11] text-xs font-bold px-3 py-1 text-gray-400 border-b border-r border-[#1f2937] z-10 rounded-br-lg">
+            {selectedSymbol.toUpperCase()} / USDT
+          </div>
+          <iframe
+            id="tradingview_chart"
+            src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3A${selectedSymbol.toUpperCase()}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
+            style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important' }}
+            frameBorder="0"
+            allowTransparency="true"
+            scrolling="no"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
+
+      <div className="bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-2xl overflow-hidden flex-1 min-h-[300px]">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-[#121822] border-b border-[#1f2937]">
@@ -110,8 +138,17 @@ export default function LiveTerminal() {
                   };
                   
                   return (
-                    <tr key={sym} className="hover:bg-[#1A2027] transition-colors font-mono">
-                      <td className="px-6 py-5 font-black text-gray-200 tracking-wide uppercase">{sym}</td>
+                    <tr 
+                      key={sym} 
+                      onClick={() => setSelectedSymbol(sym)}
+                      className={`transition-colors font-mono cursor-pointer ${selectedSymbol === sym ? 'bg-[#1f2937]/70' : 'hover:bg-[#1A2027]'}`}
+                    >
+                      <td className="px-6 py-5 font-black text-gray-200 tracking-wide uppercase">
+                        <div className="flex items-center gap-2">
+                          {selectedSymbol === sym && <div className="w-1.5 h-1.5 rounded-full bg-[#0ECB81] animate-pulse" />}
+                          {sym}
+                        </div>
+                      </td>
                       <td className="px-6 py-5 text-right text-gray-300">
                         {m.price ? Number(m.price).toPrecision(6) : 'Bekleniyor...'}
                       </td>
