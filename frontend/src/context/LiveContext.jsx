@@ -136,6 +136,8 @@ export function LiveProvider({ children }) {
         const usdVolume = qty * price;
         const netUsd = isMaker ? -usdVolume : usdVolume;
         
+        console.log(`[aggTrade] ${sym} | Price: ${price} | Qty: ${qty} | isMaker: ${isMaker} | NetUsd: ${netUsd}`);
+        
         const now = Date.now();
         buf.cvd_arr.push({ time: now, qty: netUsd });
         
