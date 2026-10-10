@@ -61,4 +61,7 @@ Sistem asenkron haberleşen iki bağımsız mikroservise bölünmüş ve hem par
 
 * **Girdi (Input):** `Binance REST API` (FVG Çizimi) & `Binance WebSocket` (@depth20, @trade, @kline)
 * **Çıktı (Agent Log Formatı):** `Zaman | Sembol | Fiyat | Macro_OBI | CVD_1m | SMC_Context | FVG_Top | FVG_Bottom | FVG_Depth_Pct | Sinyal_Yonu | Aktif_SL`
-* **Frontend Arayüzü:** React/Vite tabanlı arayüz, `live_metrics` üzerinden canlı SMC durumlarını, `trade_logs` üzerinden ise işlem geçmişini tek bir Unified Dashboard üzerinden gösterir.
+* **Frontend Arayüzü (Premium UI):** 
+  * **Unified Dashboard:** Kümülatif PnL (Bakiye) büyüme eğrisini anlık çizer. Açık olan (henüz kapanmamış) pozisyonları canlı radar olarak listeler.
+  * **Market Scanner (Screener):** DB'yi şişirmemek adına screener verisi JSON olarak `active_screener` tablosunda tek satırda tutulur ve UI'a bir **Sıcaklık Haritası (Heatmap)** şeklinde yansıtılır. FVG'ye en yakın fırsatlar parlak yeşil olarak öne çıkar.
+  * **Trade Logs & Live Terminal:** Sinyal geçmişi kartlarla sunulur. Canlı terminal OBI ve FVG verilerini profesyonel hacker ekranı tasarımıyla gösterir.
