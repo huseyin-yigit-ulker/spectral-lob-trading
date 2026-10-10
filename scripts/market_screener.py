@@ -6,9 +6,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
-    from utils.database import log_screener_to_supabase
+    from utils.database import log_screener_to_supabase, update_active_screener
 except ImportError:
     log_screener_to_supabase = None
+    update_active_screener = None
 from datetime import datetime
 import os
 import sys
@@ -126,19 +127,24 @@ def run_screener():
         print(f"{rank+1}. {c['symbol']} | Skor: {c['score']:.1f} | FVG Mesafe: %{c['fvg_dist']:.2f} | Spread: %{c['spread']:.3f}")
         top_symbols.append(c['symbol'])
         
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump({"updated_at": time.time(), "symbols": top_symbols}, f)
-        
-    # --- YENI: BACKTEST ICIN SCREENER TARIHCESINI LOGLA ---
-    log_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    
+    output_data = {"updated_at": time.time(), "symbols": top_symbols, "details": []}
     
     for c in scored_candidates:
         durum = 'KABUL' if c['symbol'] in top_symbols else 'RED'
+        if durum == 'KABUL':
+            output_data["details"].append(c)
         # DB'yi yormamak adina screener loglari kapatildi
         # if log_screener_to_supabase:
         #     log_screener_to_supabase(log_time, c['symbol'], c['price'], c['vol'], c['spread'], c['fvg_dist'], c['score'], durum)
         
-    print(f"\n[OK] Yeni liste '{OUTPUT_FILE}' dosyasina asenkron olarak yazildi.")
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+        json.dump(output_data, f)
+        
+    if update_active_screener:
+        update_active_screener(output_data)
+
+    print(f"\n[OK] Yeni liste '{OUTPUT_FILE}' ve veritabanina asenkron olarak yazildi.")
     print("Siradaki tarama 15 dakika sonra otomatik baslayacak...")
 
 if __name__ == "__main__":

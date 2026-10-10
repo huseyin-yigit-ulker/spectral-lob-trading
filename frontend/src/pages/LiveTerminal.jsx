@@ -58,7 +58,7 @@ export default function LiveTerminal() {
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider">Sembol</th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Fiyat</th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                  <Tooltip text={`Emir Defteri Dengesizliği (Order Book Imbalance). Limit emirlerdeki alıcı/satıcı baskısını ölçer.\n\nSİNYAL ŞARTI:\nLONG (AL) için: > +0.40\nSHORT (SAT) için: < -0.40`}>
+                  <Tooltip text={`Emir Defteri Dengesizliği (Order Book Imbalance). Limit emirlerdeki alıcı/satıcı baskısını ölçer.\n\nSİNYAL ŞARTI:\nLONG (AL) için: > +0.30\nSHORT (SAT) için: < -0.30`}>
                     Canlı OBI (Depth) <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
@@ -73,7 +73,7 @@ export default function LiveTerminal() {
                   </Tooltip>
                 </th>
                 <th className="px-6 py-5 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
-                  <Tooltip text={`Fair Value Gap (Likidite Boşluğu) derinliği.\n\nSİNYAL ŞARTI:\nİki yön için de en az: %0.10`}>
+                  <Tooltip text={`Fair Value Gap (Likidite Boşluğu) derinliği.\n\nSİNYAL ŞARTI:\nİki yön için de en az: %0.20`}>
                     FVG Derinlik <Info size={14} className="text-[#F0B90B]" />
                   </Tooltip>
                 </th>
@@ -103,9 +103,9 @@ export default function LiveTerminal() {
                   
                   // OBI Renklendirme Stratejisi
                   let obiClass = "text-gray-400";
-                  if (m.obi >= 0.40) obiClass = "bg-[#0ECB81]/20 text-[#0ECB81] px-2 py-1 rounded shadow-[0_0_12px_rgba(14,203,129,0.4)]";
+                  if (m.obi >= 0.30) obiClass = "bg-[#0ECB81]/20 text-[#0ECB81] px-2 py-1 rounded shadow-[0_0_12px_rgba(14,203,129,0.4)]";
                   else if (m.obi > 0) obiClass = "text-[#0ECB81]";
-                  else if (m.obi <= -0.40) obiClass = "bg-[#F6465D]/20 text-[#F6465D] px-2 py-1 rounded shadow-[0_0_12px_rgba(246,70,93,0.4)]";
+                  else if (m.obi <= -0.30) obiClass = "bg-[#F6465D]/20 text-[#F6465D] px-2 py-1 rounded shadow-[0_0_12px_rgba(246,70,93,0.4)]";
                   else if (m.obi < 0) obiClass = "text-[#F6465D]";
 
                   // CVD Formatlama (K/M)
@@ -157,7 +157,7 @@ export default function LiveTerminal() {
                       </td>
                       <td className="px-6 py-5 text-right font-medium text-xs">
                         {m?.fvg_depth !== undefined ? (
-                          <span className={m.fvg_depth >= 0.10 ? 'text-[#0ECB81]' : 'text-[#F6465D]'}>
+                          <span className={m.fvg_depth >= 0.20 ? 'text-[#0ECB81]' : 'text-[#F6465D]'}>
                             %{m.fvg_depth.toFixed(2)}
                           </span>
                         ) : <span className="text-gray-500">-</span>}

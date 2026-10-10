@@ -1,5 +1,6 @@
 export function calculateTransactions(logs) {
-  const trades = [];
+  const closed = [];
+  const active = [];
   const groups = {};
 
   // Group by symbol
@@ -36,7 +37,7 @@ export function calculateTransactions(logs) {
       } else if (state === 'IN_LONG') {
         if (sig === '[!] BEKLE' || sig === '[-] SAT (SHORT)') {
           const pnlPct = ((fiyat - entryPrice) / entryPrice) * 100;
-          trades.push({
+          closed.push({
             sembol: symbol,
             tip: 'LONG',
             entry_time: entryTime,
@@ -44,7 +45,9 @@ export function calculateTransactions(logs) {
             entry_price: entryPrice,
             exit_price: fiyat,
             pnl_pct: pnlPct,
-            win: pnlPct > 0
+            win: pnlPct > 0,
+            obi: row.obi,
+            fvg_depth: row.fvg_depth
           });
           if (sig === '[-] SAT (SHORT)') {
             state = 'IN_SHORT';
@@ -57,7 +60,7 @@ export function calculateTransactions(logs) {
       } else if (state === 'IN_SHORT') {
         if (sig === '[!] BEKLE' || sig === '[+] AL (LONG)') {
           const pnlPct = ((entryPrice - fiyat) / entryPrice) * 100;
-          trades.push({
+          closed.push({
             sembol: symbol,
             tip: 'SHORT',
             entry_time: entryTime,
@@ -65,7 +68,9 @@ export function calculateTransactions(logs) {
             entry_price: entryPrice,
             exit_price: fiyat,
             pnl_pct: pnlPct,
-            win: pnlPct > 0
+            win: pnlPct > 0,
+            obi: row.obi,
+            fvg_depth: row.fvg_depth
           });
           if (sig === '[+] AL (LONG)') {
             state = 'IN_LONG';
@@ -77,8 +82,25 @@ export function calculateTransactions(logs) {
         }
       }
     });
+    // Check for active trade at the end of the logs
+    if (state === 'IN_LONG') {
+      active.push({
+        sembol: symbol,
+        tip: 'LONG',
+        entry_time: entryTime,
+        entry_price: entryPrice
+      });
+    } else if (state === 'IN_SHORT') {
+      active.push({
+        sembol: symbol,
+        tip: 'SHORT',
+        entry_time: entryTime,
+        entry_price: entryPrice
+      });
+    }
   }
 
   // Sort trades by exit_time DESC
-  return trades.sort((a, b) => new Date(b.exit_time) - new Date(a.exit_time));
+  closed.sort((a, b) => new Date(b.exit_time) - new Date(a.exit_time));
+  return { closed, active };
 }

@@ -109,3 +109,25 @@ def update_live_metrics(states_dict):
         pass # print(f"  [Supabase Live Metrics Hatasi] {e}") # Sessizce yoksay
     finally:
         conn.close()
+
+def update_active_screener(json_data):
+    conn = get_supabase_conn()
+    if not conn:
+        return
+        
+    try:
+        import json
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO quant_v5.active_screener (id, updated_at, data)
+                VALUES (1, CURRENT_TIMESTAMP, %s)
+                ON CONFLICT (id) DO UPDATE SET 
+                    updated_at = CURRENT_TIMESTAMP,
+                    data = EXCLUDED.data
+            """, (json.dumps(json_data),))
+        conn.commit()
+    except Exception as e:
+        print(f"  [Supabase Active Screener Hatasi] {e}")
+    finally:
+        conn.close()
+
