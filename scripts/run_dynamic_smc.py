@@ -26,13 +26,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.live import Live
 
-# Log Dosyasi
-os.makedirs('logs', exist_ok=True)
-date_str = datetime.now().strftime("%Y-%m-%d")
-csv_file = f'logs/dynamic_smc_signals_{date_str}.csv'
-if not os.path.isfile(csv_file):
-    with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
-        csv.writer(f).writerow(['Zaman', 'Sembol', 'Fiyat', 'Macro_OBI', 'CVD_1m', 'SMC_Context', 'FVG_Top', 'FVG_Bottom', 'FVG_Depth_Pct', 'Sinyal_Yonu', 'Aktif_SL'])
+# Log Dosyasi Kaldirildi (Sadece DB)
 
 class SMCAgent:
     def __init__(self, symbol):
@@ -86,7 +80,11 @@ def update_agents_from_screener():
             # Listeden dusenleri temizle
             to_remove = [s for s in agents if s not in new_symbols]
             for s in to_remove:
-                del agents[s]
+                if agents[s].internal_signal_state != 0:
+                    # Islem acik, silme ve websocket'te dinlemeye devam et (Zombi modu)
+                    new_symbols.append(s)
+                else:
+                    del agents[s]
                 
             current_symbols = new_symbols
             return True
@@ -227,15 +225,15 @@ async def binance_ws():
                             cur_t = t5 if t5 else t3
                             fvg_depth_ratio = ((cur_t - cur_b) / cur_b) if cur_b else 0.0
                             agent.fvg_depth_pct = fvg_depth_ratio * 100
-                            is_fvg_wide_enough = fvg_depth_ratio >= 0.001 # %0.10
+                            is_fvg_wide_enough = fvg_depth_ratio >= 0.0020 # %0.20
                             
-                            if agent.macro_obi > 0.40 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
+                            if agent.macro_obi > 0.30 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
                                 agent.internal_signal_state = 1
                                 b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                 b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                                 bot_bound = b5 if b5 else b3
                                 if bot_bound: agent.active_trade_sl = bot_bound * 0.9995
-                            elif agent.macro_obi < -0.40 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
+                            elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
                                 agent.internal_signal_state = -1
                                 b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                 b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
@@ -265,17 +263,11 @@ async def binance_ws():
                                 if now - agent.last_log_time > 2:
                                     agent.last_log_time = now
                                     dt_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-                                    with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
-                                        b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+                                    b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                     b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                                     f_b = b5 if b5 else (b3 if b3 else 0.0)
                                     f_t = t5 if t5 else (t3 if t3 else 0.0)
                                     f_depth = ((f_t - f_b) / f_b * 100) if f_b > 0 else 0.0
-                                    
-                                    csv.writer(f).writerow([
-                                        dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
-                                        agent.smc_status, f_t, f_b, round(f_depth, 4), agent.last_signal_text, agent.active_trade_sl or 0.0
-                                    ])
                                     
                                     # SUPABASE VE TELEGRAM ENTEGRASYONU
                                     if log_trade_to_supabase:

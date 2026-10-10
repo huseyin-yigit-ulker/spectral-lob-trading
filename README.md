@@ -35,25 +35,25 @@ Bu proje, yüksek frekanslı emir defteri verilerini (Order Book Imbalance & Cum
 Sistem asenkron haberleşen iki bağımsız mikroservise bölünmüş ve hem para basan hem de kusursuz backtest verisi toplayan bir makineye dönüştürülmüştür:
 
 **1. Dinamik İzci (Screener):** `scripts/market_screener.py`
-* Her 15 dakikada bir Binance USDT vadeli işlemlerindeki 150+ coini tarar. Spread > %0.06 ve Hacim < 50M$ olanları eler.
+* Her 15 dakikada bir Binance USDT vadeli işlemlerindeki 150+ coini tarar. Spread > %0.06 ve Hacim < 150M$ olanları eler. (Düşük hacimli manipülatif coinlerden kaçınmak için hacim filtresi 150 Milyon Dolara çıkarıldı).
 * **Kara Liste (Blacklist):** PAXG, XAUT (Altın stabil) ve PUMP gibi manipülatif çöp coinler koda gömülü liste ile sonsuza dek reddedilir.
-* **Tarihçe Loglayıcı (Backtest Data):** Her 15 dakikalık taramanın detaylarını `logs/screener_history_*.csv` dosyasına kaydeder. Neyi, neden reddettiğini (Spread, Hacim, Puan) loglar.
+* **Genişletilmiş Radar:** WS bağlantısı limiti 15'ten 40'a yükseltildi, daha geniş bir fırsat havuzu izlenir. DB'yi yormamak adına screener logları veritabanına yazılmaz, sadece JSON üzerinden izlenir.
 
-**2. Dinamik Tetikçi (Dynamic SMC Agent):** `scripts/run_dynamic_smc.py`
+**2. Dinamik Tetikçi (Keskin Nişancı):** `scripts/run_dynamic_smc.py`
 * Her 15 saniyede bir JSON dosyasını dinler ve yeni coinlere dinamik bağlanır.
-* **Dar FVG Filtresi (Depth Filter):** Tespit edilen FVG'nin derinliği (üst-alt sınırı) **%0.10'dan daha küçükse** komisyon/slippage tuzağına düşmemek için işlemi otomatik reddeder.
+* **Dar FVG Filtresi (Depth Filter):** Tespit edilen FVG'nin derinliği (üst-alt sınırı) **%0.20'den daha küçükse** komisyon/slippage tuzağına düşmemek için işlemi otomatik reddeder. (Eski kural olan %0.05, stopların erken patlamasına sebep olduğu için %0.20'ye güncellendi).
+* **Kuvvetli OBI Filtresi:** İşleme girmek için Emir Defteri Dengesizliğinin (OBI) en az **0.30** olması zorunludur. (Sınırda kalan cılız tepkileri elemek için).
 * **Websocket Hata Koruması:** Binance sunucularından kaynaklı asenkron veri (Fiyat = 0.0) gelişlerinde sahte işlem açılmasını engeller.
 * **Yapısal FVG Stop-Loss (Structural Stop):** İşleme girdiği salise FVG kutusunun sınırına %0.05 toleransla "Yapısal Stop" koyar. Fiyat sınır dışına taştığında OBI'yi beklemeden işlemi anında keser (Sahte duvar/Spoofing kalkanı).
 
 ---
 
-## ☁️ Sunucu (VM / Cloud) Dağıtımı
+## ☁️ Sunucu (VM / Cloud) Dağıtımı & Veritabanı (V2)
 
-Sistemin uzak bulut sunucularında 7/24 tamamen kendi kendine çalışabilmesi için `vm_deploy/` klasörüne özel **Headless (Görünmez)** scriptler eklenmiştir:
+* Sistem **Supabase V2** PostgreSQL altyapısına taşınmış olup, tablolar Pooler (6543) üzerinden yönetilmektedir. Gereksiz screener datası V1'den silinmiş ve sistem sadece net sinyalleri (`trade_logs`) ve `live_metrics` tablosunu beslemektedir.
 
-* **`start_headless_linux.sh`**: Linux (Ubuntu) sunucularda Akıllı Python Dedektörü ve `nohup` kullanarak **V5 İzci ve V5 Tetikçi** botlarını işletim sisteminin arka planına gömer. SSH bağlantısı veya terminal kapatılsa dahi botlar çalışmaya devam eder.
+* **`start_headless_linux.sh`**: Linux (Ubuntu) sunucularda Akıllı Python Dedektörü ve `nohup` kullanarak **V5 İzci ve V5 Tetikçi** botlarını arka plana gömer. SSH bağlantısı kapatılsa dahi botlar çalışmaya devam eder.
 * **`stop_headless_linux.sh`**: Arka plandaki tüm python işlemlerini temiz bir şekilde sonlandırır.
-* *(Aynı işlemlerin Windows VM'leri için olan PowerShell `.ps1` versiyonları da mevcuttur).*
 
 ---
 
@@ -61,4 +61,4 @@ Sistemin uzak bulut sunucularında 7/24 tamamen kendi kendine çalışabilmesi i
 
 * **Girdi (Input):** `Binance REST API` (FVG Çizimi) & `Binance WebSocket` (@depth20, @trade, @kline)
 * **Çıktı (Agent Log Formatı):** `Zaman | Sembol | Fiyat | Macro_OBI | CVD_1m | SMC_Context | FVG_Top | FVG_Bottom | FVG_Depth_Pct | Sinyal_Yonu | Aktif_SL`
-* **Çıktı (Screener Log Formatı):** `Zaman | Sembol | Fiyat | Hacim | Spread | FVG_Mesafe_Yuzde | Skor | Durum`
+* **Frontend Arayüzü:** React/Vite tabanlı arayüz, `live_metrics` üzerinden canlı SMC durumlarını, `trade_logs` üzerinden ise işlem geçmişini tek bir Unified Dashboard üzerinden gösterir.
