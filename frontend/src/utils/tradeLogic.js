@@ -1,3 +1,40 @@
+export function formatUtcDateTime(dateStr, includeSeconds = true) {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '-';
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const year = d.getUTCFullYear();
+  const hours = String(d.getUTCHours()).padStart(2, '0');
+  const mins = String(d.getUTCMinutes()).padStart(2, '0');
+  const secs = String(d.getUTCSeconds()).padStart(2, '0');
+  return includeSeconds 
+    ? `${day}.${month}.${year} ${hours}:${mins}:${secs} UTC`
+    : `${day}.${month}.${year} ${hours}:${mins} UTC`;
+}
+
+export function formatUtcTime(dateStr, includeSeconds = true) {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '-';
+  const hours = String(d.getUTCHours()).padStart(2, '0');
+  const mins = String(d.getUTCMinutes()).padStart(2, '0');
+  const secs = String(d.getUTCSeconds()).padStart(2, '0');
+  return includeSeconds ? `${hours}:${mins}:${secs} UTC` : `${hours}:${mins} UTC`;
+}
+
+export function formatSmartPrice(price) {
+  if (price === undefined || price === null || isNaN(price)) return '-';
+  const num = Number(price);
+  if (num === 0) return '0.00';
+  if (num < 0.0001) return num.toFixed(7);
+  if (num < 0.01) return num.toFixed(6);
+  if (num < 1) return num.toFixed(5);
+  if (num < 10) return num.toFixed(4);
+  if (num < 1000) return num.toFixed(2);
+  return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export function reconstructTrades(rawLogs) {
   // rawLogs'u eskiden yeniye dogru sirala
   const sortedLogs = [...rawLogs].sort((a, b) => new Date(a.zaman) - new Date(b.zaman));
@@ -11,10 +48,6 @@ export function reconstructTrades(rawLogs) {
     const isExit = log.sinyal.includes('BEKLE');
 
     if (isEntry) {
-      // Eger onceden acik kalmis bir islem varsa onu iptal say veya kapat
-      if (openPositions[sym]) {
-        // Gormezden gelebiliriz veya timeout ile kapatabiliriz, basitlik icin eziyoruz
-      }
       openPositions[sym] = {
         id: log.id,
         sembol: sym,
@@ -24,33 +57,55 @@ export function reconstructTrades(rawLogs) {
         fvg_top: Number(log.fvg_top || 0),
         fvg_bottom: Number(log.fvg_bottom || 0),
         obi: Number(log.obi || 0),
+        cvd: Number(log.cvd || 0),
         fvg_depth: Number(log.fvg_depth || 0),
-        context: log.context,
+        context: log.context || 'NEUTRAL',
+        sinyal: log.sinyal,
         status: 'OPEN'
       };
     } else if (isExit && openPositions[sym]) {
       const pos = openPositions[sym];
       pos.cikis_zaman = log.zaman;
       pos.cikis_fiyat = Number(log.fiyat);
+      pos.cikis_obi = Number(log.obi || 0);
+      pos.cikis_cvd = Number(log.cvd || 0);
       pos.status = 'CLOSED';
       
       const diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
+      pos.fiyat_fark = diff;
       pos.pnl_yuzde = (diff / pos.giris_fiyat) * 100;
       
-      // Süre (dakika)
-      pos.sure_dk = Math.floor((new Date(pos.cikis_zaman).getTime() - new Date(pos.giris_zaman).getTime()) / 60000);
+      // Süre hesabi
+      const ms = new Date(pos.cikis_zaman).getTime() - new Date(pos.giris_zaman).getTime();
+      pos.sure_ms = ms;
+      pos.sure_dk = Math.max(0, Math.floor(ms / 60000));
+      if (ms < 60000) {
+        pos.sure_str = `${Math.max(1, Math.floor(ms / 1000))} sn`;
+      } else if (pos.sure_dk < 60) {
+        pos.sure_str = `${pos.sure_dk} dk`;
+      } else {
+        const h = Math.floor(pos.sure_dk / 60);
+        const m = pos.sure_dk % 60;
+        pos.sure_str = `${h}s ${m}d`;
+      }
       
       closedTrades.push(pos);
       delete openPositions[sym];
     }
   });
 
-  const activeTrades = Object.values(openPositions);
+  const activeTrades = Object.values(openPositions).map(pos => {
+    const ms = Date.now() - new Date(pos.giris_zaman).getTime();
+    pos.sure_ms = ms;
+    pos.sure_dk = Math.max(0, Math.floor(ms / 60000));
+    pos.sure_str = pos.sure_dk < 60 ? `${pos.sure_dk} dk` : `${Math.floor(pos.sure_dk / 60)}s ${pos.sure_dk % 60}d`;
+    return pos;
+  });
   
   // Hepsini birlestir, en yeniden eskiye sirala (UI gosterimi icin)
   const allTrades = [...activeTrades, ...closedTrades].sort((a, b) => new Date(b.giris_zaman) - new Date(a.giris_zaman));
 
-  // Gunluk Istatistikler (Tüm kapalı islemler veya bugunun islemleri üzerinden)
+  // Istatistikler
   let totalPnl = 0;
   let wins = 0;
   let losses = 0;
@@ -73,7 +128,9 @@ export function reconstructTrades(rawLogs) {
       winRate,
       totalClosed,
       wins,
-      losses
+      losses,
+      activeCount: activeTrades.length
     }
   };
 }
+
