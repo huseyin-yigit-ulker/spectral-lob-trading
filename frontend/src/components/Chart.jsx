@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { createChart } from 'lightweight-charts';
+import { createChart, AreaSeries } from 'lightweight-charts';
 
 export default function PnlChart({ data }) {
   const chartContainerRef = useRef();
@@ -27,7 +27,7 @@ export default function PnlChart({ data }) {
       height: 300,
     });
 
-    const areaSeries = chart.addAreaSeries({
+    const areaSeries = chart.addSeries(AreaSeries, {
       lineColor: '#F0B90B',
       topColor: 'rgba(240, 185, 11, 0.4)',
       bottomColor: 'rgba(240, 185, 11, 0.0)',
