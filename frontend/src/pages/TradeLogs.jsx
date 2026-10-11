@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import SignalCard from '../components/SignalCard';
 import ChartModal from '../components/ChartModal';
-import { reconstructTrades } from '../utils/tradeLogic';
+import { reconstructTrades, parseUtcDate } from '../utils/tradeLogic';
 import { Filter, List, Activity, TrendingUp, TrendingDown, Target, Zap } from 'lucide-react';
 
 const PERIODS = [
@@ -44,7 +44,7 @@ export default function TradeLogs() {
     else if (period === '30d') limitMs = 30 * 24 * 60 * 60 * 1000;
 
     return allReconstructedTrades.filter(t => {
-      const tradeTime = new Date(t.giris_zaman).getTime();
+      const tradeTime = parseUtcDate(t.giris_zaman).getTime();
       return (now - tradeTime) <= limitMs;
     });
   }, [allReconstructedTrades, period]);

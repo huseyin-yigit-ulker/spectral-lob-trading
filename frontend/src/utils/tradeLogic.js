@@ -1,6 +1,16 @@
+export function parseUtcDate(dateStr) {
+  if (!dateStr) return new Date();
+  if (dateStr instanceof Date) return dateStr;
+  let s = String(dateStr).trim();
+  if (s.endsWith('Z') || /[+-]\d{2}(:\d{2})?$/.test(s)) {
+    return new Date(s);
+  }
+  return new Date(s.replace(' ', 'T') + 'Z');
+}
+
 export function formatUtcDateTime(dateStr, includeSeconds = true) {
   if (!dateStr) return '-';
-  const d = new Date(dateStr);
+  const d = parseUtcDate(dateStr);
   if (isNaN(d.getTime())) return '-';
   const day = String(d.getUTCDate()).padStart(2, '0');
   const month = String(d.getUTCMonth() + 1).padStart(2, '0');
@@ -15,7 +25,7 @@ export function formatUtcDateTime(dateStr, includeSeconds = true) {
 
 export function formatUtcTime(dateStr, includeSeconds = true) {
   if (!dateStr) return '-';
-  const d = new Date(dateStr);
+  const d = parseUtcDate(dateStr);
   if (isNaN(d.getTime())) return '-';
   const hours = String(d.getUTCHours()).padStart(2, '0');
   const mins = String(d.getUTCMinutes()).padStart(2, '0');
@@ -37,7 +47,7 @@ export function formatSmartPrice(price) {
 
 export function reconstructTrades(rawLogs) {
   // rawLogs'u eskiden yeniye dogru sirala
-  const sortedLogs = [...rawLogs].sort((a, b) => new Date(a.zaman) - new Date(b.zaman));
+  const sortedLogs = [...rawLogs].sort((a, b) => parseUtcDate(a.zaman) - parseUtcDate(b.zaman));
   
   const openPositions = {};
   const closedTrades = [];
@@ -76,7 +86,7 @@ export function reconstructTrades(rawLogs) {
       pos.pnl_yuzde = (diff / pos.giris_fiyat) * 100;
       
       // Süre hesabi
-      const ms = new Date(pos.cikis_zaman).getTime() - new Date(pos.giris_zaman).getTime();
+      const ms = parseUtcDate(pos.cikis_zaman).getTime() - parseUtcDate(pos.giris_zaman).getTime();
       pos.sure_ms = ms;
       pos.sure_dk = Math.max(0, Math.floor(ms / 60000));
       if (ms < 60000) {
@@ -95,7 +105,7 @@ export function reconstructTrades(rawLogs) {
   });
 
   const activeTrades = Object.values(openPositions).map(pos => {
-    const ms = Date.now() - new Date(pos.giris_zaman).getTime();
+    const ms = Date.now() - parseUtcDate(pos.giris_zaman).getTime();
     pos.sure_ms = ms;
     pos.sure_dk = Math.max(0, Math.floor(ms / 60000));
     pos.sure_str = pos.sure_dk < 60 ? `${pos.sure_dk} dk` : `${Math.floor(pos.sure_dk / 60)}s ${pos.sure_dk % 60}d`;
@@ -103,7 +113,7 @@ export function reconstructTrades(rawLogs) {
   });
   
   // Hepsini birlestir, en yeniden eskiye sirala (UI gosterimi icin)
-  const allTrades = [...activeTrades, ...closedTrades].sort((a, b) => new Date(b.giris_zaman) - new Date(a.giris_zaman));
+  const allTrades = [...activeTrades, ...closedTrades].sort((a, b) => parseUtcDate(b.giris_zaman) - parseUtcDate(a.giris_zaman));
 
   // Istatistikler
   let totalPnl = 0;

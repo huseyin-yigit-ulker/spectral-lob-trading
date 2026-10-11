@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createChart, CandlestickSeries, createSeriesMarkers } from 'lightweight-charts';
 import { readChartTheme } from '../utils/chartTheme';
-import { formatSmartPrice, formatUtcDateTime } from '../utils/tradeLogic';
+import { formatSmartPrice, formatUtcDateTime, parseUtcDate } from '../utils/tradeLogic';
 
 const norm = (s) => (s ? s.replace(/[^A-Za-z0-9]/g, '') : '');
 
@@ -82,8 +82,8 @@ export default function TradeChart({ trade }) {
     (async () => {
       try {
         setStatus('Binance mum verileri çekiliyor...');
-        const entryTimeMs = new Date(trade.giris_zaman || trade.zaman).getTime();
-        const exitTimeMs = trade.cikis_zaman ? new Date(trade.cikis_zaman).getTime() : entryTimeMs;
+        const entryTimeMs = parseUtcDate(trade.giris_zaman || trade.zaman).getTime();
+        const exitTimeMs = trade.cikis_zaman ? parseUtcDate(trade.cikis_zaman).getTime() : entryTimeMs;
         
         // Giriş ve çıkış anını rahatça kapsayacak zaman penceresi (1.5 saat öncesi - 1.5 saat sonrası)
         const padBefore = 90 * 60 * 1000;
