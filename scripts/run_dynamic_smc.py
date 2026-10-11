@@ -39,13 +39,50 @@ class SMCAgent:
         self.cvd_1m = 0.0
         self.smc_status = "ISINIYOR"
         self.internal_signal_state = 0
+        self.entry_price = 0.0
+        self.highest_pnl = 0.0
         self.active_trade_sl = None
+        self.emergency_sl = None
+        self.is_break_even = False
         self.fvg_depth_pct = 0.0
         self.last_signal_text = "[!] BEKLE"
         self.last_signal_color = "gray"
         self.last_log_time = 0
         self.smc_5m = SMCAnalyzer(max_candles=30)
         self.smc_3m = SMCAnalyzer(max_candles=30)
+
+def sync_signal_state(agent, prev_sig):
+    if agent.internal_signal_state == 1:
+        agent.last_signal_text = "[+] AL (LONG)"
+        agent.last_signal_color = "green bold"
+    elif agent.internal_signal_state == -1:
+        agent.last_signal_text = "[-] SAT (SHORT)"
+        agent.last_signal_color = "red bold"
+    else:
+        agent.last_signal_text = "[!] BEKLE"
+        agent.last_signal_color = "gray"
+
+    if agent.internal_signal_state != prev_sig:
+        now = time.time()
+        if now - agent.last_log_time > 2:
+            agent.last_log_time = now
+            dt_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+            b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+            b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
+            f_b = b5 if b5 else (b3 if b3 else 0.0)
+            f_t = t5 if t5 else (t3 if t3 else 0.0)
+            f_depth = ((f_t - f_b) / f_b * 100) if f_b > 0 else 0.0
+            
+            # SUPABASE VE TELEGRAM ENTEGRASYONU
+            if log_trade_to_supabase:
+                log_trade_to_supabase(
+                    dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
+                    agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4)
+                )
+                
+            if send_telegram_message:
+                msg = f"<b>{agent.symbol}</b>\nSinyal: {agent.last_signal_text}\nFiyat: {agent.current_price}\nOBI: {agent.macro_obi:.2f}\nSMC: {agent.smc_status}"
+                send_telegram_message(msg)
 
 agents = {}
 current_symbols = []
@@ -154,7 +191,7 @@ async def binance_ws():
             streams = []
             for s in current_symbols:
                 ls = s.lower()
-                streams.extend([f"{ls}@depth20@100ms", f"{ls}@trade", f"{ls}@kline_3m", f"{ls}@kline_5m"])
+                streams.extend([f"{ls}@depth20@100ms", f"{ls}@trade", f"{ls}@kline_1m", f"{ls}@kline_3m", f"{ls}@kline_5m"])
                 
             stream_str = "/".join(streams)
             url = f"wss://fstream.binance.com/stream?streams={stream_str}"
@@ -189,11 +226,53 @@ async def binance_ws():
                             if k['x']:
                                 if k['i'] == '5m': agent.smc_5m.add_candle(k['o'], k['h'], k['l'], k['c'], k['T'])
                                 elif k['i'] == '3m': agent.smc_3m.add_candle(k['o'], k['h'], k['l'], k['c'], k['T'])
+                                elif k['i'] == '1m':
+                                    close_p = float(k['c'])
+                                    prev_sig = agent.internal_signal_state
+                                    # 1 Dakikalık Mum Kapanışı ile SL Kontrolü
+                                    if agent.internal_signal_state == 1 and agent.active_trade_sl and close_p <= agent.active_trade_sl:
+                                        agent.internal_signal_state = 0
+                                        agent.active_trade_sl = None
+                                        agent.emergency_sl = None
+                                        agent.entry_price = 0.0
+                                        agent.highest_pnl = 0.0
+                                        agent.is_break_even = False
+                                    elif agent.internal_signal_state == -1 and agent.active_trade_sl and close_p >= agent.active_trade_sl:
+                                        agent.internal_signal_state = 0
+                                        agent.active_trade_sl = None
+                                        agent.emergency_sl = None
+                                        agent.entry_price = 0.0
+                                        agent.highest_pnl = 0.0
+                                        agent.is_break_even = False
+                                    sync_signal_state(agent, prev_sig)
                         
                         elif msg.get('e') == 'trade':
                             agent.current_price = float(msg['p'])
                             agent.latest_time = msg['T']
                             agent.state_builder.cvd_features.add_trade(agent.latest_time, agent.current_price, float(msg['q']), msg['m'])
+                            
+                            # Pozisyondaysak Anlık PnL, Break-Even ve Trailing Takibi
+                            if agent.internal_signal_state != 0 and agent.entry_price > 0:
+                                cur_pnl = ((agent.current_price - agent.entry_price) / agent.entry_price * 100) if agent.internal_signal_state == 1 else ((agent.entry_price - agent.current_price) / agent.entry_price * 100)
+                                if cur_pnl > agent.highest_pnl:
+                                    agent.highest_pnl = cur_pnl
+                                
+                                # Break-Even (@ %0.30 kâr görüldüğünde SL'i başa başa çek)
+                                if agent.highest_pnl >= 0.30:
+                                    agent.is_break_even = True
+                                    if agent.internal_signal_state == 1:
+                                        agent.active_trade_sl = max(agent.active_trade_sl or 0, agent.entry_price * 1.0005)
+                                    else:
+                                        agent.active_trade_sl = min(agent.active_trade_sl or 999999, agent.entry_price * 0.9995)
+                                
+                                # Trailing Stop (@ %0.35+ kâr ve zirveden %0.20 çekilme)
+                                if agent.highest_pnl >= 0.35:
+                                    if agent.internal_signal_state == 1:
+                                        trail_sl = agent.entry_price * (1.0 + (agent.highest_pnl - 0.20) / 100)
+                                        agent.active_trade_sl = max(agent.active_trade_sl or 0, trail_sl)
+                                    else:
+                                        trail_sl = agent.entry_price * (1.0 - (agent.highest_pnl - 0.20) / 100)
+                                        agent.active_trade_sl = min(agent.active_trade_sl or 999999, trail_sl)
                             
                         elif msg.get('e') == 'depthUpdate':
                             bids = [[float(p), float(q)] for p, q in msg['b']]
@@ -218,67 +297,64 @@ async def binance_ws():
                             
                             prev_sig = agent.internal_signal_state
                             
-                            # FVG Derinlik (Boyutu) Kontrolu (>%0.10)
+                            # FVG Derinlik (Boyutu) Kontrolu (>%0.15)
                             b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                             b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                             cur_b = b5 if b5 else b3
                             cur_t = t5 if t5 else t3
                             fvg_depth_ratio = ((cur_t - cur_b) / cur_b) if cur_b else 0.0
                             agent.fvg_depth_pct = fvg_depth_ratio * 100
-                            is_fvg_wide_enough = fvg_depth_ratio >= 0.0020 # %0.20
+                            is_fvg_wide_enough = fvg_depth_ratio >= 0.0015 # %0.15
                             
                             if agent.macro_obi > 0.30 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
-                                agent.internal_signal_state = 1
-                                b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
-                                b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
-                                bot_bound = b5 if b5 else b3
-                                if bot_bound: agent.active_trade_sl = bot_bound * 0.9995
-                            elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
-                                agent.internal_signal_state = -1
-                                b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
-                                b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
-                                top_bound = t5 if t5 else t3
-                                if top_bound: agent.active_trade_sl = top_bound * 1.0005
-                                
-                            if agent.internal_signal_state == 1:
-                                if agent.macro_obi < -0.15 or (agent.active_trade_sl and agent.current_price < agent.active_trade_sl):
-                                    agent.internal_signal_state = 0
-                                    agent.active_trade_sl = None
-                            if agent.internal_signal_state == -1:
-                                if agent.macro_obi > 0.15 or (agent.active_trade_sl and agent.current_price > agent.active_trade_sl):
-                                    agent.internal_signal_state = 0
-                                    agent.active_trade_sl = None
-                            
-                            if agent.internal_signal_state == 1:
-                                agent.last_signal_text = "[+] AL (LONG)"; agent.last_signal_color = "green bold"
-                            elif agent.internal_signal_state == -1:
-                                agent.last_signal_text = "[-] SAT (SHORT)"; agent.last_signal_color = "red bold"
-                            else:
-                                agent.last_signal_text = "[!] BEKLE"; agent.last_signal_color = "gray"
-                                
-                            live.update(generate_table())
-                            
-                            if agent.internal_signal_state != prev_sig:
-                                now = time.time()
-                                if now - agent.last_log_time > 2:
-                                    agent.last_log_time = now
-                                    dt_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+                                if agent.internal_signal_state != 1:
+                                    agent.internal_signal_state = 1
+                                    agent.entry_price = agent.current_price
+                                    agent.highest_pnl = 0.0
+                                    agent.is_break_even = False
                                     b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                     b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
-                                    f_b = b5 if b5 else (b3 if b3 else 0.0)
-                                    f_t = t5 if t5 else (t3 if t3 else 0.0)
-                                    f_depth = ((f_t - f_b) / f_b * 100) if f_b > 0 else 0.0
-                                    
-                                    # SUPABASE VE TELEGRAM ENTEGRASYONU
-                                    if log_trade_to_supabase:
-                                        log_trade_to_supabase(
-                                            dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
-                                            agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4)
-                                        )
-                                        
-                                    if send_telegram_message:
-                                        msg = f"<b>{agent.symbol}</b>\nSinyal: {agent.last_signal_text}\nFiyat: {agent.current_price}\nOBI: {agent.macro_obi:.2f}\nSMC: {agent.smc_status}"
-                                        send_telegram_message(msg)
+                                    bot_bound = b5 if b5 else b3
+                                    if bot_bound:
+                                        agent.active_trade_sl = bot_bound * 0.9980 # %0.20 Genişletilmiş SL
+                                    else:
+                                        agent.active_trade_sl = agent.entry_price * 0.9980
+                                    agent.emergency_sl = agent.entry_price * 0.9900 # %1.00 Acil Hard Stop
+                            elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
+                                if agent.internal_signal_state != -1:
+                                    agent.internal_signal_state = -1
+                                    agent.entry_price = agent.current_price
+                                    agent.highest_pnl = 0.0
+                                    agent.is_break_even = False
+                                    b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
+                                    b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
+                                    top_bound = t5 if t5 else t3
+                                    if top_bound:
+                                        agent.active_trade_sl = top_bound * 1.0020 # %0.20 Genişletilmiş SL
+                                    else:
+                                        agent.active_trade_sl = agent.entry_price * 1.0020
+                                    agent.emergency_sl = agent.entry_price * 1.0100 # %1.00 Acil Hard Stop
+                                
+                            # Pozisyondan Çıkış Kontrolleri (Acil Stop & OBI Reversal)
+                            if agent.internal_signal_state == 1:
+                                if agent.macro_obi < -0.15 or (agent.emergency_sl and agent.current_price <= agent.emergency_sl):
+                                    agent.internal_signal_state = 0
+                                    agent.active_trade_sl = None
+                                    agent.emergency_sl = None
+                                    agent.entry_price = 0.0
+                                    agent.highest_pnl = 0.0
+                                    agent.is_break_even = False
+                            elif agent.internal_signal_state == -1:
+                                if agent.macro_obi > 0.15 or (agent.emergency_sl and agent.current_price >= agent.emergency_sl):
+                                    agent.internal_signal_state = 0
+                                    agent.active_trade_sl = None
+                                    agent.emergency_sl = None
+                                    agent.entry_price = 0.0
+                                    agent.highest_pnl = 0.0
+                                    agent.is_break_even = False
+                            
+                            sync_signal_state(agent, prev_sig)
+                            live.update(generate_table())
             except Exception as e:
                 time.sleep(2)
 
