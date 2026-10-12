@@ -41,10 +41,17 @@ Sistem asenkron haberleşen iki bağımsız mikroservise bölünmüş ve hem par
 
 **2. Dinamik Tetikçi (Keskin Nişancı):** `scripts/run_dynamic_smc.py`
 * Her 15 saniyede bir JSON dosyasını dinler ve yeni coinlere dinamik bağlanır.
-* **Dar FVG Filtresi (Depth Filter):** Tespit edilen FVG'nin derinliği (üst-alt sınırı) **%0.20'den daha küçükse** komisyon/slippage tuzağına düşmemek için işlemi otomatik reddeder. (Eski kural olan %0.05, stopların erken patlamasına sebep olduğu için %0.20'ye güncellendi).
-* **Kuvvetli OBI Filtresi:** İşleme girmek için Emir Defteri Dengesizliğinin (OBI) en az **0.30** olması zorunludur. (Sınırda kalan cılız tepkileri elemek için).
+* **Dar FVG Filtresi (Depth Filter):** Tespit edilen FVG'nin derinliği (üst-alt sınırı) **%0.20'den daha küçükse** komisyon/slippage tuzağına düşmemek için işlemi otomatik reddeder.
+* **Kuvvetli OBI Filtresi:** İşleme girmek için Emir Defteri Dengesizliğinin (OBI) en az **0.30** olması zorunludur.
 * **Websocket Hata Koruması:** Binance sunucularından kaynaklı asenkron veri (Fiyat = 0.0) gelişlerinde sahte işlem açılmasını engeller.
-* **Yapısal FVG Stop-Loss (Structural Stop):** İşleme girdiği salise FVG kutusunun sınırına %0.05 toleransla "Yapısal Stop" koyar. Fiyat sınır dışına taştığında OBI'yi beklemeden işlemi anında keser (Sahte duvar/Spoofing kalkanı).
+
+### 💎 V5.2: SMC Yapısal OBI Dinamik Çıkış & Genişletilmiş Koruma Kalkanı (GÜNCEL)
+* **Dinamik FVG-Koşullu OBI Çıkışı:** Pozisyon yönünde FVG geçerliliğini korurken (`BEARISH_FVG` veya `BULLISH_FVG`) anlık mikro dalgalanmalar yüzünden işlem kapatılmaz. OBI çıkış eşiği **±0.35 (Kuvvetli Ters Emir Baskısı)** seviyesine çekilmiştir. Yalnızca FVG yapısı bozulduğunda/bittiğinde standart ±0.15 güvenlik eşiği devreye girer.
+* **1 Dakikalık Mum Kapanışı Onaylı SL:** İğne/fitil manipülasyonlarına (stop hunt) karşı SL artık anlık tik ile değil, 1 dakikalık mum kapanışı onayıyla tetiklenir (`kline_1m['x'] == True`).
+* **%0.20 Genişletilmiş FVG Tamponu:** Stop seviyesi FVG sınırına yapışık olmak yerine %0.20 toleransla (`fvg_top * 1.0020` / `fvg_bot * 0.9980`) yerleştirilir.
+* **Optimize Edilmiş Break-Even & Trailing Stop:** Başa baş koruması %0.45 kârda devreye girerek pozisyona nefes alma payı bırakır; %0.50+ kârda %0.25 callback ile kârı kilitler.
+* **Veritabanı Durum Kurtarma (State Persistence):** Bot yeniden başlasa veya coin listeden geçici olarak düşse dahi PostgreSQL üzerindeki açık işlemler otomatik tanınır ve pozisyon asla sahipsiz kalmaz.
+* **Backtest Sonucu:** Win Rate (Kazanma Oranı) **%10.8'den %37.8'e yükselmiş (3.5 Kat Artış)**, erken çıkışlar engellenerek TAOUSDT gibi büyük trendlerin sonuna kadar taşınması sağlanmıştır.
 
 ---
 

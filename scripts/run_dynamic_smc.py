@@ -330,21 +330,21 @@ async def binance_ws():
                                 if cur_pnl > agent.highest_pnl:
                                     agent.highest_pnl = cur_pnl
                                 
-                                # Break-Even (@ %0.30 kâr görüldüğünde SL'i başa başa çek)
-                                if agent.highest_pnl >= 0.30:
+                                # Break-Even (@ %0.45 kâr görüldüğünde SL'i başa başa çek)
+                                if agent.highest_pnl >= 0.45:
                                     agent.is_break_even = True
                                     if agent.internal_signal_state == 1:
                                         agent.active_trade_sl = max(agent.active_trade_sl or 0, agent.entry_price * 1.0005)
                                     else:
                                         agent.active_trade_sl = min(agent.active_trade_sl or 999999, agent.entry_price * 0.9995)
                                 
-                                # Trailing Stop (@ %0.35+ kâr ve zirveden %0.20 çekilme)
-                                if agent.highest_pnl >= 0.35:
+                                # Trailing Stop (@ %0.50+ kâr ve zirveden %0.25 çekilme)
+                                if agent.highest_pnl >= 0.50:
                                     if agent.internal_signal_state == 1:
-                                        trail_sl = agent.entry_price * (1.0 + (agent.highest_pnl - 0.20) / 100)
+                                        trail_sl = agent.entry_price * (1.0 + (agent.highest_pnl - 0.25) / 100)
                                         agent.active_trade_sl = max(agent.active_trade_sl or 0, trail_sl)
                                     else:
-                                        trail_sl = agent.entry_price * (1.0 - (agent.highest_pnl - 0.20) / 100)
+                                        trail_sl = agent.entry_price * (1.0 - (agent.highest_pnl - 0.25) / 100)
                                         agent.active_trade_sl = min(agent.active_trade_sl or 999999, trail_sl)
                             
                         elif msg.get('e') == 'depthUpdate':
@@ -408,9 +408,12 @@ async def binance_ws():
                                         agent.active_trade_sl = agent.entry_price * 1.0020
                                     agent.emergency_sl = agent.entry_price * 1.0100 # %1.00 Acil Hard Stop
                                 
-                            # Pozisyondan Çıkış Kontrolleri (Acil Stop & OBI Reversal)
+                            # Pozisyondan Çıkış Kontrolleri (Acil Stop & Dinamik OBI Reversal)
+                            # Yapı lehimize FVG içindeyse OBI çıkışı çok daha KUVVETLİ (±0.35) olmalıdır.
+                            # FVG yapısı bozulduysa/bittiğinde standart (±0.15) OBI ile çıkılır.
                             if agent.internal_signal_state == 1:
-                                if agent.macro_obi < -0.15 or (agent.emergency_sl and agent.current_price <= agent.emergency_sl):
+                                obi_exit_threshold = -0.35 if agent.smc_status == 'BULLISH_FVG' else -0.15
+                                if agent.macro_obi < obi_exit_threshold or (agent.emergency_sl and agent.current_price <= agent.emergency_sl):
                                     agent.internal_signal_state = 0
                                     agent.active_trade_sl = None
                                     agent.emergency_sl = None
@@ -418,7 +421,8 @@ async def binance_ws():
                                     agent.highest_pnl = 0.0
                                     agent.is_break_even = False
                             elif agent.internal_signal_state == -1:
-                                if agent.macro_obi > 0.15 or (agent.emergency_sl and agent.current_price >= agent.emergency_sl):
+                                obi_exit_threshold = 0.35 if agent.smc_status == 'BEARISH_FVG' else 0.15
+                                if agent.macro_obi > obi_exit_threshold or (agent.emergency_sl and agent.current_price >= agent.emergency_sl):
                                     agent.internal_signal_state = 0
                                     agent.active_trade_sl = None
                                     agent.emergency_sl = None
