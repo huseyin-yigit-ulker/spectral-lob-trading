@@ -14,31 +14,45 @@ export function LiveProvider({ children }) {
 
   useEffect(() => {
     async function fetchSymbols() {
-      const now = new Date();
-      // 15 dakikalik periyodun baslangicini bul (ornegin 14:12 -> 14:00)
+      // 1. active_screener tablosundan en güncel listeyi al
+      const { data } = await supabase
+        .from('active_screener')
+        .select('updated_at, data')
+        .eq('id', 1)
+        .single();
+
+      let unique = [];
+      let updatedTime = null;
+
+      if (data && data.data && Array.isArray(data.data.symbols)) {
+        unique = [...new Set(data.data.symbols.map(s => s.toLowerCase()))].slice(0, 15);
+        if (data.updated_at) {
+          updatedTime = new Date(data.updated_at);
+        }
+      }
+
+      // 2. Eğer active_screener boş ise screener_history fallback
+      if (unique.length === 0) {
+        const { data: histData } = await supabase
+          .from('screener_history')
+          .select('sembol')
+          .eq('durum', 'KABUL')
+          .order('id', { ascending: false })
+          .limit(15);
+        if (histData && histData.length > 0) {
+          unique = [...new Set(histData.map(d => d.sembol.toLowerCase()))].slice(0, 15);
+        }
+      }
+
+      const now = updatedTime || new Date();
       const periodStartMs = Math.floor(now.getTime() / (15 * 60 * 1000)) * (15 * 60 * 1000);
       const periodStart = new Date(periodStartMs);
-      
       const endMs = periodStartMs + (15 * 60 * 1000);
       const periodEnd = new Date(endMs);
       
       const pad = n => n.toString().padStart(2, '0');
-      const pStr = `${pad(periodStart.getHours())}:${pad(periodStart.getMinutes())} - ${pad(periodEnd.getHours())}:${pad(periodEnd.getMinutes())}`;
+      const pStr = `${pad(periodStart.getUTCHours())}:${pad(periodStart.getUTCMinutes())} - ${pad(periodEnd.getUTCHours())}:${pad(periodEnd.getUTCMinutes())} UTC`;
       setActivePeriodString(pStr);
-
-      const pastISO = periodStart.toISOString();
-
-      const { data } = await supabase
-        .from('screener_history')
-        .select('sembol')
-        .eq('durum', 'KABUL')
-        .gte('zaman', pastISO);
-
-      let unique = [];
-      
-      if (data && data.length > 0) {
-        unique = [...new Set(data.map(d => d.sembol.toLowerCase()))].slice(0, 15);
-      }
 
       setSymbols(unique);
       
@@ -49,28 +63,28 @@ export function LiveProvider({ children }) {
       });
       setMetrics(initMetrics);
 
-        if (unique.length > 0) {
-          try {
-            const symsString = JSON.stringify(unique.map(s => s.toUpperCase()));
-            const res = await fetch(`https://fapi.binance.com/fapi/v1/ticker/price?symbols=${symsString}`);
-            const prices = await res.json();
-            
-            setMetrics(prev => {
-              const next = { ...prev };
-              prices.forEach(p => {
-                const s = p.symbol.toLowerCase();
-                if (next[s]) next[s].price = parseFloat(p.price);
-              });
-              return next;
+      if (unique.length > 0) {
+        try {
+          const symsString = JSON.stringify(unique.map(s => s.toUpperCase()));
+          const res = await fetch(`https://fapi.binance.com/fapi/v1/ticker/price?symbols=${symsString}`);
+          const prices = await res.json();
+          
+          setMetrics(prev => {
+            const next = { ...prev };
+            prices.forEach(p => {
+              const s = p.symbol.toLowerCase();
+              if (next[s]) next[s].price = parseFloat(p.price);
             });
-          } catch(e) {}
-        }
+            return next;
+          });
+        } catch(e) {}
+      }
     }
     
     fetchSymbols();
     
-    // Screener yeni periyotta calistiginda hizla yakalamasi icin 1 dakikada bir kontrol et
-    const interval = setInterval(fetchSymbols, 60 * 1000);
+    // Screener yeni periyotta çalıştığında hızla yakalaması için 15 saniyede bir kontrol et
+    const interval = setInterval(fetchSymbols, 15 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -102,12 +116,16 @@ export function LiveProvider({ children }) {
   }, [symbols]);
 
   useEffect(() => {
-    if (symbols.length === 0) return;
+    if (symbols.length === 0) {
+      setWsStatus('DISCONNECTED');
+      return;
+    }
     
     if (wsRef.current) {
       wsRef.current.close();
     }
 
+    setWsStatus('CONNECTING');
     const wsUrl = 'wss://fstream.binance.com/stream';
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
