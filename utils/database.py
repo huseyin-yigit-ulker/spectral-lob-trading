@@ -28,39 +28,47 @@ def get_supabase_conn():
         return None
 
 def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth):
-    conn = get_supabase_conn()
-    if not conn:
-        return
-        
-    try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS quant_v5.trade_logs (
-                    id SERIAL PRIMARY KEY,
-                    zaman TIMESTAMP,
-                    sembol VARCHAR(50),
-                    fiyat NUMERIC,
-                    obi NUMERIC,
-                    cvd NUMERIC,
-                    context VARCHAR(50),
-                    sinyal VARCHAR(50),
-                    fvg_top NUMERIC,
-                    fvg_bottom NUMERIC,
-                    fvg_depth NUMERIC,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
+    import time
+    for attempt in range(3):
+        conn = get_supabase_conn()
+        if not conn:
+            time.sleep(1)
+            continue
             
-            cur.execute("""
-                INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth))
-            
-        conn.commit()
-    except Exception as e:
-        print(f"  [Supabase DB Yazma Hatasi] {e}")
-    finally:
-        conn.close()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS quant_v5.trade_logs (
+                        id SERIAL PRIMARY KEY,
+                        zaman TIMESTAMP,
+                        sembol VARCHAR(50),
+                        fiyat NUMERIC,
+                        obi NUMERIC,
+                        cvd NUMERIC,
+                        context VARCHAR(50),
+                        sinyal VARCHAR(50),
+                        fvg_top NUMERIC,
+                        fvg_bottom NUMERIC,
+                        fvg_depth NUMERIC,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
+                
+                cur.execute("""
+                    INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth))
+                
+            conn.commit()
+            return True
+        except Exception as e:
+            print(f"  [Supabase DB Yazma Hatasi (Deneme {attempt+1})] {e}")
+            time.sleep(1)
+        finally:
+            if conn:
+                try: conn.close()
+                except: pass
+    return False
 
 def log_screener_to_supabase(zaman, sembol, fiyat, hacim, spread, fvg_mesafe_yuzde, skor, durum):
     conn = get_supabase_conn()

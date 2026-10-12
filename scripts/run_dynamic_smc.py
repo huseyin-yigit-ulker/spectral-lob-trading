@@ -4,11 +4,12 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from utils.notifier import send_telegram_message
-    from utils.database import log_trade_to_supabase, update_live_metrics
+    from utils.database import log_trade_to_supabase, update_live_metrics, get_supabase_conn
 except ImportError:
     send_telegram_message = None
     log_trade_to_supabase = None
     update_live_metrics = None
+    get_supabase_conn = None
 import websockets
 import json
 import csv
@@ -89,24 +90,96 @@ current_symbols = []
 SCREENER_FILE = 'data/active_screener.json'
 last_screener_mtime = 0
 
+def get_open_positions_from_db():
+    if not get_supabase_conn:
+        return {}
+    conn = get_supabase_conn()
+    if not conn:
+        return {}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT id, zaman, sembol, fiyat, sinyal, fvg_top, fvg_bottom, fvg_depth
+                FROM quant_v5.trade_logs
+                ORDER BY id ASC;
+            """)
+            rows = cur.fetchall()
+            
+        open_pos = {}
+        for r in rows:
+            _id, zaman, sym, fiyat, sinyal, f_top, f_bot, f_depth = r
+            if ('AL' in sinyal or 'SAT' in sinyal) and ('BEKLE' not in sinyal):
+                open_pos[sym] = {
+                    'id': _id,
+                    'zaman': zaman,
+                    'direction': 1 if ('AL' in sinyal or 'LONG' in sinyal) else -1,
+                    'entry_price': float(fiyat),
+                    'fvg_top': float(f_top or 0),
+                    'fvg_bottom': float(f_bot or 0),
+                    'fvg_depth': float(f_depth or 0),
+                    'signal_text': sinyal
+                }
+            elif 'BEKLE' in sinyal and sym in open_pos:
+                del open_pos[sym]
+        return open_pos
+    except Exception as e:
+        return {}
+    finally:
+        try: conn.close()
+        except: pass
+
 def update_agents_from_screener():
     global current_symbols, last_screener_mtime
     if not os.path.exists(SCREENER_FILE): return False
     
+    # 1. DB'den açık pozisyonları çek (State Persistence)
+    open_positions = get_open_positions_from_db()
+
     mtime = os.path.getmtime(SCREENER_FILE)
-    if mtime == last_screener_mtime: return False
+    screener_changed = (mtime != last_screener_mtime)
+    has_missing_open_pos = any(s not in agents for s in open_positions)
+    
+    # Eger screener degismediyse, eksik acik pozisyon da yoksa ve agents doluysa devam et
+    if not screener_changed and not has_missing_open_pos and len(agents) > 0:
+        return False
+        
     last_screener_mtime = mtime
     
     try:
         with open(SCREENER_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            new_symbols = data.get('symbols', [])
-            if not new_symbols: return False
+            screener_symbols = data.get('symbols', [])
+            
+            # Açık pozisyonlu sembolleri listeye ZORUNLU olarak dahil et
+            merged_symbols = list(screener_symbols)
+            for open_sym in open_positions:
+                if open_sym not in merged_symbols:
+                    merged_symbols.append(open_sym)
+            
+            if not merged_symbols: return False
             
             # Yeni eklenenleri isit
-            for s in new_symbols:
+            for s in merged_symbols:
                 if s not in agents:
                     agents[s] = SMCAgent(s)
+                    
+                    # Eğer bu coin veritabanında zaten açık bir işlemse hafızasını ve SL'ini geri yükle!
+                    if s in open_positions:
+                        pos_info = open_positions[s]
+                        agents[s].internal_signal_state = pos_info['direction']
+                        agents[s].entry_price = pos_info['entry_price']
+                        agents[s].last_signal_text = pos_info['signal_text']
+                        agents[s].last_signal_color = "green bold" if pos_info['direction'] == 1 else "red bold"
+                        
+                        top_b = pos_info['fvg_top']
+                        bot_b = pos_info['fvg_bottom']
+                        if pos_info['direction'] == 1:
+                            agents[s].active_trade_sl = (bot_b * 0.9980) if bot_b > 0 else (agents[s].entry_price * 0.9980)
+                            agents[s].emergency_sl = agents[s].entry_price * 0.9900
+                        else:
+                            agents[s].active_trade_sl = (top_b * 1.0020) if top_b > 0 else (agents[s].entry_price * 1.0020)
+                            agents[s].emergency_sl = agents[s].entry_price * 1.0100
+                            
                     try:
                         r5 = requests.get(f"https://fapi.binance.com/fapi/v1/klines?symbol={s}&interval=5m&limit=30", timeout=3).json()
                         for k in r5: agents[s].smc_5m.add_candle(k[1], k[2], k[3], k[4], k[6])
@@ -114,16 +187,16 @@ def update_agents_from_screener():
                         for k in r3: agents[s].smc_3m.add_candle(k[1], k[2], k[3], k[4], k[6])
                     except: pass
                     
-            # Listeden dusenleri temizle
-            to_remove = [s for s in agents if s not in new_symbols]
+            # Listeden dusenleri temizle (AMA acik pozisyonu olanlari ASLA silme!)
+            to_remove = [s for s in agents if s not in merged_symbols]
             for s in to_remove:
-                if agents[s].internal_signal_state != 0:
+                if agents[s].internal_signal_state != 0 or s in open_positions:
                     # Islem acik, silme ve websocket'te dinlemeye devam et (Zombi modu)
-                    new_symbols.append(s)
+                    merged_symbols.append(s)
                 else:
                     del agents[s]
                 
-            current_symbols = new_symbols
+            current_symbols = merged_symbols
             return True
     except:
         return False
@@ -199,7 +272,7 @@ async def binance_ws():
             next_check_time = time.time() + 15
             
             try:
-                async with websockets.connect(url) as ws:
+                async with websockets.connect(url, ping_interval=20, ping_timeout=60, max_size=None) as ws:
                     while True:
                         # 15 saniyede bir JSON dosyasi degismis mi diye kontrol et
                         if time.time() > next_check_time:
