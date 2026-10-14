@@ -82,6 +82,13 @@ export default function LiveTerminal() {
     return (val > 0 ? '+' : val < 0 ? '-' : '') + '$' + formatted;
   };
 
+  // Binance Futures Perpetual kontrat sembolünü TradingView formatına çevir (Örn: WALUSDT -> BINANCE:WALUSDT.P)
+  const getTradingViewFuturesSymbol = (sym) => {
+    if (!sym) return '';
+    const clean = sym.toUpperCase().replace(/\.P$/, '');
+    return `BINANCE%3A${clean}.P`;
+  };
+
   // Mini OBI İlerleme / Dengesizlik Çubuğu (-1.0 ile +1.0 arası)
   const renderOBIMeter = (obi) => {
     if (obi === undefined || isNaN(obi)) return null;
@@ -556,7 +563,10 @@ export default function LiveTerminal() {
             <div className="bg-[#121822] text-xs font-bold px-3.5 py-2 text-gray-300 border-b border-[#1f2937] flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-[#0ECB81] animate-pulse" />
-                <span className="font-black text-gray-100">{selectedSymbol.toUpperCase()} / USDT</span>
+                <span className="font-black text-gray-100">{selectedSymbol.toUpperCase()}.P</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded font-black bg-[#F0B90B]/20 text-[#F0B90B] border border-[#F0B90B]/30">
+                  PERP
+                </span>
                 <span className="text-gray-400 font-mono">
                   {selectedMetrics?.price ? `$${Number(selectedMetrics.price).toPrecision(6)}` : ''}
                 </span>
@@ -590,7 +600,7 @@ export default function LiveTerminal() {
               <iframe
                 id="tradingview_chart_split"
                 key={`${selectedSymbol}-${chartInterval}`}
-                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3A${selectedSymbol.toUpperCase()}&interval=${chartInterval}&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
+                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=${getTradingViewFuturesSymbol(selectedSymbol)}&interval=${chartInterval}&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
                 style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
                 frameBorder="0"
                 allowTransparency="true"
@@ -610,7 +620,10 @@ export default function LiveTerminal() {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#0ECB81] animate-pulse" />
-                <span className="font-black text-gray-100 text-sm">{selectedSymbol.toUpperCase()} / USDT</span>
+                <span className="font-black text-gray-100 text-sm">{selectedSymbol.toUpperCase()}.P</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded font-black bg-[#F0B90B]/20 text-[#F0B90B] border border-[#F0B90B]/30">
+                  PERP
+                </span>
                 <span className="text-[#F0B90B] font-mono font-bold">
                   {selectedMetrics?.price ? `$${Number(selectedMetrics.price).toPrecision(6)}` : ''}
                 </span>
@@ -659,7 +672,7 @@ export default function LiveTerminal() {
             <iframe
               id="tradingview_chart_bottom"
               key={`${selectedSymbol}-${chartInterval}`}
-              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3A${selectedSymbol.toUpperCase()}&interval=${chartInterval}&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
+              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=${getTradingViewFuturesSymbol(selectedSymbol)}&interval=${chartInterval}&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
               style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
               frameBorder="0"
               allowTransparency="true"
@@ -683,9 +696,9 @@ export default function LiveTerminal() {
                 <div className="w-3 h-3 rounded-full bg-[#0ECB81] animate-pulse" />
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-black text-gray-100">{selectedSymbol.toUpperCase()} / USDT</span>
+                    <span className="text-base font-black text-gray-100">{selectedSymbol.toUpperCase()}.P</span>
                     <span className="text-xs px-2 py-0.5 rounded font-black bg-[#F0B90B]/20 text-[#F0B90B] border border-[#F0B90B]/30">
-                      BINANCE FUTURES
+                      BINANCE FUTURES (PERP)
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-xs font-mono mt-0.5">
@@ -763,7 +776,7 @@ export default function LiveTerminal() {
               <iframe
                 id="tradingview_chart_modal"
                 key={`${selectedSymbol}-${chartInterval}`}
-                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3A${selectedSymbol.toUpperCase()}&interval=${chartInterval}&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
+                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=${getTradingViewFuturesSymbol(selectedSymbol)}&interval=${chartInterval}&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=1&studies_overrides=%7B%7D`}
                 style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
                 frameBorder="0"
                 allowTransparency="true"
