@@ -4,7 +4,7 @@ import { useLive } from '../context/LiveContext';
 import Tooltip from '../components/Tooltip';
 
 export default function LiveTerminal() {
-  const { symbols, metrics, wsStatus, activePeriodString } = useLive();
+  const { symbols, metrics, wsStatus, activePeriodString, btcRegime } = useLive();
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
   useEffect(() => {
@@ -24,9 +24,32 @@ export default function LiveTerminal() {
         </div>
         
         <div className="flex flex-col md:flex-row items-end md:items-center gap-3">
+          {/* BTC Macro Regime Pill */}
+          <div className="px-3.5 py-1.5 bg-[#121822] border border-[#1f2937] rounded-xl shadow-sm flex items-center gap-2.5">
+            <div className={`w-2.5 h-2.5 rounded-full ${
+              btcRegime?.regime === 'BEARISH' ? 'bg-red-500 animate-pulse' :
+              btcRegime?.regime === 'BULLISH' ? 'bg-green-500 animate-pulse' :
+              'bg-yellow-500'
+            }`} />
+            <div className="flex flex-col">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                BTC BEKLENEN YÖN {btcRegime?.price ? `($${Number(btcRegime.price).toLocaleString('en-US', { maximumFractionDigits: 0 })})` : ''}
+              </span>
+              <span className={`text-xs font-black ${
+                btcRegime?.regime === 'BEARISH' ? 'text-red-400' :
+                btcRegime?.regime === 'BULLISH' ? 'text-green-400' :
+                'text-yellow-400'
+              }`}>
+                {btcRegime?.regime === 'BEARISH' ? '🔻 SADECE SHORT' :
+                 btcRegime?.regime === 'BULLISH' ? '🔺 SADECE LONG' :
+                 '↔️ ÇİFT YÖN (NÖTR)'}
+              </span>
+            </div>
+          </div>
+
           {/* Active Period Badge */}
           {activePeriodString && (
-            <div className="px-3 py-1.5 bg-[#1E2329] border border-[#2B3139] rounded-lg shadow-sm">
+            <div className="px-3 py-2 bg-[#1E2329] border border-[#2B3139] rounded-xl shadow-sm">
               <span className="text-xs font-bold text-[#F0B90B]">
                 PERİYOT: <span className="text-gray-300 ml-1">{activePeriodString}</span>
               </span>
@@ -45,6 +68,33 @@ export default function LiveTerminal() {
               WS: {wsStatus}
             </span>
           </div>
+        </div>
+      </div>
+
+      {/* Macro Regime Policy Notice Banner */}
+      <div className={`px-4 py-3 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs shrink-0 ${
+        btcRegime?.regime === 'BEARISH' ? 'bg-red-500/10 border-red-500/25 text-red-200' :
+        btcRegime?.regime === 'BULLISH' ? 'bg-green-500/10 border-green-500/25 text-green-200' :
+        'bg-yellow-500/10 border-yellow-500/25 text-yellow-200'
+      }`}>
+        <div className="flex items-center gap-2.5">
+          <Info size={16} className={
+            btcRegime?.regime === 'BEARISH' ? 'text-red-400 shrink-0' :
+            btcRegime?.regime === 'BULLISH' ? 'text-green-400 shrink-0' :
+            'text-yellow-400 shrink-0'
+          } />
+          <span>
+            {btcRegime?.regime === 'BEARISH' ? (
+              <span><strong>Makro Filtre Devrede:</strong> Bitcoin 1H/4H trendi düşüş yönünde. Bot şu anda <strong>sadece SHORT</strong> yönlü işlemleri onaylar. Karşı trend LONG sinyalleri (Sniper OBI ≥ +0.70 harici) otomatik engellenir.</span>
+            ) : btcRegime?.regime === 'BULLISH' ? (
+              <span><strong>Makro Filtre Devrede:</strong> Bitcoin 1H/4H trendi yükseliş yönünde. Bot şu anda <strong>sadece LONG</strong> yönlü işlemleri onaylar. SHORT sinyalleri filtrelenir.</span>
+            ) : (
+              <span><strong>Makro Filtre Devrede:</strong> Bitcoin nötr / yatay konsolidasyon bölgesinde. Bot strateji kurallarına göre <strong>hem LONG hem de SHORT</strong> pozisyonları işleme alabilir.</span>
+            )}
+          </span>
+        </div>
+        <div className="shrink-0 font-mono text-[11px] bg-black/40 px-2.5 py-1 rounded-lg border border-white/10 font-bold text-gray-300">
+          Aktif Politika: {btcRegime?.regime === 'BEARISH' ? 'SHORT ÖNCELİKLİ' : btcRegime?.regime === 'BULLISH' ? 'LONG ÖNCELİKLİ' : 'DENGELİ'}
         </div>
       </div>
 
@@ -150,9 +200,31 @@ export default function LiveTerminal() {
                       </td>
                       <td className="px-6 py-5 text-right font-medium text-xs">
                         {m?.smc_status ? (
-                          <span className={m.smc_status === 'BULLISH_FVG' ? 'text-[#0ECB81] font-bold' : m.smc_status === 'BEARISH_FVG' ? 'text-[#F6465D] font-bold' : 'text-gray-400'}>
-                            {m.smc_status}
-                          </span>
+                          <div className="flex flex-col items-end gap-1">
+                            <span className={m.smc_status === 'BULLISH_FVG' ? 'text-[#0ECB81] font-bold' : m.smc_status === 'BEARISH_FVG' ? 'text-[#F6465D] font-bold' : 'text-gray-400'}>
+                              {m.smc_status}
+                            </span>
+                            {btcRegime?.regime === 'BEARISH' && m.smc_status === 'BEARISH_FVG' && (
+                              <span className="text-[10px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded font-bold border border-green-500/20">
+                                🎯 İzinli (Trend Yönü)
+                              </span>
+                            )}
+                            {btcRegime?.regime === 'BEARISH' && m.smc_status === 'BULLISH_FVG' && (
+                              <span className="text-[10px] text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded font-bold border border-red-500/20">
+                                ⛔ Makro Engel (Sniper Harici)
+                              </span>
+                            )}
+                            {btcRegime?.regime === 'BULLISH' && m.smc_status === 'BULLISH_FVG' && (
+                              <span className="text-[10px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded font-bold border border-green-500/20">
+                                🎯 İzinli (Trend Yönü)
+                              </span>
+                            )}
+                            {btcRegime?.regime === 'BULLISH' && m.smc_status === 'BEARISH_FVG' && (
+                              <span className="text-[10px] text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded font-bold border border-red-500/20">
+                                ⛔ Makro Engel
+                              </span>
+                            )}
+                          </div>
                         ) : <span className="text-gray-500">BEKLENIYOR</span>}
                       </td>
                       <td className="px-6 py-5 text-right font-medium text-xs">

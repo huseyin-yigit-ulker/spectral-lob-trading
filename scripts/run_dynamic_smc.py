@@ -26,6 +26,7 @@ from features.state_builder import StateBuilder
 from rich.console import Console
 from rich.table import Table
 from rich.live import Live
+from utils.btc_regime import get_btc_regime, is_trade_allowed_by_btc
 
 # Log Dosyasi Kaldirildi (Sadece DB)
 
@@ -202,7 +203,14 @@ def update_agents_from_screener():
         return False
 
 def generate_table():
-    table = Table(title="Dinamik V5 SMC + HFT (Oto-Tarayici Gucunde)", border_style="cyan")
+    btc_info = get_btc_regime()
+    btc_summary = btc_info.get('summary', 'BTC: Yükleniyor...')
+    badge_color = btc_info.get('badge_color', 'white')
+
+    table = Table(
+        title=f"Dinamik V5.2 SMC Terminal | BTC Trendi: [{badge_color}]{btc_summary}[/{badge_color}]",
+        border_style="cyan"
+    )
     table.add_column("Sembol", justify="left", style="cyan", no_wrap=True)
     table.add_column("Fiyat", justify="right", style="magenta")
     table.add_column("Doluluk", justify="center", style="white")
@@ -234,22 +242,49 @@ def generate_table():
             f"[{smc_color}]{smc}[/{smc_color}]",
             f"[{agent.last_signal_color}]{agent.last_signal_text}[/{agent.last_signal_color}]"
         )
-    
-    if update_live_metrics:
-        states_dict = {}
-        for s in current_symbols:
-            if s in agents and agents[s].current_price > 0:
-                states_dict[s.lower()] = {
-                    'smc_status': agents[s].smc_status,
-                    'fvg_depth': round(agents[s].fvg_depth_pct, 4)
-                }
-        if states_dict:
-            update_live_metrics(states_dict)
-            
     return table
+
+async def periodic_db_metrics_sync():
+    """
+    Periyodik olarak (10 saniyede bir) live_metrics tablosuna yazar.
+    Sadece coinlerin durumlarinda (SMC durumu / FVG derinligi) gercek bir degisiklik
+    varsa Supabase'e sorgu atar. Boylece gereksiz Log Ingestion onlenir.
+    """
+    last_synced_states = {}
+    while True:
+        try:
+            await asyncio.sleep(10)
+            if not update_live_metrics or not current_symbols:
+                continue
+                
+            states_dict = {}
+            for s in current_symbols:
+                if s in agents and agents[s].current_price > 0:
+                    states_dict[s.lower()] = {
+                        'smc_status': agents[s].smc_status,
+                        'fvg_depth': round(agents[s].fvg_depth_pct, 4)
+                    }
+                    
+            # BTC Piyasa Rejimini de live_metrics'e ekle
+            btc_info = get_btc_regime()
+            states_dict['_btc_'] = {
+                'smc_status': btc_info.get('regime', 'NEUTRAL'),
+                'fvg_depth': round(btc_info.get('btc_price', 0.0), 2)
+            }
+                    
+            if states_dict and states_dict != last_synced_states:
+                loop = asyncio.get_running_loop()
+                await loop.run_in_executor(None, update_live_metrics, states_dict)
+                last_synced_states = states_dict
+        except asyncio.CancelledError:
+            break
+        except Exception as e:
+            pass
 
 async def binance_ws():
     console = Console()
+    sync_task = asyncio.create_task(periodic_db_metrics_sync())
+    last_table_render = 0
     with Live(generate_table(), refresh_per_second=2, console=console) as live:
         while True:
             # Screener'in hazirlanmasini bekle
@@ -380,7 +415,11 @@ async def binance_ws():
                             is_fvg_wide_enough = fvg_depth_ratio >= 0.0015 # %0.15
                             
                             if agent.macro_obi > 0.30 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
-                                if agent.internal_signal_state != 1:
+                                # BTC Makro Trend Filtresi: BTC düşüşteyken altcoin LONG'unu engelle
+                                allowed, btc_reason = is_trade_allowed_by_btc('LONG', agent.macro_obi, agent.fvg_depth_pct)
+                                if not allowed:
+                                    pass # Sinyal reddedildi
+                                elif agent.internal_signal_state != 1:
                                     agent.internal_signal_state = 1
                                     agent.entry_price = agent.current_price
                                     agent.highest_pnl = 0.0
@@ -394,7 +433,11 @@ async def binance_ws():
                                         agent.active_trade_sl = agent.entry_price * 0.9980
                                     agent.emergency_sl = agent.entry_price * 0.9900 # %1.00 Acil Hard Stop
                             elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
-                                if agent.internal_signal_state != -1:
+                                # BTC Makro Trend Filtresi: BTC yükselişteyken altcoin SHORT'unu engelle
+                                allowed, btc_reason = is_trade_allowed_by_btc('SHORT', agent.macro_obi, agent.fvg_depth_pct)
+                                if not allowed:
+                                    pass # Sinyal reddedildi
+                                elif agent.internal_signal_state != -1:
                                     agent.internal_signal_state = -1
                                     agent.entry_price = agent.current_price
                                     agent.highest_pnl = 0.0
@@ -431,7 +474,10 @@ async def binance_ws():
                                     agent.is_break_even = False
                             
                             sync_signal_state(agent, prev_sig)
-                            live.update(generate_table())
+                            now_t = time.time()
+                            if now_t - last_table_render >= 0.25:
+                                live.update(generate_table())
+                                last_table_render = now_t
             except Exception as e:
                 time.sleep(2)
 

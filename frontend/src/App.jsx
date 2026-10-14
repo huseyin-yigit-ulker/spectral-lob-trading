@@ -5,10 +5,11 @@ import TradeLogs from './pages/TradeLogs';
 import LiveTerminal from './pages/LiveTerminal';
 import { Activity, LayoutDashboard, List, Terminal, Globe, TerminalSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { LiveProvider } from './context/LiveContext';
+import { LiveProvider, useLive } from './context/LiveContext';
 
 function Topbar() {
   const [utcTime, setUtcTime] = useState('');
+  const { btcRegime } = useLive() || {};
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -24,6 +25,33 @@ function Topbar() {
         <Terminal className="text-[#F0B90B]" size={20} />
         <span className="font-black text-white tracking-tight">QUANT<span className="text-[#F0B90B]">V5</span></span>
       </div>
+
+      {/* Center: BTC Macro Regime & Expected Trade Direction */}
+      <div className="hidden sm:flex items-center gap-2">
+        {btcRegime?.regime === 'BEARISH' ? (
+          <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/30 rounded-lg text-xs font-bold text-red-400">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            <span>BTC MAKRO: <span className="text-white font-black">DÜŞÜŞ</span></span>
+            <span className="text-gray-500">|</span>
+            <span className="text-red-300">BEKLENEN: <span className="bg-red-500/20 text-red-200 px-1.5 py-0.5 rounded font-black tracking-wide">🔻 SADECE SHORT</span></span>
+          </div>
+        ) : btcRegime?.regime === 'BULLISH' ? (
+          <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-lg text-xs font-bold text-green-400">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span>BTC MAKRO: <span className="text-white font-black">YÜKSELİŞ</span></span>
+            <span className="text-gray-500">|</span>
+            <span className="text-green-300">BEKLENEN: <span className="bg-green-500/20 text-green-200 px-1.5 py-0.5 rounded font-black tracking-wide">🔺 SADECE LONG</span></span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-xs font-bold text-yellow-400">
+            <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
+            <span>BTC MAKRO: <span className="text-white font-black">NÖTR / RANGE</span></span>
+            <span className="text-gray-500">|</span>
+            <span className="text-yellow-300">BEKLENEN: <span className="bg-yellow-500/20 text-yellow-200 px-1.5 py-0.5 rounded font-black tracking-wide">↔️ ÇİFT YÖNLÜ</span></span>
+          </div>
+        )}
+      </div>
+
       <div className="flex items-center gap-4">
         <div className="hidden md:flex items-center gap-2 text-gray-400 text-xs font-mono bg-[#1E2329] px-3 py-1 rounded-md border border-[#2B3139]">
           <Globe size={12} className="text-[#F0B90B]" />

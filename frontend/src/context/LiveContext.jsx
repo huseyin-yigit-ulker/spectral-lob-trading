@@ -8,6 +8,7 @@ export function LiveProvider({ children }) {
   const [metrics, setMetrics] = useState({});
   const [wsStatus, setWsStatus] = useState('CONNECTING');
   const [activePeriodString, setActivePeriodString] = useState('');
+  const [btcRegime, setBtcRegime] = useState({ regime: 'NEUTRAL', price: 0 });
   
   const wsRef = useRef(null);
   const buffers = useRef({});
@@ -17,6 +18,7 @@ export function LiveProvider({ children }) {
     let isSubscribed = true;
 
     async function fetchSymbols() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       let unique = [];
       let updatedTime = null;
 
@@ -162,17 +164,26 @@ export function LiveProvider({ children }) {
     let isSubscribed = true;
     
     async function fetchSMC() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
         const { data } = await supabase
           .from('live_metrics')
           .select('*');
           
         if (data && isSubscribed) {
+          const btcRow = data.find(d => (d.sembol || '').toLowerCase() === '_btc_');
+          if (btcRow) {
+            setBtcRegime({
+              regime: btcRow.smc_status || 'NEUTRAL',
+              price: parseFloat(btcRow.fvg_depth || 0)
+            });
+          }
+
           setMetrics(prev => {
             const next = { ...prev };
             data.forEach(d => {
               const s = (d.sembol || '').toLowerCase();
-              if (next[s]) {
+              if (s !== '_btc_' && next[s]) {
                 next[s] = {
                   ...next[s],
                   smc_status: d.smc_status,
@@ -189,10 +200,17 @@ export function LiveProvider({ children }) {
     }
     
     fetchSMC();
-    const interval = setInterval(fetchSMC, 3000);
+    const interval = setInterval(fetchSMC, 10000); // 10 saniyede bir
+
+    const handleVisibility = () => {
+      if (!document.hidden) fetchSMC();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
     return () => {
       isSubscribed = false;
       clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [symbols]);
 
@@ -331,7 +349,7 @@ export function LiveProvider({ children }) {
   }, [symbols]);
 
   return (
-    <LiveContext.Provider value={{ symbols, metrics, wsStatus, activePeriodString }}>
+    <LiveContext.Provider value={{ symbols, metrics, wsStatus, activePeriodString, btcRegime }}>
       {children}
     </LiveContext.Provider>
   );

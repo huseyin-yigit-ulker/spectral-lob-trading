@@ -3,15 +3,18 @@ import { supabase } from '../lib/supabase';
 import { calculateTransactions } from '../utils/transactions';
 import { Activity, Target, ShieldAlert, Zap, Clock, ArrowRight, TrendingUp, TrendingDown, Layers } from 'lucide-react';
 import PnlChart from '../components/Chart';
+import { useLive } from '../context/LiveContext';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ transactions: 0, active: 0, winRate: 0, pnl: 0, profitFactor: 0 });
   const [closedTransactions, setClosedTransactions] = useState([]);
   const [activeTransactions, setActiveTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { btcRegime } = useLive() || {};
 
   useEffect(() => {
     async function fetchData() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       const { data: logsData } = await supabase
         .from('trade_logs')
         .select('*')
@@ -57,9 +60,95 @@ export default function Dashboard() {
           <h2 className="text-2xl font-black text-gray-100 tracking-tight">SMC Terminal <span className="text-[#F0B90B]">V5</span></h2>
           <p className="text-sm text-gray-500 mt-1">High-Frequency Trading & Smart Money Concepts</p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span className="text-xs font-bold text-green-400">SNIPER MODE ACTIVE</span>
+        <div className="flex items-center gap-3">
+          {btcRegime?.regime === 'BEARISH' && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              <span className="text-xs font-bold text-red-400">BTC MAKRO: 🔴 DÜŞÜŞ (SHORT AĞIRLIKLI)</span>
+            </div>
+          )}
+          {btcRegime?.regime === 'BULLISH' && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              <span className="text-xs font-bold text-green-400">BTC MAKRO: 🟢 YÜKSELİŞ (LONG AĞIRLIKLI)</span>
+            </div>
+          )}
+          {(!btcRegime?.regime || btcRegime?.regime === 'NEUTRAL') && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/30 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
+              <span className="text-xs font-bold text-yellow-400">BTC MAKRO: ⚪ NÖTR (HER İKİ YÖN)</span>
+            </div>
+          )}
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-xs font-bold text-green-400">SNIPER MODE ACTIVE</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Market Regime & Expected Trade Direction Policy Card */}
+      <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-4 md:p-5 shadow-lg">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          
+          {/* BTC Price & Regime */}
+          <div className="flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-2xl shrink-0 ${
+              btcRegime?.regime === 'BEARISH' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+              btcRegime?.regime === 'BULLISH' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+              'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+            }`}>
+              ₿
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Bitcoin Makro Rejimi</span>
+                <span className={`px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-wider ${
+                  btcRegime?.regime === 'BEARISH' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                  btcRegime?.regime === 'BULLISH' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                  'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                }`}>
+                  {btcRegime?.regime === 'BEARISH' ? '🔴 DÜŞÜŞ TRENDİ (BEARISH)' : btcRegime?.regime === 'BULLISH' ? '🟢 YÜKSELİŞ TRENDİ (BULLISH)' : '⚪ YATAY (RANGE)'}
+                </span>
+              </div>
+              <div className="text-lg font-black text-gray-100 mt-0.5 flex items-center gap-2">
+                <span>{btcRegime?.price ? `$${Number(btcRegime.price).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}` : 'BTC Analiz Ediliyor'}</span>
+                <span className="text-xs font-medium text-gray-500">(1H / 4H Trend Filtresi)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Trade Direction Policy */}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 bg-[#0B0E11] px-3.5 py-2 rounded-lg border border-[#1f2937]">
+              <span className="text-xs text-gray-400 font-semibold">LONG Sinyalleri:</span>
+              {btcRegime?.regime === 'BEARISH' ? (
+                <span className="text-xs font-black text-red-400 flex items-center gap-1">❌ BLOKE EDİLDİ</span>
+              ) : (
+                <span className="text-xs font-black text-green-400 flex items-center gap-1">✅ İZİNLİ</span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 bg-[#0B0E11] px-3.5 py-2 rounded-lg border border-[#1f2937]">
+              <span className="text-xs text-gray-400 font-semibold">SHORT Sinyalleri:</span>
+              {btcRegime?.regime === 'BULLISH' ? (
+                <span className="text-xs font-black text-red-400 flex items-center gap-1">❌ BLOKE EDİLDİ</span>
+              ) : (
+                <span className="text-xs font-black text-green-400 flex items-center gap-1">✅ İZİNLİ (BEKLENEN)</span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 bg-[#0B0E11] px-3.5 py-2 rounded-lg border border-[#1f2937]">
+              <span className="text-xs text-gray-400 font-semibold">Beklenen İşlem:</span>
+              <span className={`text-xs font-black px-2 py-0.5 rounded ${
+                btcRegime?.regime === 'BEARISH' ? 'bg-red-500/20 text-red-300' :
+                btcRegime?.regime === 'BULLISH' ? 'bg-green-500/20 text-green-300' :
+                'bg-yellow-500/20 text-yellow-300'
+              }`}>
+                {btcRegime?.regime === 'BEARISH' ? '🔻 SADECE SHORT' : btcRegime?.regime === 'BULLISH' ? '🔺 SADECE LONG' : '↔️ HER İKİ YÖN'}
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
       

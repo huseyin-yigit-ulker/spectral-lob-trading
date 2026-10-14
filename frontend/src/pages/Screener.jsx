@@ -9,6 +9,7 @@ export default function Screener() {
 
   useEffect(() => {
     async function fetchScreener() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       setLoading(true);
       const { data, error } = await supabase
         .from('active_screener')
@@ -25,7 +26,7 @@ export default function Screener() {
       setLoading(false);
     }
     fetchScreener();
-    const interval = setInterval(fetchScreener, 15000);
+    const interval = setInterval(fetchScreener, 60000); // screener 15 dakikada bir guncellenir, 60s fazlasiyla yeterli
     return () => clearInterval(interval);
   }, []);
 

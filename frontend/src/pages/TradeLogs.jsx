@@ -19,6 +19,7 @@ export default function TradeLogs() {
   const [period, setPeriod] = useState('all');
 
   const fetchLogs = async () => {
+    if (typeof document !== 'undefined' && document.hidden) return;
     const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: true });
     if (data) {
       const parsed = reconstructTrades(data);
