@@ -27,7 +27,7 @@ def get_supabase_conn():
         print(f"  [Supabase Baglanti Hatasi] {e}")
         return None
 
-def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth):
+def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth, rlr=1.0, bsi=0.0, clean_obi=0.0):
     import time
     for attempt in range(3):
         conn = get_supabase_conn()
@@ -38,9 +38,9 @@ def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_t
         try:
             with conn.cursor() as cur:
                 cur.execute("""
-                    INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth))
+                    INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth, rlr, bsi, clean_obi)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth, rlr, bsi, clean_obi))
                 
             conn.commit()
             return True
@@ -81,19 +81,29 @@ def update_live_metrics(states_dict):
     try:
         from psycopg2.extras import execute_values
         rows = [
-            (sym, data.get('smc_status', ''), data.get('fvg_depth', 0.0))
+            (
+                sym, 
+                data.get('smc_status', ''), 
+                data.get('fvg_depth', 0.0),
+                data.get('rlr', 1.0),
+                data.get('bsi', 0.0),
+                data.get('clean_obi', 0.0)
+            )
             for sym, data in states_dict.items()
         ]
         with conn.cursor() as cur:
             query = """
-                INSERT INTO quant_v5.live_metrics (sembol, smc_status, fvg_depth, updated_at)
+                INSERT INTO quant_v5.live_metrics (sembol, smc_status, fvg_depth, rlr, bsi, clean_obi, updated_at)
                 VALUES %s
                 ON CONFLICT (sembol) DO UPDATE SET 
                     smc_status = EXCLUDED.smc_status,
                     fvg_depth = EXCLUDED.fvg_depth,
+                    rlr = EXCLUDED.rlr,
+                    bsi = EXCLUDED.bsi,
+                    clean_obi = EXCLUDED.clean_obi,
                     updated_at = EXCLUDED.updated_at
             """
-            execute_values(cur, query, rows, template="(%s, %s, %s, CURRENT_TIMESTAMP)", page_size=100)
+            execute_values(cur, query, rows, template="(%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)", page_size=100)
         conn.commit()
     except Exception as e:
         pass # print(f"  [Supabase Live Metrics Hatasi] {e}")

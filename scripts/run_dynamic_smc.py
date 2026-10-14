@@ -23,6 +23,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 from features.smc_features import SMCAnalyzer
 from features.state_builder import StateBuilder
+from features.frequency_features import LOBSpectralAnalyzer
 from rich.console import Console
 from rich.table import Table
 from rich.live import Live
@@ -52,6 +53,11 @@ class SMCAgent:
         self.last_log_time = 0
         self.smc_5m = SMCAnalyzer(max_candles=30)
         self.smc_3m = SMCAnalyzer(max_candles=30)
+        self.spectral_analyzer = LOBSpectralAnalyzer(window_size=128, sample_rate_hz=10.0)
+        self.rlr = 1.0
+        self.bsi = 0.0
+        self.clean_obi = 0.0
+        self.spectral_state = "ISINIYOR"
 
 def sync_signal_state(agent, prev_sig):
     if agent.internal_signal_state == 1:
@@ -79,7 +85,8 @@ def sync_signal_state(agent, prev_sig):
             if log_trade_to_supabase:
                 log_trade_to_supabase(
                     dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
-                    agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4)
+                    agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4),
+                    round(agent.rlr, 3), round(agent.bsi, 3), round(agent.clean_obi, 4)
                 )
                 
             if send_telegram_message:
@@ -208,7 +215,7 @@ def generate_table():
     badge_color = btc_info.get('badge_color', 'white')
 
     table = Table(
-        title=f"Dinamik V5.2 SMC Terminal | BTC Trendi: [{badge_color}]{btc_summary}[/{badge_color}]",
+        title=f"Dinamik V5.3 LOB Spectral Terminal | BTC: [{badge_color}]{btc_summary}[/{badge_color}]",
         border_style="cyan"
     )
     table.add_column("Sembol", justify="left", style="cyan", no_wrap=True)
@@ -217,6 +224,7 @@ def generate_table():
     table.add_column("Macro OBI", justify="right", style="yellow")
     table.add_column("CVD (1m)", justify="right", style="blue")
     table.add_column("FVG Derinlik", justify="right", style="cyan")
+    table.add_column("LOB Spektrum", justify="center")
     table.add_column("SMC Likidite", justify="center", style="white")
     table.add_column("Sinyal", justify="center")
 
@@ -232,6 +240,9 @@ def generate_table():
         smc = agent.smc_status
         smc_color = "green bold" if smc == 'BULLISH_FVG' else "red bold" if smc == 'BEARISH_FVG' else "dim white"
         
+        spec_color = "green" if agent.spectral_state == 'ORGANIC' else "red bold" if agent.spectral_state == 'SPOOFING_ALERT' else "yellow" if agent.spectral_state == 'HFT_NOISE' else "dim white"
+        spec_text = f"[{spec_color}]{agent.spectral_state} (%{agent.rlr*100:.0f})[/{spec_color}]"
+
         table.add_row(
             agent.symbol,
             f"{agent.current_price:.6f}",
@@ -239,6 +250,7 @@ def generate_table():
             f"[{obi_color}]{obi:+.4f}[/{obi_color}]",
             f"[{cvd_color}]{cvd:+.2f}[/{cvd_color}]",
             f"[{ 'green' if agent.fvg_depth_pct >= 0.10 else 'red' }]% {agent.fvg_depth_pct:.2f}[/]",
+            spec_text,
             f"[{smc_color}]{smc}[/{smc_color}]",
             f"[{agent.last_signal_color}]{agent.last_signal_text}[/{agent.last_signal_color}]"
         )
@@ -247,8 +259,8 @@ def generate_table():
 async def periodic_db_metrics_sync():
     """
     Periyodik olarak (10 saniyede bir) live_metrics tablosuna yazar.
-    Sadece coinlerin durumlarinda (SMC durumu / FVG derinligi) gercek bir degisiklik
-    varsa Supabase'e sorgu atar. Boylece gereksiz Log Ingestion onlenir.
+    Sadece coinlerin durumlarinda (SMC durumu / FVG derinligi / Spektral metrikler)
+    gercek bir degisiklik varsa Supabase'e sorgu atar. Boylece gereksiz Log Ingestion onlenir.
     """
     last_synced_states = {}
     while True:
@@ -262,14 +274,20 @@ async def periodic_db_metrics_sync():
                 if s in agents and agents[s].current_price > 0:
                     states_dict[s.lower()] = {
                         'smc_status': agents[s].smc_status,
-                        'fvg_depth': round(agents[s].fvg_depth_pct, 4)
+                        'fvg_depth': round(agents[s].fvg_depth_pct, 4),
+                        'rlr': round(agents[s].rlr, 3),
+                        'bsi': round(agents[s].bsi, 3),
+                        'clean_obi': round(agents[s].clean_obi, 4)
                     }
                     
             # BTC Piyasa Rejimini de live_metrics'e ekle
             btc_info = get_btc_regime()
             states_dict['_btc_'] = {
                 'smc_status': btc_info.get('regime', 'NEUTRAL'),
-                'fvg_depth': round(btc_info.get('btc_price', 0.0), 2)
+                'fvg_depth': round(btc_info.get('btc_price', 0.0), 2),
+                'rlr': 1.0,
+                'bsi': 0.0,
+                'clean_obi': 0.0
             }
                     
             if states_dict and states_dict != last_synced_states:
@@ -390,12 +408,20 @@ async def binance_ws():
                             raw_obi = (b_qty - a_qty) / (b_qty + a_qty + 1e-8)
                             agent.obi_buffer.append(raw_obi)
                             agent.macro_obi = sum(agent.obi_buffer) / len(agent.obi_buffer)
+                            agent.spectral_analyzer.add_tick(raw_obi)
                             
                             if len(agent.obi_buffer) < 100: continue
                             if agent.current_price == 0.0: continue # Fiyat verisi henuz gelmediyse islem yapma
                             cvd_dict = agent.state_builder.cvd_features.get_multi_window_cvd(agent.latest_time)
                             agent.cvd_1m = cvd_dict.get('1m', 0.0)
                             
+                            # LOB Frekans & Spektral Analiz
+                            spec = agent.spectral_analyzer.analyze()
+                            agent.rlr = spec['rlr']
+                            agent.bsi = spec['bsi']
+                            agent.clean_obi = spec['clean_obi']
+                            agent.spectral_state = spec['state']
+
                             ctx_5 = agent.smc_5m.get_market_context(agent.current_price)
                             ctx_3 = agent.smc_3m.get_market_context(agent.current_price)
                             
@@ -414,11 +440,21 @@ async def binance_ws():
                             agent.fvg_depth_pct = fvg_depth_ratio * 100
                             is_fvg_wide_enough = fvg_depth_ratio >= 0.0015 # %0.15
                             
+                            # HFT Spoofing / Ghost Liquidity Tespiti
+                            is_spoofed = (spec['state'] == 'SPOOFING_ALERT' or spec['bsi'] >= 0.40)
+                            
                             if agent.macro_obi > 0.30 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
-                                # BTC Makro Trend Filtresi: BTC düşüşteyken altcoin LONG'unu engelle
+                                # 1. BTC Makro Trend Filtresi: BTC düşüşteyken altcoin LONG'unu engelle
                                 allowed, btc_reason = is_trade_allowed_by_btc('LONG', agent.macro_obi, agent.fvg_depth_pct)
+                                # 2. Arındırılmış OBI Teyidi
+                                is_clean_confirmed = (spec['clean_obi'] >= 0.18 or not agent.spectral_analyzer.is_ready())
+                                
                                 if not allowed:
-                                    pass # Sinyal reddedildi
+                                    pass # Sinyal reddedildi (BTC trend engeli)
+                                elif is_spoofed:
+                                    pass # Sinyal reddedildi (HFT Spoofing / Sahte Duvar)
+                                elif not is_clean_confirmed:
+                                    pass # Sinyal reddedildi (Arındırılmış gerçek OBI yetersiz)
                                 elif agent.internal_signal_state != 1:
                                     agent.internal_signal_state = 1
                                     agent.entry_price = agent.current_price
@@ -433,10 +469,17 @@ async def binance_ws():
                                         agent.active_trade_sl = agent.entry_price * 0.9980
                                     agent.emergency_sl = agent.entry_price * 0.9900 # %1.00 Acil Hard Stop
                             elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
-                                # BTC Makro Trend Filtresi: BTC yükselişteyken altcoin SHORT'unu engelle
+                                # 1. BTC Makro Trend Filtresi: BTC yükselişteyken altcoin SHORT'unu engelle
                                 allowed, btc_reason = is_trade_allowed_by_btc('SHORT', agent.macro_obi, agent.fvg_depth_pct)
+                                # 2. Arındırılmış OBI Teyidi
+                                is_clean_confirmed = (spec['clean_obi'] <= -0.18 or not agent.spectral_analyzer.is_ready())
+                                
                                 if not allowed:
-                                    pass # Sinyal reddedildi
+                                    pass # Sinyal reddedildi (BTC trend engeli)
+                                elif is_spoofed:
+                                    pass # Sinyal reddedildi (HFT Spoofing / Sahte Duvar)
+                                elif not is_clean_confirmed:
+                                    pass # Sinyal reddedildi (Arındırılmış gerçek OBI yetersiz)
                                 elif agent.internal_signal_state != -1:
                                     agent.internal_signal_state = -1
                                     agent.entry_price = agent.current_price

@@ -457,13 +457,27 @@ export default function LiveTerminal() {
                           {m.price ? Number(m.price).toPrecision(6) : '...'}
                         </td>
 
-                        {/* 3. Canlı OBI */}
+                        {/* 3. Canlı OBI & Frekans Analizi */}
                         <td className="px-3.5 py-2.5 text-right">
                           <div className="flex flex-col items-end">
                             <span className={`text-xs ${obiColor} ${isObiSignalReady ? 'bg-black/30 px-1.5 py-0.5 rounded' : ''}`}>
                               {m.obi !== undefined ? (m.obi > 0 ? '+' : '') + m.obi.toFixed(3) : '...'}
                             </span>
                             {renderOBIMeter(m.obi)}
+                            {/* Spektral Likidite Doğruluk Rozeti */}
+                            {m.bsi !== undefined && m.bsi >= 0.40 ? (
+                              <span className="text-[9px] font-bold text-red-400 bg-red-500/15 px-1 py-0.2 rounded border border-red-500/30 mt-0.5 animate-pulse">
+                                ⚠️ Spoofing (%{(m.bsi * 100).toFixed(0)})
+                              </span>
+                            ) : m.rlr !== undefined && m.rlr >= 0.60 ? (
+                              <span className="text-[9px] font-bold text-emerald-400/90 mt-0.5">
+                                🟢 %{(m.rlr * 100).toFixed(0)} Gerçek
+                              </span>
+                            ) : m.rlr !== undefined ? (
+                              <span className="text-[9px] font-medium text-yellow-400/80 mt-0.5">
+                                🟡 HFT Gürültülü
+                              </span>
+                            ) : null}
                           </div>
                         </td>
 
@@ -686,6 +700,16 @@ export default function LiveTerminal() {
                     <span className="text-gray-400">
                       CVD: <strong className="text-white">{formatCVD(selectedMetrics?.cvd)}</strong>
                     </span>
+                    {selectedMetrics?.rlr !== undefined && (
+                      <span className="text-gray-400 hidden md:inline">
+                        Gerçek Likidite (RLR): <strong className={selectedMetrics.rlr >= 0.6 ? 'text-green-400' : 'text-yellow-400'}>%{(selectedMetrics.rlr * 100).toFixed(0)}</strong>
+                      </span>
+                    )}
+                    {selectedMetrics?.bsi !== undefined && selectedMetrics.bsi >= 0.35 && (
+                      <span className="text-red-400 font-bold hidden md:inline animate-pulse">
+                        ⚠️ Spoofing Riski: %{(selectedMetrics.bsi * 100).toFixed(0)}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -813,6 +837,18 @@ export default function LiveTerminal() {
                   <li><strong>Break-Even (Başa Baş):</strong> PnL <code>+%0.70</code> seviyesini gördüğünde SL seviyesi giriş fiyatına çekilir (Risk Sıfırlama).</li>
                   <li><strong>Trailing Stop (İzleyen Kâr):</strong> PnL <code>+%1.20</code> seviyesine ulaştığında kâr kilitleme devreye girer.</li>
                   <li><strong>Ters OBI Erken Çıkış:</strong> FVG hedefinde ters yönde kurumsal emir yığılması (<code>Ters OBI ≥ 0.50</code>) oluşursa kâr korunarak erken çıkılır.</li>
+                </ul>
+              </div>
+
+              {/* Kural 4: LOB Frekans Analizi & Sahte Likidite Koruması */}
+              <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3.5 space-y-1.5">
+                <div className="flex items-center gap-2 font-black text-sm text-purple-400">
+                  <ShieldCheck size={16} /> 4. LOB Frekans Analizi & Sahte Likidite Koruması (V5.3)
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-gray-400 ml-1">
+                  <li><strong>Fourier / PSD Dönüşümü:</strong> Emir defterinin son 12.8 saniyelik mikro ritmi FFT ile frekans uzayına taşınır.</li>
+                  <li><strong>Bot Spoofing İndeksi (BSI):</strong> Yüksek frekansta periyodik yapay emir duvarı (<code>BSI ≥ %40</code>) tespit edilirse sinyal engellenir.</li>
+                  <li><strong>Arındırılmış Gerçek OBI:</strong> HFT gürültüsü ve spoofing zirveleri filtrelenerek yalnızca kalıcı gerçek likidite baz alınır.</li>
                 </ul>
               </div>
 

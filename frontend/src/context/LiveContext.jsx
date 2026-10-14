@@ -187,7 +187,10 @@ export function LiveProvider({ children }) {
                 next[s] = {
                   ...next[s],
                   smc_status: d.smc_status,
-                  fvg_depth: parseFloat(d.fvg_depth || 0)
+                  fvg_depth: parseFloat(d.fvg_depth || 0),
+                  rlr: d.rlr !== null && d.rlr !== undefined ? parseFloat(d.rlr) : 1.0,
+                  bsi: d.bsi !== null && d.bsi !== undefined ? parseFloat(d.bsi) : 0.0,
+                  clean_obi: d.clean_obi !== null && d.clean_obi !== undefined ? parseFloat(d.clean_obi) : 0.0
                 };
               }
             });
