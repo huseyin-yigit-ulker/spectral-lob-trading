@@ -81,6 +81,49 @@ export default function ChartModal({ trade, onClose }) {
           </button>
         </div>
 
+        {/* BTC Macro & Entry Reason Banner */}
+        <div className="px-6 py-2 bg-[#0d121a] border-b border-[#1f2937] flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-gray-400 font-bold uppercase text-[10px]">Giriş Analizi:</span>
+            
+            {/* BTC Regime */}
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${
+              trade.btc_regime === 'BEARISH' 
+                ? 'bg-red-500/10 text-red-400 border-red-500/30' 
+                : trade.btc_regime === 'BULLISH' 
+                  ? 'bg-green-500/10 text-green-400 border-green-500/30' 
+                  : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'
+            }`}>
+              <span>₿</span> BTC: {trade.btc_regime || 'NEUTRAL'}
+            </span>
+
+            {/* Sniper Exception or Trend Match */}
+            {trade.is_sniper || (trade.entry_reason || '').toLowerCase().includes('sniper') ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-black bg-purple-500/20 text-purple-300 border border-purple-500/40 font-mono shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                🎯 SNİPER İSTİSNASI (BTC'den Bağımsız)
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-blue-500/10 text-blue-300 border border-blue-500/20 font-mono">
+                🛡️ BTC Trend Uyumlu
+              </span>
+            )}
+
+            {/* Entry Reason Description */}
+            {trade.entry_reason && (
+              <span className="text-gray-300 font-mono text-[11px] ml-1">
+                <span className="text-gray-500 font-semibold">• Neden:</span> {trade.entry_reason}
+              </span>
+            )}
+          </div>
+
+          {/* Micro LOB metrics */}
+          <div className="flex items-center gap-2 text-[10px] text-gray-500 font-mono">
+            <span>Clean OBI: <strong className="text-gray-300">{trade.clean_obi ? Number(trade.clean_obi).toFixed(3) : '-'}</strong></span>
+            <span>•</span>
+            <span>RLR: <strong className="text-gray-300">{trade.rlr ? `%${(Number(trade.rlr)*100).toFixed(0)}` : '-'}</strong></span>
+          </div>
+        </div>
+
         {/* Chart Area */}
         <div className="flex-1 w-full bg-[#0B0E11] relative overflow-hidden">
           <TradeChart trade={trade} />

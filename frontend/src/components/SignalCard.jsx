@@ -72,6 +72,39 @@ export default function SignalCard({ trade, onClick }) {
         </div>
       </div>
 
+      {/* BTC Macro & Entry Reason Tag Row */}
+      <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+        {/* BTC Macro Badge */}
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border font-mono ${
+          trade.btc_regime === 'BEARISH'
+            ? 'bg-red-500/10 text-red-400 border-red-500/20'
+            : trade.btc_regime === 'BULLISH'
+              ? 'bg-green-500/10 text-green-400 border-green-500/20'
+              : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+        }`}>
+          <span>₿</span> BTC: {trade.btc_regime || 'NEUTRAL'}
+        </span>
+
+        {/* Sniper or Trend Match Badge */}
+        {trade.is_sniper || (trade.entry_reason || '').toLowerCase().includes('sniper') ? (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-purple-500/15 text-purple-300 border border-purple-500/30 font-mono shadow-[0_0_8px_rgba(168,85,247,0.15)]">
+            🎯 SNİPER İSTİSNASI
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-300 border border-blue-500/20 font-mono">
+            🛡️ TREND UYUMLU
+          </span>
+        )}
+      </div>
+
+      {/* Entry Reason Description */}
+      {trade.entry_reason && (
+        <div className="text-[11px] text-gray-300 bg-[#121822]/90 border border-[#1f2937] rounded-lg px-2.5 py-1.5 flex items-start gap-1.5 leading-snug">
+          <span className="text-[#F0B90B] font-bold shrink-0">Neden:</span>
+          <span className="text-gray-300 font-mono text-[10.5px] truncate" title={trade.entry_reason}>{trade.entry_reason}</span>
+        </div>
+      )}
+
       {/* Prices Grid: Entry & Exit */}
       <div className="grid grid-cols-2 gap-2 mt-0.5">
         {/* Entry Price Box */}

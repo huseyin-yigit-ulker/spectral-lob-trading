@@ -27,7 +27,7 @@ def get_supabase_conn():
         print(f"  [Supabase Baglanti Hatasi] {e}")
         return None
 
-def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth, rlr=1.0, bsi=0.0, clean_obi=0.0):
+def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth, rlr=1.0, bsi=0.0, clean_obi=0.0, btc_regime='NEUTRAL', entry_reason=''):
     import time
     for attempt in range(3):
         conn = get_supabase_conn()
@@ -38,9 +38,9 @@ def log_trade_to_supabase(zaman, sembol, fiyat, obi, cvd, context, signal, fvg_t
         try:
             with conn.cursor() as cur:
                 cur.execute("""
-                    INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth, rlr, bsi, clean_obi)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth, rlr, bsi, clean_obi))
+                    INSERT INTO quant_v5.trade_logs (zaman, sembol, fiyat, obi, cvd, context, sinyal, fvg_top, fvg_bottom, fvg_depth, rlr, bsi, clean_obi, btc_regime, entry_reason)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (zaman, sembol, fiyat, obi, cvd, context, signal, fvg_top, fvg_bottom, fvg_depth, rlr, bsi, clean_obi, btc_regime, entry_reason))
                 
             conn.commit()
             return True

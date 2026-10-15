@@ -132,24 +132,27 @@ btc_watcher = BTCRegimeWatcher()
 def get_btc_regime(force_refresh=False):
     return btc_watcher.get_regime(force_refresh=force_refresh)
 
-def is_trade_allowed_by_btc(direction: str, obi: float, fvg_depth_pct: float) -> tuple[bool, str]:
+def is_trade_allowed_by_btc(direction: str, obi: float, fvg_depth_pct: float) -> tuple[bool, str, bool, str]:
     state = btc_watcher.get_regime()
     regime = state['regime']
+    btc_price = state.get('btc_price', 0.0)
 
     if direction == 'LONG':
         if state['allow_long']:
-            return True, "BTC Rejimi LONG'a Uygun"
+            reg_desc = "Trend Uyumlu" if regime == "BULLISH" else "Yatay / Nötr Piyasa"
+            return True, f"BTC {reg_desc} ({regime} - ${btc_price:,.0f})", False, regime
         # İstisna kontrolü
         if btc_watcher.check_sniper_exception('LONG', obi, fvg_depth_pct):
-            return True, f"Sniper İstisnası: Altcoin BTC'den Pozitif Ayrıştı (OBI: {obi:.2f})"
-        return False, f"BTC Ayı Trendinde ({state['summary']}) - LONG İptal Edildi"
+            return True, f"Sniper İstisnası: BTC {regime} (${btc_price:,.0f}) İken Pozitif Ayrışma (OBI: {obi:+.2f}, FVG: %{fvg_depth_pct:.2f})", True, regime
+        return False, f"BTC Ayı Trendinde ({state['summary']}) - LONG İptal Edildi", False, regime
 
     elif direction == 'SHORT':
         if state['allow_short']:
-            return True, "BTC Rejimi SHORT'a Uygun"
+            reg_desc = "Trend Uyumlu" if regime == "BEARISH" else "Yatay / Nötr Piyasa"
+            return True, f"BTC {reg_desc} ({regime} - ${btc_price:,.0f})", False, regime
         # İstisna kontrolü
         if btc_watcher.check_sniper_exception('SHORT', obi, fvg_depth_pct):
-            return True, f"Sniper İstisnası: Altcoin BTC'den Negatif Ayrıştı (OBI: {obi:.2f})"
-        return False, f"BTC Boğa Trendinde ({state['summary']}) - SHORT İptal Edildi"
+            return True, f"Sniper İstisnası: BTC {regime} (${btc_price:,.0f}) İken Negatif Ayrışma (OBI: {obi:+.2f}, FVG: %{fvg_depth_pct:.2f})", True, regime
+        return False, f"BTC Boğa Trendinde ({state['summary']}) - SHORT İptal Edildi", False, regime
 
-    return True, "Bilinmeyen Yön"
+    return True, "Bilinmeyen Yön", False, regime

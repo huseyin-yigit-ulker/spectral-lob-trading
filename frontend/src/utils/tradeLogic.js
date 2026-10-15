@@ -58,6 +58,12 @@ export function reconstructTrades(rawLogs) {
     const isExit = log.sinyal.includes('BEKLE');
 
     if (isEntry) {
+      const isSniper = log.entry_reason ? log.entry_reason.toLowerCase().includes('sniper') : (Math.abs(Number(log.obi || 0)) >= 0.70 && Number(log.fvg_depth || 0) >= 0.40);
+      const btcRegime = log.btc_regime || (isSniper ? 'BEARISH' : 'NEUTRAL');
+      const entryReason = log.entry_reason || (isSniper 
+        ? `Sniper İstisnası: Altcoin BTC'den Pozitif Ayrıştı (OBI: ${Number(log.obi || 0) > 0 ? '+' : ''}${Number(log.obi || 0).toFixed(2)})` 
+        : `BTC Trend Uyumlu (${btcRegime})`);
+
       openPositions[sym] = {
         id: log.id,
         sembol: sym,
@@ -71,6 +77,12 @@ export function reconstructTrades(rawLogs) {
         fvg_depth: Number(log.fvg_depth || 0),
         context: log.context || 'NEUTRAL',
         sinyal: log.sinyal,
+        rlr: Number(log.rlr || 1.0),
+        bsi: Number(log.bsi || 0),
+        clean_obi: Number(log.clean_obi || 0),
+        btc_regime: btcRegime,
+        entry_reason: entryReason,
+        is_sniper: isSniper,
         status: 'OPEN'
       };
     } else if (isExit && openPositions[sym]) {

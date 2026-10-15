@@ -58,6 +58,9 @@ class SMCAgent:
         self.bsi = 0.0
         self.clean_obi = 0.0
         self.spectral_state = "ISINIYOR"
+        self.btc_regime = "NEUTRAL"
+        self.entry_reason = ""
+        self.is_sniper = False
 
 def sync_signal_state(agent, prev_sig):
     if agent.internal_signal_state == 1:
@@ -86,11 +89,54 @@ def sync_signal_state(agent, prev_sig):
                 log_trade_to_supabase(
                     dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
                     agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4),
-                    round(agent.rlr, 3), round(agent.bsi, 3), round(agent.clean_obi, 4)
+                    round(agent.rlr, 3), round(agent.bsi, 3), round(agent.clean_obi, 4),
+                    agent.btc_regime, agent.entry_reason
                 )
                 
             if send_telegram_message:
-                msg = f"<b>{agent.symbol}</b>\nSinyal: {agent.last_signal_text}\nFiyat: {agent.current_price}\nOBI: {agent.macro_obi:.2f}\nSMC: {agent.smc_status}"
+                if agent.internal_signal_state in (1, -1):
+                    is_long = agent.internal_signal_state == 1
+                    dir_str = "LONG (AL)" if is_long else "SHORT (SAT)"
+                    dir_emoji = "🟢" if is_long else "🔴"
+                    sniper_line = "🎯 <b>ÖZEL MOD: SNİPER İSTİSNASI (BTC'den Bağımsız Pozitif Ayrışma)</b>\n" if agent.is_sniper else ""
+                    btc_emoji = "🟢" if agent.btc_regime == "BULLISH" else ("🔴" if agent.btc_regime == "BEARISH" else "⚪")
+                    
+                    sl_text = f"{agent.active_trade_sl:.6f}" if agent.active_trade_sl else "Belirleniyor"
+                    em_text = f"{agent.emergency_sl:.6f}" if agent.emergency_sl else "Belirleniyor"
+
+                    msg = (
+                        f"⚡ <b>SMC V5.3 YENİ İŞLEM AÇILDI</b>\n"
+                        f"━━━━━━━━━━━━━━━━━━━━\n"
+                        f"{sniper_line}"
+                        f"🪙 <b>Sembol:</b> #{agent.symbol}\n"
+                        f"{dir_emoji} <b>Yön:</b> <b>{dir_str}</b>\n"
+                        f"💵 <b>Giriş Fiyatı:</b> <code>{agent.current_price:.6f}</code>\n"
+                        f"🛡️ <b>Teknik SL:</b> <code>{sl_text}</code>\n"
+                        f"🚨 <b>Acil Hard Stop:</b> <code>{em_text}</code>\n\n"
+                        f"📊 <b>Piyasa & Giriş Nedeni:</b>\n"
+                        f"• <b>BTC Makro:</b> {btc_emoji} {agent.btc_regime}\n"
+                        f"• <b>Karar Nedeni:</b> {agent.entry_reason or 'Mikro Akış Onayı'}\n\n"
+                        f"🔬 <b>SMC & LOB Metrikleri:</b>\n"
+                        f"• <b>SMC Yapı:</b> {agent.smc_status} (FVG: %{agent.fvg_depth_pct:.2f})\n"
+                        f"• <b>Macro OBI:</b> {agent.macro_obi:+.3f} | <b>Clean OBI:</b> {agent.clean_obi:+.3f}\n"
+                        f"• <b>CVD (1m):</b> {agent.cvd_1m:+.2f}\n"
+                        f"• <b>Spektrum:</b> {agent.spectral_state} (RLR: %{agent.rlr*100:.0f}, BSI: {agent.bsi:.2f})\n"
+                        f"━━━━━━━━━━━━━━━━━━━━"
+                    )
+                else:
+                    # İşlem Kapandı (BEKLE)
+                    pnl_val = ((agent.current_price - agent.entry_price) / agent.entry_price * 100) if prev_sig == 1 else ((agent.entry_price - agent.current_price) / agent.entry_price * 100) if agent.entry_price > 0 else 0.0
+                    pnl_emoji = "🟢 KÂR" if pnl_val > 0 else "🔴 ZARAR"
+                    
+                    msg = (
+                        f"🏁 <b>SMC V5.3 İŞLEM KAPANDI ([!] BEKLE)</b>\n"
+                        f"━━━━━━━━━━━━━━━━━━━━\n"
+                        f"🪙 <b>Sembol:</b> #{agent.symbol}\n"
+                        f"💵 <b>Çıkış Fiyatı:</b> <code>{agent.current_price:.6f}</code> (Giriş: <code>{agent.entry_price:.6f}</code>)\n"
+                        f"💰 <b>Net PnL:</b> {pnl_emoji} <b>%{pnl_val:+.2f}</b>\n"
+                        f"📊 <b>Giriş Tipi:</b> {'🎯 Sniper İstisnası' if agent.is_sniper else 'BTC Uyumlu Trend'}\n"
+                        f"━━━━━━━━━━━━━━━━━━━━"
+                    )
                 send_telegram_message(msg)
 
 agents = {}
@@ -107,7 +153,7 @@ def get_open_positions_from_db():
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT id, zaman, sembol, fiyat, sinyal, fvg_top, fvg_bottom, fvg_depth
+                SELECT id, zaman, sembol, fiyat, sinyal, fvg_top, fvg_bottom, fvg_depth, COALESCE(btc_regime, 'NEUTRAL'), COALESCE(entry_reason, '')
                 FROM quant_v5.trade_logs
                 ORDER BY id ASC;
             """)
@@ -115,7 +161,7 @@ def get_open_positions_from_db():
             
         open_pos = {}
         for r in rows:
-            _id, zaman, sym, fiyat, sinyal, f_top, f_bot, f_depth = r
+            _id, zaman, sym, fiyat, sinyal, f_top, f_bot, f_depth, btc_reg, ent_reas = r
             if ('AL' in sinyal or 'SAT' in sinyal) and ('BEKLE' not in sinyal):
                 open_pos[sym] = {
                     'id': _id,
@@ -125,7 +171,9 @@ def get_open_positions_from_db():
                     'fvg_top': float(f_top or 0),
                     'fvg_bottom': float(f_bot or 0),
                     'fvg_depth': float(f_depth or 0),
-                    'signal_text': sinyal
+                    'signal_text': sinyal,
+                    'btc_regime': str(btc_reg or 'NEUTRAL'),
+                    'entry_reason': str(ent_reas or '')
                 }
             elif 'BEKLE' in sinyal and sym in open_pos:
                 del open_pos[sym]
@@ -178,6 +226,9 @@ def update_agents_from_screener():
                         agents[s].entry_price = pos_info['entry_price']
                         agents[s].last_signal_text = pos_info['signal_text']
                         agents[s].last_signal_color = "green bold" if pos_info['direction'] == 1 else "red bold"
+                        agents[s].btc_regime = pos_info.get('btc_regime', 'NEUTRAL')
+                        agents[s].entry_reason = pos_info.get('entry_reason', '')
+                        agents[s].is_sniper = 'Sniper' in agents[s].entry_reason
                         
                         top_b = pos_info['fvg_top']
                         bot_b = pos_info['fvg_bottom']
@@ -445,7 +496,7 @@ async def binance_ws():
                             
                             if agent.macro_obi > 0.30 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
                                 # 1. BTC Makro Trend Filtresi: BTC düşüşteyken altcoin LONG'unu engelle
-                                allowed, btc_reason = is_trade_allowed_by_btc('LONG', agent.macro_obi, agent.fvg_depth_pct)
+                                allowed, btc_reason, is_sniper, btc_regime = is_trade_allowed_by_btc('LONG', agent.macro_obi, agent.fvg_depth_pct)
                                 # 2. Arındırılmış OBI Teyidi
                                 is_clean_confirmed = (spec['clean_obi'] >= 0.18 or not agent.spectral_analyzer.is_ready())
                                 
@@ -460,6 +511,9 @@ async def binance_ws():
                                     agent.entry_price = agent.current_price
                                     agent.highest_pnl = 0.0
                                     agent.is_break_even = False
+                                    agent.btc_regime = btc_regime
+                                    agent.entry_reason = btc_reason
+                                    agent.is_sniper = is_sniper
                                     b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                     b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                                     bot_bound = b5 if b5 else b3
@@ -470,7 +524,7 @@ async def binance_ws():
                                     agent.emergency_sl = agent.entry_price * 0.9900 # %1.00 Acil Hard Stop
                             elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
                                 # 1. BTC Makro Trend Filtresi: BTC yükselişteyken altcoin SHORT'unu engelle
-                                allowed, btc_reason = is_trade_allowed_by_btc('SHORT', agent.macro_obi, agent.fvg_depth_pct)
+                                allowed, btc_reason, is_sniper, btc_regime = is_trade_allowed_by_btc('SHORT', agent.macro_obi, agent.fvg_depth_pct)
                                 # 2. Arındırılmış OBI Teyidi
                                 is_clean_confirmed = (spec['clean_obi'] <= -0.18 or not agent.spectral_analyzer.is_ready())
                                 
@@ -485,6 +539,9 @@ async def binance_ws():
                                     agent.entry_price = agent.current_price
                                     agent.highest_pnl = 0.0
                                     agent.is_break_even = False
+                                    agent.btc_regime = btc_regime
+                                    agent.entry_reason = btc_reason
+                                    agent.is_sniper = is_sniper
                                     b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                                     b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                                     top_bound = t5 if t5 else t3

@@ -192,21 +192,33 @@ export default function Dashboard() {
                {loading ? <p className="text-gray-500 text-sm">Loading...</p> : 
                 activeTransactions.length === 0 ? <p className="text-gray-500 text-sm">No active positions currently.</p> :
                 activeTransactions.map((t, i) => (
-                  <div key={i} className="flex justify-between items-center p-4 bg-green-500/5 rounded-lg border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
-                    <div>
-                      <div className="font-bold text-white flex items-center gap-2 text-lg">
-                        {t.sembol}
-                        <span className={`text-xs font-bold px-2 py-1 rounded flex items-center gap-1 ${t.tip === 'LONG' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                          {t.tip === 'LONG' ? <TrendingUp size={12}/> : <TrendingDown size={12}/>}
-                          {t.tip}
-                        </span>
+                  <div key={i} className="p-4 bg-green-500/5 rounded-lg border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)] space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-bold text-white flex items-center gap-2 text-lg">
+                          {t.sembol}
+                          <span className={`text-xs font-bold px-2 py-1 rounded flex items-center gap-1 ${t.tip === 'LONG' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                            {t.tip === 'LONG' ? <TrendingUp size={12}/> : <TrendingDown size={12}/>}
+                            {t.tip}
+                          </span>
+                          {t.is_sniper && (
+                            <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                              🎯 SNİPER
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-gray-400 mt-1">Giriş: ${Number(t.entry_price).toFixed(4)}</div>
                       </div>
-                      <div className="text-sm text-gray-400 mt-1">Entry: {Number(t.entry_price).toFixed(4)}</div>
+                      <div className="text-right">
+                         <div className="text-xs text-gray-400">₿ BTC: <span className="font-bold text-gray-200">{t.btc_regime || 'NEUTRAL'}</span></div>
+                         <div className="text-xs text-green-400 mt-1 animate-pulse">SMC İzleniyor...</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                       <div className="text-sm text-gray-400">Position Open</div>
-                       <div className="text-xs text-green-400 mt-1 animate-pulse">Waiting for SMC Exit...</div>
-                    </div>
+                    {t.entry_reason && (
+                      <div className="text-[10px] text-gray-400 bg-[#0B0E11]/60 px-2 py-1 rounded border border-[#1f2937]/50 truncate font-mono">
+                        <span className="text-[#F0B90B] font-bold">Neden:</span> {t.entry_reason}
+                      </div>
+                    )}
                   </div>
                 ))
                }
@@ -225,19 +237,34 @@ export default function Dashboard() {
             {loading ? <p className="text-gray-500 text-sm">Loading...</p> : 
              closedTransactions.length === 0 ? <p className="text-gray-500 text-sm">No closed trades yet.</p> :
              closedTransactions.slice(0, 15).map((t, i) => (
-              <div key={i} className={`p-3 rounded-lg border ${t.win ? 'bg-green-900/10 border-green-500/20' : 'bg-red-900/10 border-red-500/20'}`}>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold text-white text-sm">{t.sembol}</span>
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 ${t.tip === 'LONG' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                    {t.tip}
+              <div key={i} className={`p-3 rounded-lg border space-y-1.5 ${t.win ? 'bg-green-900/10 border-green-500/20' : 'bg-red-900/10 border-red-500/20'}`}>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-white text-sm">{t.sembol}</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 ${t.tip === 'LONG' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                      {t.tip}
+                    </span>
+                    {t.is_sniper && (
+                      <span className="text-[9px] font-bold px-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                        🎯 Sniper
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] font-mono text-gray-400">
+                    ₿ {t.btc_regime || 'NEUTRAL'}
                   </span>
                 </div>
-                <div className="flex justify-between text-xs text-gray-400 mb-2">
-                  <div>{Number(t.entry_price).toFixed(4)}</div>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <div>${Number(t.entry_price).toFixed(4)}</div>
                   <ArrowRight size={12} className="text-gray-600 mx-1"/>
-                  <div>{Number(t.exit_price).toFixed(4)}</div>
+                  <div>${Number(t.exit_price).toFixed(4)}</div>
                 </div>
-                <div className="flex justify-between items-end">
+                {t.entry_reason && (
+                  <div className="text-[10px] text-gray-400 truncate font-mono">
+                    <span className="text-[#F0B90B]">Neden:</span> {t.entry_reason}
+                  </div>
+                )}
+                <div className="flex justify-between items-end pt-0.5 border-t border-[#1f2937]/40">
                   <div className="text-[10px] text-gray-500">
                     {new Date(t.exit_time).toLocaleTimeString()}
                   </div>
