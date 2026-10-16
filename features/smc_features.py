@@ -91,11 +91,78 @@ class SMCAnalyzer:
                 return fvg['type']
         return 'NEUTRAL'
 
+    def get_adx(self, period=14):
+        """
+        Mum listesi üzerinden 14 periyotluk ADX (Trend Gücü) hesaplar.
+        ADX < 18 ise piyasa testere/yatay (chop) noise bandındadır.
+        """
+        c_list = list(self.candles)
+        if len(c_list) < period + 5:
+            return 25.0
+        
+        tr_list = []
+        plus_dm_list = []
+        minus_dm_list = []
+        
+        for i in range(1, len(c_list)):
+            h = float(c_list[i]['high'])
+            l = float(c_list[i]['low'])
+            prev_c = float(c_list[i-1]['close'])
+            prev_h = float(c_list[i-1]['high'])
+            prev_l = float(c_list[i-1]['low'])
+            
+            tr = max(h - l, abs(h - prev_c), abs(l - prev_c))
+            tr_list.append(tr)
+            
+            up_move = h - prev_h
+            down_move = prev_l - l
+            
+            plus_dm = up_move if (up_move > down_move and up_move > 0) else 0.0
+            minus_dm = down_move if (down_move > up_move and down_move > 0) else 0.0
+            
+            plus_dm_list.append(plus_dm)
+            minus_dm_list.append(minus_dm)
+            
+        if len(tr_list) < period:
+            return 25.0
+            
+        alpha = 1.0 / period
+        atr = tr_list[0]
+        plus_di_smooth = plus_dm_list[0]
+        minus_di_smooth = minus_dm_list[0]
+        
+        dx_list = []
+        for i in range(1, len(tr_list)):
+            atr = alpha * tr_list[i] + (1 - alpha) * atr
+            plus_di_smooth = alpha * plus_dm_list[i] + (1 - alpha) * plus_di_smooth
+            minus_di_smooth = alpha * minus_dm_list[i] + (1 - alpha) * minus_di_smooth
+            
+            if atr > 0:
+                p_di = 100 * (plus_di_smooth / atr)
+                m_di = 100 * (minus_di_smooth / atr)
+                sum_di = p_di + m_di
+                if sum_di > 0:
+                    dx = 100 * abs(p_di - m_di) / sum_di
+                    dx_list.append(dx)
+                    
+        if not dx_list:
+            return 25.0
+            
+        adx = dx_list[0]
+        for d in dx_list[1:]:
+            adx = alpha * d + (1 - alpha) * adx
+            
+        return adx
+
     def get_active_fvg_bounds(self, current_price):
         for fvg in self.active_fvgs:
             if fvg['bottom'] <= current_price <= fvg['top']:
                 return fvg['bottom'], fvg['top']
         return None, None
+
+    def is_choppy(self, threshold=18.0):
+        """ADX eşiğinin altında piyasa testere bandındaysa True döner."""
+        return self.get_adx() < threshold
 
 class SMCFeatures:
     """RL ajani icin geriye donuk uyumluluk saglayan dummy sinif"""

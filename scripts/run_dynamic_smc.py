@@ -58,6 +58,7 @@ class SMCAgent:
         self.bsi = 0.0
         self.clean_obi = 0.0
         self.spectral_state = "ISINIYOR"
+        self.adx_5m = 25.0
         self.btc_regime = "NEUTRAL"
         self.entry_reason = ""
         self.is_sniper = False
@@ -513,6 +514,10 @@ async def binance_ws():
                             # HFT Spoofing / Ghost Liquidity Tespiti
                             is_spoofed = (spec['state'] == 'SPOOFING_ALERT' or spec['bsi'] >= 0.40)
                             
+                            # ADX Testere (Chop) Kalkanı: ADX < 18 ise piyasa yönsüzdür, sahte kırılımları engelle
+                            agent.adx_5m = agent.smc_5m.get_adx()
+                            is_choppy = agent.smc_5m.is_choppy(18.0)
+                            
                             if agent.macro_obi > 0.30 and agent.cvd_1m > 0 and agent.smc_status == 'BULLISH_FVG' and is_fvg_wide_enough:
                                 # 1. BTC Makro Trend Filtresi: BTC düşüşteyken altcoin LONG'unu engelle
                                 allowed, btc_reason, is_sniper, btc_regime = is_trade_allowed_by_btc('LONG', agent.macro_obi, agent.fvg_depth_pct)
@@ -521,6 +526,8 @@ async def binance_ws():
                                 
                                 if not allowed:
                                     pass # Sinyal reddedildi (BTC trend engeli)
+                                elif is_choppy:
+                                    pass # Sinyal reddedildi (ADX < 18 Chop / Testere Piyasası Kalkanı)
                                 elif is_spoofed:
                                     pass # Sinyal reddedildi (HFT Spoofing / Sahte Duvar)
                                 elif not is_clean_confirmed:
@@ -549,6 +556,8 @@ async def binance_ws():
                                 
                                 if not allowed:
                                     pass # Sinyal reddedildi (BTC trend engeli)
+                                elif is_choppy:
+                                    pass # Sinyal reddedildi (ADX < 18 Chop / Testere Piyasası Kalkanı)
                                 elif is_spoofed:
                                     pass # Sinyal reddedildi (HFT Spoofing / Sahte Duvar)
                                 elif not is_clean_confirmed:
