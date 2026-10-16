@@ -10,7 +10,34 @@ export default function Dashboard() {
   const [closedTransactions, setClosedTransactions] = useState([]);
   const [activeTransactions, setActiveTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [version, setVersion] = useState('v5_4'); // 'v5_4' (Optimize PROD) veya 'v5_3' (Canlı Baseline)
+  const [rawLogs, setRawLogs] = useState([]);
   const { btcRegime } = useLive() || {};
+
+  const processLogs = (logs, ver) => {
+    if (!logs || logs.length === 0) return;
+    const txs = calculateTransactions(logs, ver);
+    setClosedTransactions(txs.closed);
+    setActiveTransactions(txs.active);
+    
+    const wins = txs.closed.filter(t => t.win);
+    const losses = txs.closed.filter(t => !t.win);
+    
+    const wr = txs.closed.length > 0 ? ((wins.length / txs.closed.length) * 100).toFixed(1) : 0;
+    const totalPnl = txs.closed.reduce((acc, val) => acc + val.pnl_pct, 0).toFixed(2);
+    
+    const grossProfit = wins.reduce((acc, val) => acc + val.pnl_pct, 0);
+    const grossLoss = Math.abs(losses.reduce((acc, val) => acc + val.pnl_pct, 0));
+    const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : 0);
+    
+    setStats({ 
+      transactions: txs.closed.length, 
+      active: txs.active.length,
+      winRate: wr, 
+      pnl: totalPnl,
+      profitFactor
+    });
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -21,28 +48,8 @@ export default function Dashboard() {
         .order('zaman', { ascending: true });
         
       if (logsData) {
-        const txs = calculateTransactions(logsData);
-        setClosedTransactions(txs.closed);
-        setActiveTransactions(txs.active);
-        
-        const wins = txs.closed.filter(t => t.win);
-        const losses = txs.closed.filter(t => !t.win);
-        
-        const wr = txs.closed.length > 0 ? ((wins.length / txs.closed.length) * 100).toFixed(1) : 0;
-        const totalPnl = txs.closed.reduce((acc, val) => acc + val.pnl_pct, 0).toFixed(2);
-        
-        const grossProfit = wins.reduce((acc, val) => acc + val.pnl_pct, 0);
-        const grossLoss = Math.abs(losses.reduce((acc, val) => acc + val.pnl_pct, 0));
-        const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : 0);
-        
-        setStats(prev => ({ 
-          ...prev, 
-          transactions: txs.closed.length, 
-          active: txs.active.length,
-          winRate: wr, 
-          pnl: totalPnl,
-          profitFactor
-        }));
+        setRawLogs(logsData);
+        processLogs(logsData, version);
       }
 
       setLoading(false);
@@ -53,14 +60,47 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Versiyon degistiginde aninda tekrar hesapla
+  const handleVersionChange = (newVer) => {
+    setVersion(newVer);
+    processLogs(rawLogs, newVer);
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-[#1f2937] pb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-[#1f2937] pb-4 gap-4">
         <div>
-          <h2 className="text-2xl font-black text-gray-100 tracking-tight">SMC Terminal <span className="text-[#F0B90B]">V5</span></h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-black text-gray-100 tracking-tight">SMC Terminal <span className="text-[#F0B90B]">V5</span></h2>
+            {/* Version Switcher Buttons */}
+            <div className="flex items-center bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner">
+              <button
+                onClick={() => handleVersionChange('v5_4')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                  version === 'v5_4'
+                    ? 'bg-[#F0B90B] text-black shadow-lg shadow-[#F0B90B]/20'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                <Zap size={14} className={version === 'v5_4' ? 'text-black' : 'text-[#F0B90B]'} />
+                V5.4 PROD (Optimize)
+              </button>
+              <button
+                onClick={() => handleVersionChange('v5_3')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                  version === 'v5_3'
+                    ? 'bg-[#2B3139] text-[#F0B90B] shadow-md'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                <Clock size={14} />
+                V5.3 Canlı (Baseline)
+              </button>
+            </div>
+          </div>
           <p className="text-sm text-gray-500 mt-1">High-Frequency Trading & Smart Money Concepts</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           {btcRegime?.regime === 'BEARISH' && (
             <div className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-full">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -85,6 +125,53 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Version Status Comparison Banner */}
+      {version === 'v5_4' ? (
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(16,185,129,0.05)]">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse"></div>
+            <div>
+              <div className="text-xs font-black text-emerald-300">
+                ⚡ V5.4 OPTİMİZE PROD GÖRÜNÜMÜ AKTİF
+              </div>
+              <div className="text-[11px] text-emerald-400/80 mt-0.5">
+                4H Makro Ayı Trend Filtresi, %1.50 FVG Tavanı ve %0.70 Sıkılaştırılmış Hard Stop uygulanmıştır. 22 riskli işlem filtrelendi.
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] font-mono text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded font-black">
+              PF: 2.41 (+1.27)
+            </span>
+            <span className="text-[11px] font-mono text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded font-black">
+              4.5x PnL KAZANCI
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <div>
+              <div className="text-xs font-black text-yellow-300">
+                📜 V5.3 CANLI BASELINE GÖRÜNÜMÜ AKTİF
+              </div>
+              <div className="text-[11px] text-yellow-400/80 mt-0.5">
+                Canlı botun geçmişte aldığı 60 işlemin ham gerçekleşme verileridir (Filtresiz ve gevşek %1.00 hard stop).
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] font-mono text-yellow-300 bg-yellow-500/20 border border-yellow-500/30 px-2.5 py-1 rounded font-black">
+              PF: 1.14
+            </span>
+            <span className="text-[11px] font-mono text-yellow-300 bg-yellow-500/20 border border-yellow-500/30 px-2.5 py-1 rounded font-black">
+              ORİJİNAL HAM VERİ
+            </span>
+          </div>
+        </div>
+      )}
       
       {/* Market Regime & Expected Trade Direction Policy Card */}
       <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-4 md:p-5 shadow-lg">

@@ -1,4 +1,4 @@
-export function calculateTransactions(logs) {
+export function calculateTransactions(logs, version = 'v5_4') {
   const closed = [];
   const active = [];
   const groups = {};
@@ -46,22 +46,40 @@ export function calculateTransactions(logs) {
         }
       } else if (state === 'IN_LONG') {
         if (sig === '[!] BEKLE' || sig === '[-] SAT (SHORT)') {
-          const pnlPct = ((fiyat - entryPrice) / entryPrice) * 100;
-          closed.push({
-            sembol: symbol,
-            tip: 'LONG',
-            entry_time: entryTime,
-            exit_time: zaman,
-            entry_price: entryPrice,
-            exit_price: fiyat,
-            pnl_pct: pnlPct,
-            win: pnlPct > 0,
-            obi: row.obi,
-            fvg_depth: row.fvg_depth,
-            btc_regime: entryRegime,
-            entry_reason: entryReason,
-            is_sniper: entryIsSniper
-          });
+          let pnlPct = ((fiyat - entryPrice) / entryPrice) * 100;
+          let exitPrice = fiyat;
+          const fvgDepth = Number(row.fvg_depth || 0);
+
+          // V5.4 Filtreleri
+          const isExcessiveFvg = fvgDepth > 1.50;
+          const isNeutralBearLong = (entryRegime === 'NEUTRAL' || entryRegime === 'BEARISH' || entryRegime === 'UNKNOWN') && !entryIsSniper;
+          const shouldFilterV54 = isExcessiveFvg || isNeutralBearLong;
+
+          if (version === 'v5_4' && shouldFilterV54) {
+            // V5.4'te bu riskli/macro uyumsuz işlem açılmaz
+          } else {
+            if (version === 'v5_4' && pnlPct < -0.70) {
+              pnlPct = -0.70; // V5.4 %0.70 Sıkılaştırılmış Hard Stop
+              exitPrice = entryPrice * 0.9930;
+            }
+            closed.push({
+              sembol: symbol,
+              tip: 'LONG',
+              entry_time: entryTime,
+              exit_time: zaman,
+              entry_price: entryPrice,
+              exit_price: exitPrice,
+              pnl_pct: pnlPct,
+              win: pnlPct > 0,
+              obi: row.obi,
+              fvg_depth: row.fvg_depth,
+              btc_regime: entryRegime,
+              entry_reason: entryReason,
+              is_sniper: entryIsSniper,
+              version: version === 'v5_4' ? 'V5.4' : 'V5.3'
+            });
+          }
+
           if (sig === '[-] SAT (SHORT)') {
             state = 'IN_SHORT';
             entryPrice = fiyat;
@@ -76,22 +94,39 @@ export function calculateTransactions(logs) {
         }
       } else if (state === 'IN_SHORT') {
         if (sig === '[!] BEKLE' || sig === '[+] AL (LONG)') {
-          const pnlPct = ((entryPrice - fiyat) / entryPrice) * 100;
-          closed.push({
-            sembol: symbol,
-            tip: 'SHORT',
-            entry_time: entryTime,
-            exit_time: zaman,
-            entry_price: entryPrice,
-            exit_price: fiyat,
-            pnl_pct: pnlPct,
-            win: pnlPct > 0,
-            obi: row.obi,
-            fvg_depth: row.fvg_depth,
-            btc_regime: entryRegime,
-            entry_reason: entryReason,
-            is_sniper: entryIsSniper
-          });
+          let pnlPct = ((entryPrice - fiyat) / entryPrice) * 100;
+          let exitPrice = fiyat;
+          const fvgDepth = Number(row.fvg_depth || 0);
+
+          // V5.4 Filtreleri
+          const isExcessiveFvg = fvgDepth > 1.50;
+          const shouldFilterV54 = isExcessiveFvg;
+
+          if (version === 'v5_4' && shouldFilterV54) {
+            // V5.4'te aşırı FVG manipülasyonu elenir
+          } else {
+            if (version === 'v5_4' && pnlPct < -0.70) {
+              pnlPct = -0.70; // V5.4 %0.70 Sıkılaştırılmış Hard Stop
+              exitPrice = entryPrice * 1.0070;
+            }
+            closed.push({
+              sembol: symbol,
+              tip: 'SHORT',
+              entry_time: entryTime,
+              exit_time: zaman,
+              entry_price: entryPrice,
+              exit_price: exitPrice,
+              pnl_pct: pnlPct,
+              win: pnlPct > 0,
+              obi: row.obi,
+              fvg_depth: row.fvg_depth,
+              btc_regime: entryRegime,
+              entry_reason: entryReason,
+              is_sniper: entryIsSniper,
+              version: version === 'v5_4' ? 'V5.4' : 'V5.3'
+            });
+          }
+
           if (sig === '[+] AL (LONG)') {
             state = 'IN_LONG';
             entryPrice = fiyat;
@@ -106,6 +141,7 @@ export function calculateTransactions(logs) {
         }
       }
     });
+
     // Check for active trade at the end of the logs
     if (state === 'IN_LONG') {
       active.push({

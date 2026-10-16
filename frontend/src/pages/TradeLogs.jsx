@@ -17,13 +17,22 @@ export default function TradeLogs() {
   const [loading, setLoading] = useState(true);
   const [activeTrade, setActiveTrade] = useState(null);
   const [period, setPeriod] = useState('all');
+  const [version, setVersion] = useState('v5_4');
+  const [showFiltered, setShowFiltered] = useState(false);
+  const [rawLogs, setRawLogs] = useState([]);
+
+  const processLogs = (data, ver) => {
+    if (!data) return;
+    const parsed = reconstructTrades(data, ver);
+    setAllReconstructedTrades(parsed.allTrades);
+  };
 
   const fetchLogs = async () => {
     if (typeof document !== 'undefined' && document.hidden) return;
     const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: true });
     if (data) {
-      const parsed = reconstructTrades(data);
-      setAllReconstructedTrades(parsed.allTrades);
+      setRawLogs(data);
+      processLogs(data, version);
     }
     setLoading(false);
   };
@@ -34,8 +43,17 @@ export default function TradeLogs() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleVersionChange = (newVer) => {
+    setVersion(newVer);
+    processLogs(rawLogs, newVer);
+  };
+
   const filteredTrades = useMemo(() => {
-    if (period === 'all') return allReconstructedTrades;
+    let list = allReconstructedTrades;
+    if (version === 'v5_4' && !showFiltered) {
+      list = list.filter(t => !t.is_filtered);
+    }
+    if (period === 'all') return list;
     
     const now = new Date().getTime();
     let limitMs = 0;
@@ -44,15 +62,15 @@ export default function TradeLogs() {
     else if (period === '7d') limitMs = 7 * 24 * 60 * 60 * 1000;
     else if (period === '30d') limitMs = 30 * 24 * 60 * 60 * 1000;
 
-    return allReconstructedTrades.filter(t => {
+    return list.filter(t => {
       const tradeTime = parseUtcDate(t.giris_zaman).getTime();
       return (now - tradeTime) <= limitMs;
     });
-  }, [allReconstructedTrades, period]);
+  }, [allReconstructedTrades, period, version, showFiltered]);
 
   // Periyot bazli metrikler
   const periodStats = useMemo(() => {
-    const closed = filteredTrades.filter(t => t.status === 'CLOSED');
+    const closed = filteredTrades.filter(t => t.status === 'CLOSED' && !t.is_filtered);
     const active = filteredTrades.filter(t => t.status === 'OPEN');
     const wins = closed.filter(t => t.pnl_yuzde > 0);
     const losses = closed.filter(t => t.pnl_yuzde <= 0);
@@ -86,22 +104,65 @@ export default function TradeLogs() {
           <p className="text-sm text-gray-500 mt-1">Live V5 SMC Execution Logs, Entry/Exit Prices & PnL History</p>
         </div>
         
-        {/* Segmented Period Filter */}
-        <div className="flex items-center gap-3 bg-[#121822] p-1.5 rounded-xl border border-[#1f2937] shadow-sm overflow-x-auto w-full xl:w-auto">
-          <div className="flex bg-[#0B0E11] p-1 rounded-lg border border-[#1f2937] w-full shrink-0">
-            {PERIODS.map(p => (
-              <button
-                key={p.id}
-                onClick={() => setPeriod(p.id)}
-                className={`px-5 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap flex-1 text-center ${
-                  period === p.id 
-                    ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
-                    : 'text-gray-500 hover:text-gray-300 hover:bg-[#1E2329]'
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
+        {/* Version Switcher & Segmented Period Filter */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Version Switcher */}
+          <div className="flex bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner">
+            <button
+              onClick={() => handleVersionChange('v5_4')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                version === 'v5_4' 
+                  ? 'bg-[#F0B90B] text-black shadow-md' 
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              <Zap size={13} className={version === 'v5_4' ? 'text-black' : 'text-[#F0B90B]'} />
+              V5.4 PROD (Optimize)
+            </button>
+            <button
+              onClick={() => handleVersionChange('v5_3')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                version === 'v5_3' 
+                  ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              <Clock size={13} />
+              V5.3 Canlı (Baseline)
+            </button>
+          </div>
+
+          {/* Toggle to show/hide filtered trades in V5.4 */}
+          {version === 'v5_4' && (
+            <button
+              onClick={() => setShowFiltered(!showFiltered)}
+              className={`px-3 py-2 rounded-xl text-xs font-black border transition-all ${
+                showFiltered 
+                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-sm' 
+                  : 'bg-[#121822] text-gray-400 border-[#1f2937] hover:text-gray-200'
+              }`}
+            >
+              {showFiltered ? '✓ Filtrelenenleri Gizle' : '👁️ Elenen 22 İşlemi Gör'}
+            </button>
+          )}
+
+          {/* Segmented Period Filter */}
+          <div className="flex bg-[#121822] p-1 rounded-xl border border-[#1f2937] shadow-sm">
+            <div className="flex bg-[#0B0E11] p-0.5 rounded-lg border border-[#1f2937]">
+              {PERIODS.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => setPeriod(p.id)}
+                  className={`px-3.5 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap text-center ${
+                    period === p.id 
+                      ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
+                      : 'text-gray-500 hover:text-gray-300 hover:bg-[#1E2329]'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

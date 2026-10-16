@@ -95,7 +95,28 @@ export default function SignalCard({ trade, onClick }) {
             🛡️ TREND UYUMLU
           </span>
         )}
+
+        {/* Hard SL Capped Tag */}
+        {trade.hard_sl_triggered && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono shadow-[0_0_8px_rgba(244,63,94,0.2)]">
+            🛑 %0.70 STOP
+          </span>
+        )}
+
+        {/* Filtered by V5.4 Tag */}
+        {trade.is_filtered && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+            ⚠️ V5.4 ELENDİ
+          </span>
+        )}
       </div>
+
+      {trade.is_filtered && (
+        <div className="text-[10.5px] text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-2.5 py-1 flex items-center gap-1.5 font-mono">
+          <span className="font-bold">Neden Elendi:</span>
+          <span className="truncate">{trade.filter_reason}</span>
+        </div>
+      )}
 
       {/* Entry Reason Description */}
       {trade.entry_reason && (

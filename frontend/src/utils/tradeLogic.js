@@ -45,7 +45,7 @@ export function formatSmartPrice(price) {
   return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export function reconstructTrades(rawLogs) {
+export function reconstructTrades(rawLogs, version = 'v5_4') {
   // rawLogs'u eskiden yeniye dogru sirala
   const sortedLogs = [...rawLogs].sort((a, b) => parseUtcDate(a.zaman) - parseUtcDate(b.zaman));
   
@@ -93,9 +93,36 @@ export function reconstructTrades(rawLogs) {
       pos.cikis_cvd = Number(log.cvd || 0);
       pos.status = 'CLOSED';
       
-      const diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
+      let diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
+      let pnlPct = (diff / pos.giris_fiyat) * 100;
+
+      // V5.4 Filtre ve Hard Stop Kontrolleri
+      const isExcessiveFvg = pos.fvg_depth > 1.50;
+      const isNeutralBearLong = pos.yön === 'LONG' && (!pos.is_sniper) && (pos.btc_regime === 'NEUTRAL' || pos.btc_regime === 'BEARISH' || pos.btc_regime === 'UNKNOWN');
+
+      if (version === 'v5_4') {
+        if (isExcessiveFvg) {
+          pos.is_filtered = true;
+          pos.filter_reason = 'FVG > %1.50 (Manipülatif Aşırı FVG)';
+        } else if (isNeutralBearLong) {
+          pos.is_filtered = true;
+          pos.filter_reason = '4H Ayı Trendinde Altcoin LONG Bloke Edildi';
+        } else {
+          pos.is_filtered = false;
+          if (pnlPct < -0.70) {
+            pnlPct = -0.70;
+            pos.cikis_fiyat = pos.yön === 'LONG' ? pos.giris_fiyat * 0.9930 : pos.giris_fiyat * 1.0070;
+            pos.hard_sl_triggered = true;
+            diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
+          }
+        }
+      } else {
+        pos.is_filtered = false;
+      }
+
       pos.fiyat_fark = diff;
-      pos.pnl_yuzde = (diff / pos.giris_fiyat) * 100;
+      pos.pnl_yuzde = pnlPct;
+      pos.version = version === 'v5_4' ? 'V5.4' : 'V5.3';
       
       // Süre hesabi
       const ms = parseUtcDate(pos.cikis_zaman).getTime() - parseUtcDate(pos.giris_zaman).getTime();
@@ -127,15 +154,17 @@ export function reconstructTrades(rawLogs) {
   // Hepsini birlestir, en yeniden eskiye sirala (UI gosterimi icin)
   const allTrades = [...activeTrades, ...closedTrades].sort((a, b) => parseUtcDate(b.giris_zaman) - parseUtcDate(a.giris_zaman));
 
-  // Istatistikler
+  // Istatistikler (Filtrelenmemis islemler uzerinden)
   let totalPnl = 0;
   let wins = 0;
   let losses = 0;
 
   closedTrades.forEach(t => {
-    totalPnl += t.pnl_yuzde;
-    if (t.pnl_yuzde > 0) wins++;
-    else if (t.pnl_yuzde < 0) losses++;
+    if (!t.is_filtered) {
+      totalPnl += t.pnl_yuzde;
+      if (t.pnl_yuzde > 0) wins++;
+      else if (t.pnl_yuzde < 0) losses++;
+    }
   });
 
   const totalClosed = wins + losses;
