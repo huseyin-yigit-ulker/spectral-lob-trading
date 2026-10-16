@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import SignalCard from '../components/SignalCard';
 import ChartModal from '../components/ChartModal';
 import { reconstructTrades, parseUtcDate } from '../utils/tradeLogic';
-import { Filter, List, Activity, TrendingUp, TrendingDown, Target, Zap } from 'lucide-react';
+import { Filter, List, Activity, TrendingUp, TrendingDown, Target, Zap, Clock } from 'lucide-react';
 
 const PERIODS = [
   { id: 'all', label: 'Tüm Zamanlar' },
