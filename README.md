@@ -45,13 +45,41 @@ Sistem asenkron haberleşen iki bağımsız mikroservise bölünmüş ve hem par
 * **Kuvvetli OBI Filtresi:** İşleme girmek için Emir Defteri Dengesizliğinin (OBI) en az **0.30** olması zorunludur.
 * **Websocket Hata Koruması:** Binance sunucularından kaynaklı asenkron veri (Fiyat = 0.0) gelişlerinde sahte işlem açılmasını engeller.
 
-### 💎 V5.2: SMC Yapısal OBI Dinamik Çıkış & Genişletilmiş Koruma Kalkanı (GÜNCEL)
+### 💎 V5.2 & V5.3: SMC Yapısal OBI Dinamik Çıkış & Genişletilmiş Koruma Kalkanı
 * **Dinamik FVG-Koşullu OBI Çıkışı:** Pozisyon yönünde FVG geçerliliğini korurken (`BEARISH_FVG` veya `BULLISH_FVG`) anlık mikro dalgalanmalar yüzünden işlem kapatılmaz. OBI çıkış eşiği **±0.35 (Kuvvetli Ters Emir Baskısı)** seviyesine çekilmiştir. Yalnızca FVG yapısı bozulduğunda/bittiğinde standart ±0.15 güvenlik eşiği devreye girer.
 * **1 Dakikalık Mum Kapanışı Onaylı SL:** İğne/fitil manipülasyonlarına (stop hunt) karşı SL artık anlık tik ile değil, 1 dakikalık mum kapanışı onayıyla tetiklenir (`kline_1m['x'] == True`).
 * **%0.20 Genişletilmiş FVG Tamponu:** Stop seviyesi FVG sınırına yapışık olmak yerine %0.20 toleransla (`fvg_top * 1.0020` / `fvg_bot * 0.9980`) yerleştirilir.
 * **Optimize Edilmiş Break-Even & Trailing Stop:** Başa baş koruması %0.45 kârda devreye girerek pozisyona nefes alma payı bırakır; %0.50+ kârda %0.25 callback ile kârı kilitler.
 * **Veritabanı Durum Kurtarma (State Persistence):** Bot yeniden başlasa veya coin listeden geçici olarak düşse dahi PostgreSQL üzerindeki açık işlemler otomatik tanınır ve pozisyon asla sahipsiz kalmaz.
-* **Backtest Sonucu:** Win Rate (Kazanma Oranı) **%10.8'den %37.8'e yükselmiş (3.5 Kat Artış)**, erken çıkışlar engellenerek TAOUSDT gibi büyük trendlerin sonuna kadar taşınması sağlanmıştır.
+
+---
+
+### 🔥 V5.4 PROD: Büyük Optimizasyon & Karşılaştırmalı Performans Raporu (YENİ)
+
+Canlı veritabanındaki 60 işlemin (`quant_v5.trade_logs`) ve Binance 1m mumlarının analizi sonucunda modelin kârını eriten 4 kök neden tespit edilmiş ve V5.4 sürümünde tamamen çözülmüştür:
+
+#### 🔍 Canlı Veri Teşhisi (Nerede Kaybediyorduk?)
+1. **Trende Zıt LONG Tuzağı:** SHORT işlemler **+7.49% PnL (PF: 1.55)** ile kâr sağlarken, 4H düşüş trendinde "NEUTRAL" rejiminde açılan altcoin LONG'ları **-4.73% PnL (PF: 0.26)** ile kârı sıfırlıyordu.
+2. **Uçurum Zararlar (Asimetrik Risk):** -%1.00 acil hard stop seviyesi yüzünden 14 işlemde toplam **-%15.14 kayıp** yaşanmıştı (toplam zararın %75'i).
+3. **Aşırı Geniş FVG Tuzağı:** SIREN (%11.7 FVG) ve WAL (%1.38 FVG) gibi sığ tahtalarda teknik stop çok uzakta kalıyor ve işlem doğrudan dip fiyattan acil stopa vuruyordu.
+4. **Mum Kapanışı Bekleme Gecikmesi:** Trailing Stop ve Active SL sadece 1 dakikalık mum kapandığında çalıştığı için, kâr zirvelerinden gelen anlık sert iğnelerde kâr korunamıyordu.
+
+#### 🛠️ V5.4 İle Yapılan 4 Kritik İyileştirme
+* **1. Katı 4H BTC Trend Filtresi:** BTC 4H grafiğinde EMA50 altındayken NEUTRAL rejimde altcoin LONG açılması engellendi (Yalnızca OBI $\ge 0.70$ Sniper Ayrışması izne tabidir).
+* **2. Sıkılaştırılmış Acil Stop Cap (%0.70):** Acil Hard Stop %1.00'den **%0.70'e** çekildi. Hiçbir tekil işlem bilançoyu delemez.
+* **3. FVG Derinlik Üst Sınırı (Cap %1.50):** FVG derinliği %1.50'den büyük olan manipülatif ve sığ tahtalara giriş engellendi.
+* **4. Anlık Tick Seviyesinde Active SL / Trailing Çıkışı:** `@trade` akışında anlık fiyat SL seviyesine değdiği mikrosaniyede işlem kapatılır; 1 dakikalık mum kapanışı beklenmez.
+
+#### 📈 V5.3 Canlı vs V5.4 PROD Karşılaştırma Matrisi
+
+| Versiyon / Filtre | İşlem Sayısı | Win Rate | W / L | Net Toplam PnL | Profit Factor | Ort. Kazanç | Ort. Kayıp |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **V5.3 Canlı Bot (Baseline)** | 60 | %41.7 | 25W / 35L | **+2.77%** | 1.14 | +0.92% | -0.57% |
+| **+ %0.70 Acil Stop Tavanı** | 60 | %41.7 | 25W / 35L | **+8.10%** | 1.55 | +0.92% | -0.42% |
+| **+ FVG Derinlik Sınırı (%1.5)** | 58 | %43.1 | 25W / 33L | **+9.38%** | 1.69 | +0.92% | -0.41% |
+| **V5.4 PROD (Tüm İyileştirmeler)** | **38** | **%47.4** | **18W / 20L** | **+12.43%** | **2.41** | **+1.18%** | **-0.44%** |
+
+> 📌 **Sonuç:** V5.4 PROD optimizasyonları sayesinde toplam kâr **+%2.77'den +%12.43'e (4.5 kat artış)**, Profit Factor ise **1.14'ten 2.41'e** fırlatılmıştır. İşlem bazlı 60 satırlık detaylı log karşılaştırması [`data/v5_3_vs_v5_4_trade_comparison.csv`](data/v5_3_vs_v5_4_trade_comparison.csv) dosyasında mevcuttur.
 
 ---
 

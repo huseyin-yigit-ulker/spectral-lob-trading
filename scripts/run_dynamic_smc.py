@@ -450,6 +450,25 @@ async def binance_ws():
                                     else:
                                         trail_sl = agent.entry_price * (1.0 - (agent.highest_pnl - 0.25) / 100)
                                         agent.active_trade_sl = min(agent.active_trade_sl or 999999, trail_sl)
+                                
+                                # Anlık Tick Seviyesinde Active SL / Trailing Çıkışı (1m kapanışı beklemeden anında çık)
+                                prev_sig = agent.internal_signal_state
+                                if agent.internal_signal_state == 1 and agent.active_trade_sl and agent.current_price <= agent.active_trade_sl:
+                                    agent.internal_signal_state = 0
+                                    agent.active_trade_sl = None
+                                    agent.emergency_sl = None
+                                    agent.entry_price = 0.0
+                                    agent.highest_pnl = 0.0
+                                    agent.is_break_even = False
+                                    sync_signal_state(agent, prev_sig)
+                                elif agent.internal_signal_state == -1 and agent.active_trade_sl and agent.current_price >= agent.active_trade_sl:
+                                    agent.internal_signal_state = 0
+                                    agent.active_trade_sl = None
+                                    agent.emergency_sl = None
+                                    agent.entry_price = 0.0
+                                    agent.highest_pnl = 0.0
+                                    agent.is_break_even = False
+                                    sync_signal_state(agent, prev_sig)
                             
                         elif msg.get('e') == 'depthUpdate':
                             bids = [[float(p), float(q)] for p, q in msg['b']]
@@ -482,14 +501,14 @@ async def binance_ws():
                             
                             prev_sig = agent.internal_signal_state
                             
-                            # FVG Derinlik (Boyutu) Kontrolu (>%0.15)
+                            # FVG Derinlik (Boyutu) Kontrolu (%0.15 ile %1.50 arası; manipülatif aşırı FVG'leri eler)
                             b5, t5 = agent.smc_5m.get_active_fvg_bounds(agent.current_price)
                             b3, t3 = agent.smc_3m.get_active_fvg_bounds(agent.current_price)
                             cur_b = b5 if b5 else b3
                             cur_t = t5 if t5 else t3
                             fvg_depth_ratio = ((cur_t - cur_b) / cur_b) if cur_b else 0.0
                             agent.fvg_depth_pct = fvg_depth_ratio * 100
-                            is_fvg_wide_enough = fvg_depth_ratio >= 0.0015 # %0.15
+                            is_fvg_wide_enough = 0.0015 <= fvg_depth_ratio <= 0.0150 # %0.15 ile %1.50 arası
                             
                             # HFT Spoofing / Ghost Liquidity Tespiti
                             is_spoofed = (spec['state'] == 'SPOOFING_ALERT' or spec['bsi'] >= 0.40)
@@ -521,7 +540,7 @@ async def binance_ws():
                                         agent.active_trade_sl = bot_bound * 0.9980 # %0.20 Genişletilmiş SL
                                     else:
                                         agent.active_trade_sl = agent.entry_price * 0.9980
-                                    agent.emergency_sl = agent.entry_price * 0.9900 # %1.00 Acil Hard Stop
+                                    agent.emergency_sl = agent.entry_price * 0.9930 # %0.70 Sıkılaştırılmış Acil Hard Stop
                             elif agent.macro_obi < -0.30 and agent.cvd_1m < 0 and agent.smc_status == 'BEARISH_FVG' and is_fvg_wide_enough:
                                 # 1. BTC Makro Trend Filtresi: BTC yükselişteyken altcoin SHORT'unu engelle
                                 allowed, btc_reason, is_sniper, btc_regime = is_trade_allowed_by_btc('SHORT', agent.macro_obi, agent.fvg_depth_pct)
@@ -549,7 +568,7 @@ async def binance_ws():
                                         agent.active_trade_sl = top_bound * 1.0020 # %0.20 Genişletilmiş SL
                                     else:
                                         agent.active_trade_sl = agent.entry_price * 1.0020
-                                    agent.emergency_sl = agent.entry_price * 1.0100 # %1.00 Acil Hard Stop
+                                    agent.emergency_sl = agent.entry_price * 1.0070 # %0.70 Sıkılaştırılmış Acil Hard Stop
                                 
                             # Pozisyondan Çıkış Kontrolleri (Acil Stop & Dinamik OBI Reversal)
                             # Yapı lehimize FVG içindeyse OBI çıkışı çok daha KUVVETLİ (±0.35) olmalıdır.

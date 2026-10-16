@@ -92,10 +92,14 @@ class BTCRegimeWatcher:
                 summary = f"🟢 BULLISH (${cur_price:,.0f} > EMA50: ${ema50_1h:,.0f}) | Sadece LONG"
             else:
                 regime = 'NEUTRAL'
-                allow_long = True
+                # 4H EMA50 altındaysak makro ayı baskısındadır; sıradan LONG'ları engelle, sadece SHORT ve Sniper'a izin ver
+                allow_long = not is_4h_bear
                 allow_short = True
                 badge_color = 'yellow'
-                summary = f"⚪ NEUTRAL (${cur_price:,.0f}) | Her İki Yön"
+                if is_4h_bear:
+                    summary = f"⚪ NEUTRAL-BEAR (${cur_price:,.0f} < 4H EMA50) | Sadece SHORT + Sniper"
+                else:
+                    summary = f"⚪ NEUTRAL (${cur_price:,.0f}) | Her İki Yön"
 
             self.cached_state = {
                 'regime': regime,
