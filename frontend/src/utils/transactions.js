@@ -1,172 +1,35 @@
-export function calculateTransactions(logs, version = 'v5_4') {
-  const closed = [];
-  const active = [];
-  const groups = {};
+import { reconstructTrades } from './tradeLogic';
 
-  // Group by symbol
-  logs.forEach(log => {
-    if (!groups[log.sembol]) {
-      groups[log.sembol] = [];
-    }
-    groups[log.sembol].push(log);
-  });
-
-  for (const symbol in groups) {
-    let state = 'NO_POSITION';
-    let entryPrice = 0;
-    let entryTime = null;
-    let entryRegime = 'NEUTRAL';
-    let entryReason = '';
-    let entryIsSniper = false;
-
-    // Ensure sorted by time ASC
-    const symbolLogs = groups[symbol].sort((a, b) => new Date(a.zaman) - new Date(b.zaman));
-
-    symbolLogs.forEach(row => {
-      const sig = row.sinyal;
-      const fiyat = parseFloat(row.fiyat);
-      const zaman = row.zaman;
-
-      if (state === 'NO_POSITION') {
-        const isSniper = row.entry_reason ? row.entry_reason.toLowerCase().includes('sniper') : (Math.abs(Number(row.obi || 0)) >= 0.70 && Number(row.fvg_depth || 0) >= 0.40);
-        entryIsSniper = isSniper;
-
-        if (sig === '[+] AL (LONG)') {
-          state = 'IN_LONG';
-          entryPrice = fiyat;
-          entryTime = zaman;
-          entryRegime = row.btc_regime || (isSniper ? 'BEARISH' : 'NEUTRAL');
-          entryReason = row.entry_reason || (isSniper ? `Sniper İstisnası: Altcoin BTC'den Pozitif Ayrıştı (OBI: ${Number(row.obi || 0) > 0 ? '+' : ''}${Number(row.obi || 0).toFixed(2)})` : `BTC Trend Uyumlu (${entryRegime})`);
-        } else if (sig === '[-] SAT (SHORT)') {
-          state = 'IN_SHORT';
-          entryPrice = fiyat;
-          entryTime = zaman;
-          entryRegime = row.btc_regime || (isSniper ? 'BULLISH' : 'NEUTRAL');
-          entryReason = row.entry_reason || (isSniper ? `Sniper İstisnası: Altcoin BTC'den Negatif Ayrıştı (OBI: ${Number(row.obi || 0) > 0 ? '+' : ''}${Number(row.obi || 0).toFixed(2)})` : `BTC Trend Uyumlu (${entryRegime})`);
-        }
-      } else if (state === 'IN_LONG') {
-        if (sig === '[!] BEKLE' || sig === '[-] SAT (SHORT)') {
-          let pnlPct = ((fiyat - entryPrice) / entryPrice) * 100;
-          let exitPrice = fiyat;
-          const fvgDepth = Number(row.fvg_depth || 0);
-
-          // V5.4 Filtreleri
-          const isExcessiveFvg = fvgDepth > 1.50;
-          const isNeutralBearLong = (entryRegime === 'NEUTRAL' || entryRegime === 'BEARISH' || entryRegime === 'UNKNOWN') && !entryIsSniper;
-          const shouldFilterV54 = isExcessiveFvg || isNeutralBearLong;
-
-          if (version === 'v5_4' && shouldFilterV54) {
-            // V5.4'te bu riskli/macro uyumsuz işlem açılmaz
-          } else {
-            if (version === 'v5_4' && pnlPct < -0.70) {
-              pnlPct = -0.70; // V5.4 %0.70 Sıkılaştırılmış Hard Stop
-              exitPrice = entryPrice * 0.9930;
-            }
-            closed.push({
-              sembol: symbol,
-              tip: 'LONG',
-              entry_time: entryTime,
-              exit_time: zaman,
-              entry_price: entryPrice,
-              exit_price: exitPrice,
-              pnl_pct: pnlPct,
-              win: pnlPct > 0,
-              obi: row.obi,
-              fvg_depth: row.fvg_depth,
-              btc_regime: entryRegime,
-              entry_reason: entryReason,
-              is_sniper: entryIsSniper,
-              version: version === 'v5_4' ? 'V5.4' : 'V5.3'
-            });
-          }
-
-          if (sig === '[-] SAT (SHORT)') {
-            state = 'IN_SHORT';
-            entryPrice = fiyat;
-            entryTime = zaman;
-            const isSniper = row.entry_reason ? row.entry_reason.toLowerCase().includes('sniper') : (Math.abs(Number(row.obi || 0)) >= 0.70 && Number(row.fvg_depth || 0) >= 0.40);
-            entryIsSniper = isSniper;
-            entryRegime = row.btc_regime || (isSniper ? 'BULLISH' : 'NEUTRAL');
-            entryReason = row.entry_reason || (isSniper ? `Sniper İstisnası: Altcoin BTC'den Negatif Ayrıştı` : `BTC Trend Uyumlu (${entryRegime})`);
-          } else {
-            state = 'NO_POSITION';
-          }
-        }
-      } else if (state === 'IN_SHORT') {
-        if (sig === '[!] BEKLE' || sig === '[+] AL (LONG)') {
-          let pnlPct = ((entryPrice - fiyat) / entryPrice) * 100;
-          let exitPrice = fiyat;
-          const fvgDepth = Number(row.fvg_depth || 0);
-
-          // V5.4 Filtreleri
-          const isExcessiveFvg = fvgDepth > 1.50;
-          const shouldFilterV54 = isExcessiveFvg;
-
-          if (version === 'v5_4' && shouldFilterV54) {
-            // V5.4'te aşırı FVG manipülasyonu elenir
-          } else {
-            if (version === 'v5_4' && pnlPct < -0.70) {
-              pnlPct = -0.70; // V5.4 %0.70 Sıkılaştırılmış Hard Stop
-              exitPrice = entryPrice * 1.0070;
-            }
-            closed.push({
-              sembol: symbol,
-              tip: 'SHORT',
-              entry_time: entryTime,
-              exit_time: zaman,
-              entry_price: entryPrice,
-              exit_price: exitPrice,
-              pnl_pct: pnlPct,
-              win: pnlPct > 0,
-              obi: row.obi,
-              fvg_depth: row.fvg_depth,
-              btc_regime: entryRegime,
-              entry_reason: entryReason,
-              is_sniper: entryIsSniper,
-              version: version === 'v5_4' ? 'V5.4' : 'V5.3'
-            });
-          }
-
-          if (sig === '[+] AL (LONG)') {
-            state = 'IN_LONG';
-            entryPrice = fiyat;
-            entryTime = zaman;
-            const isSniper = row.entry_reason ? row.entry_reason.toLowerCase().includes('sniper') : (Math.abs(Number(row.obi || 0)) >= 0.70 && Number(row.fvg_depth || 0) >= 0.40);
-            entryIsSniper = isSniper;
-            entryRegime = row.btc_regime || (isSniper ? 'BEARISH' : 'NEUTRAL');
-            entryReason = row.entry_reason || (isSniper ? `Sniper İstisnası: Altcoin BTC'den Pozitif Ayrıştı` : `BTC Trend Uyumlu (${entryRegime})`);
-          } else {
-            state = 'NO_POSITION';
-          }
-        }
-      }
-    });
-
-    // Check for active trade at the end of the logs
-    if (state === 'IN_LONG') {
-      active.push({
-        sembol: symbol,
-        tip: 'LONG',
-        entry_time: entryTime,
-        entry_price: entryPrice,
-        btc_regime: entryRegime,
-        entry_reason: entryReason,
-        is_sniper: entryIsSniper
-      });
-    } else if (state === 'IN_SHORT') {
-      active.push({
-        sembol: symbol,
-        tip: 'SHORT',
-        entry_time: entryTime,
-        entry_price: entryPrice,
-        btc_regime: entryRegime,
-        entry_reason: entryReason,
-        is_sniper: entryIsSniper
-      });
-    }
+export function calculateTransactions(logs, version = 'v5_5') {
+  if (!logs || logs.length === 0) {
+    return {
+      closed: [],
+      active: [],
+      allTrades: [],
+      stats: {
+        totalPnl: 0,
+        winRate: 0,
+        totalClosed: 0,
+        wins: 0,
+        losses: 0,
+        activeCount: 0,
+        filteredCount: 0,
+        preventedLossPnl: 0
+      },
+      filteredCount: 0,
+      preventedLossPnl: 0
+    };
   }
 
-  // Sort trades by exit_time DESC
-  closed.sort((a, b) => new Date(b.exit_time) - new Date(a.exit_time));
-  return { closed, active };
+  const result = reconstructTrades(logs, version);
+
+  // Return non-filtered closed trades for main display, while attaching full list & stats
+  return {
+    closed: result.closedTrades,
+    active: result.activeTrades,
+    allTrades: result.allTrades,
+    stats: result.stats,
+    filteredCount: result.stats.filteredCount,
+    preventedLossPnl: result.stats.preventedLossPnl
+  };
 }

@@ -45,7 +45,7 @@ export function formatSmartPrice(price) {
   return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export function reconstructTrades(rawLogs, version = 'v5_4') {
+export function reconstructTrades(rawLogs, version = 'v5_5') {
   // rawLogs'u eskiden yeniye dogru sirala
   const sortedLogs = [...rawLogs].sort((a, b) => parseUtcDate(a.zaman) - parseUtcDate(b.zaman));
   
@@ -63,6 +63,35 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
       const entryReason = log.entry_reason || (isSniper 
         ? `Sniper İstisnası: Altcoin BTC'den Pozitif Ayrıştı (OBI: ${Number(log.obi || 0) > 0 ? '+' : ''}${Number(log.obi || 0).toFixed(2)})` 
         : `BTC Trend Uyumlu (${btcRegime})`);
+      
+      const fvgDepth = Number(log.fvg_depth || 0);
+      const isExcessiveFvg = fvgDepth > 1.50;
+      const isTooSmallFvg = fvgDepth > 0 && fvgDepth < 0.15;
+      const isNeutralBearLong = log.sinyal.includes('AL') && (!isSniper) && (btcRegime === 'NEUTRAL' || btcRegime === 'BEARISH' || btcRegime === 'UNKNOWN');
+
+      let isFiltered = false;
+      let filterReason = '';
+
+      if (version === 'v5_5') {
+        if (isExcessiveFvg) {
+          isFiltered = true;
+          filterReason = 'FVG > %1.50 (Manipülatif Aşırı FVG)';
+        } else if (isTooSmallFvg) {
+          isFiltered = true;
+          filterReason = 'FVG < %0.15 (Yetersiz Likidite Marjı)';
+        } else if (isNeutralBearLong) {
+          isFiltered = true;
+          filterReason = '4H Ayı Trendinde Altcoin LONG Bloke Edildi';
+        }
+      } else if (version === 'v5_4') {
+        if (isExcessiveFvg) {
+          isFiltered = true;
+          filterReason = 'FVG > %1.50 (Manipülatif Aşırı FVG)';
+        } else if (isNeutralBearLong) {
+          isFiltered = true;
+          filterReason = '4H Ayı Trendinde Altcoin LONG Bloke Edildi';
+        }
+      }
 
       openPositions[sym] = {
         id: log.id,
@@ -74,7 +103,7 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
         fvg_bottom: Number(log.fvg_bottom || 0),
         obi: Number(log.obi || 0),
         cvd: Number(log.cvd || 0),
-        fvg_depth: Number(log.fvg_depth || 0),
+        fvg_depth: fvgDepth,
         context: log.context || 'NEUTRAL',
         sinyal: log.sinyal,
         rlr: Number(log.rlr || 1.0),
@@ -83,6 +112,9 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
         btc_regime: btcRegime,
         entry_reason: entryReason,
         is_sniper: isSniper,
+        is_filtered: isFiltered,
+        filter_reason: filterReason,
+        version: version === 'v5_5' ? 'V5.5' : version === 'v5_4' ? 'V5.4' : 'V5.3',
         status: 'OPEN'
       };
     } else if (isExit && openPositions[sym]) {
@@ -96,11 +128,32 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
       let diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
       let pnlPct = (diff / pos.giris_fiyat) * 100;
 
-      // V5.4 Filtre ve Hard Stop Kontrolleri
+      // Filtreleme ve Hard Stop Kontrolleri
       const isExcessiveFvg = pos.fvg_depth > 1.50;
+      const isTooSmallFvg = pos.fvg_depth > 0 && pos.fvg_depth < 0.15;
       const isNeutralBearLong = pos.yön === 'LONG' && (!pos.is_sniper) && (pos.btc_regime === 'NEUTRAL' || pos.btc_regime === 'BEARISH' || pos.btc_regime === 'UNKNOWN');
 
-      if (version === 'v5_4') {
+      if (version === 'v5_5') {
+        if (isExcessiveFvg) {
+          pos.is_filtered = true;
+          pos.filter_reason = 'FVG > %1.50 (Manipülatif Aşırı FVG)';
+        } else if (isTooSmallFvg) {
+          pos.is_filtered = true;
+          pos.filter_reason = 'FVG < %0.15 (Yetersiz Likidite Marjı)';
+        } else if (isNeutralBearLong) {
+          pos.is_filtered = true;
+          pos.filter_reason = '4H Ayı Trendinde Altcoin LONG Bloke Edildi';
+        } else {
+          pos.is_filtered = false;
+          if (pnlPct < -0.70) {
+            pnlPct = -0.70;
+            pos.cikis_fiyat = pos.yön === 'LONG' ? pos.giris_fiyat * 0.9930 : pos.giris_fiyat * 1.0070;
+            pos.hard_sl_triggered = true;
+            diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
+          }
+        }
+        pos.version = 'V5.5';
+      } else if (version === 'v5_4') {
         if (isExcessiveFvg) {
           pos.is_filtered = true;
           pos.filter_reason = 'FVG > %1.50 (Manipülatif Aşırı FVG)';
@@ -116,13 +169,21 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
             diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
           }
         }
+        pos.version = 'V5.4';
       } else {
         pos.is_filtered = false;
+        pos.version = 'V5.3';
       }
 
       pos.fiyat_fark = diff;
       pos.pnl_yuzde = pnlPct;
-      pos.version = version === 'v5_4' ? 'V5.4' : 'V5.3';
+      pos.pnl_pct = pnlPct;
+      pos.win = pnlPct > 0;
+      pos.tip = pos.yön;
+      pos.entry_price = pos.giris_fiyat;
+      pos.exit_price = pos.cikis_fiyat;
+      pos.entry_time = pos.giris_zaman;
+      pos.exit_time = pos.cikis_zaman;
       
       // Süre hesabi
       const ms = parseUtcDate(pos.cikis_zaman).getTime() - parseUtcDate(pos.giris_zaman).getTime();
@@ -148,22 +209,32 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
     pos.sure_ms = ms;
     pos.sure_dk = Math.max(0, Math.floor(ms / 60000));
     pos.sure_str = pos.sure_dk < 60 ? `${pos.sure_dk} dk` : `${Math.floor(pos.sure_dk / 60)}s ${pos.sure_dk % 60}d`;
+    pos.tip = pos.yön;
+    pos.entry_price = pos.giris_fiyat;
+    pos.entry_time = pos.giris_zaman;
     return pos;
   });
   
   // Hepsini birlestir, en yeniden eskiye sirala (UI gosterimi icin)
   const allTrades = [...activeTrades, ...closedTrades].sort((a, b) => parseUtcDate(b.giris_zaman) - parseUtcDate(a.giris_zaman));
 
-  // Istatistikler (Filtrelenmemis islemler uzerinden)
+  // Istatistikler (Filtrelenmemis gercek islemler uzerinden)
   let totalPnl = 0;
   let wins = 0;
   let losses = 0;
+  let filteredCount = 0;
+  let preventedLossPnl = 0;
 
   closedTrades.forEach(t => {
     if (!t.is_filtered) {
       totalPnl += t.pnl_yuzde;
       if (t.pnl_yuzde > 0) wins++;
       else if (t.pnl_yuzde < 0) losses++;
+    } else {
+      filteredCount++;
+      if (t.pnl_yuzde < 0) {
+        preventedLossPnl += Math.abs(t.pnl_yuzde);
+      }
     }
   });
 
@@ -180,7 +251,9 @@ export function reconstructTrades(rawLogs, version = 'v5_4') {
       totalClosed,
       wins,
       losses,
-      activeCount: activeTrades.length
+      activeCount: activeTrades.length,
+      filteredCount,
+      preventedLossPnl
     }
   };
 }

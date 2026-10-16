@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import SignalCard from '../components/SignalCard';
 import ChartModal from '../components/ChartModal';
 import { reconstructTrades, parseUtcDate } from '../utils/tradeLogic';
-import { Filter, List, Activity, TrendingUp, TrendingDown, Target, Zap, Clock } from 'lucide-react';
+import { Filter, List, Activity, TrendingUp, TrendingDown, Target, Zap, Clock, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 const PERIODS = [
   { id: 'all', label: 'Tüm Zamanlar' },
@@ -17,7 +17,7 @@ export default function TradeLogs() {
   const [loading, setLoading] = useState(true);
   const [activeTrade, setActiveTrade] = useState(null);
   const [period, setPeriod] = useState('all');
-  const [version, setVersion] = useState('v5_4');
+  const [version, setVersion] = useState('v5_5');
   const [showFiltered, setShowFiltered] = useState(false);
   const [rawLogs, setRawLogs] = useState([]);
   const [backtestLogs, setBacktestLogs] = useState([]);
@@ -43,7 +43,7 @@ export default function TradeLogs() {
         entry_reason: t.entry_reason,
         exit_reason: t.cikis_nedeni,
         sure_str: sure_dk < 60 ? `${sure_dk} dk` : `${Math.floor(sure_dk / 60)}s ${sure_dk % 60}d`,
-        version: 'V5.4 Backtest',
+        version: 'Backtest',
         is_filtered: false
       };
     });
@@ -92,45 +92,72 @@ export default function TradeLogs() {
     }
   };
 
-  const filteredTrades = useMemo(() => {
-    let list = allReconstructedTrades;
-    if (version === 'v5_4' && !showFiltered) {
-      list = list.filter(t => !t.is_filtered);
-    }
-    if (period === 'all') return list;
+  // 1. Periyoda göre zaman filtresi
+  const periodTrades = useMemo(() => {
+    if (period === 'all') return allReconstructedTrades;
     
     const now = new Date().getTime();
     let limitMs = 0;
-    
     if (period === '24h') limitMs = 24 * 60 * 60 * 1000;
     else if (period === '7d') limitMs = 7 * 24 * 60 * 60 * 1000;
     else if (period === '30d') limitMs = 30 * 24 * 60 * 60 * 1000;
 
-    return list.filter(t => {
+    return allReconstructedTrades.filter(t => {
       const tradeTime = parseUtcDate(t.giris_zaman).getTime();
       return (now - tradeTime) <= limitMs;
     });
-  }, [allReconstructedTrades, period, version, showFiltered]);
+  }, [allReconstructedTrades, period]);
 
-  // Periyot bazli metrikler
+  // 2. Seçili periyotta filtrelenen (elenen) işlem sayısı (DİNAMİK)
+  const filteredCount = useMemo(() => {
+    return periodTrades.filter(t => t.is_filtered).length;
+  }, [periodTrades]);
+
+  // 3. Ekranda gösterilecek nihai işlemler (showFiltered kapalıysa elenenler gizlenir)
+  const displayedTrades = useMemo(() => {
+    if (!showFiltered && (version === 'v5_5' || version === 'v5_4')) {
+      return periodTrades.filter(t => !t.is_filtered);
+    }
+    return periodTrades;
+  }, [periodTrades, showFiltered, version]);
+
+  // 4. Dinamik İstatistikler (Seçili filtreye ve versiyona göre anında güncellenir)
   const periodStats = useMemo(() => {
-    const closed = filteredTrades.filter(t => t.status === 'CLOSED' && !t.is_filtered);
-    const active = filteredTrades.filter(t => t.status === 'OPEN');
+    // showFiltered açıksa tüm ekrandaki işlemler, kapalıysa yalnızca filtreden geçen gerçek işlemler
+    const targetTrades = showFiltered
+      ? periodTrades
+      : periodTrades.filter(t => !t.is_filtered);
+
+    const closed = targetTrades.filter(t => t.status === 'CLOSED');
+    const active = targetTrades.filter(t => t.status === 'OPEN');
     const wins = closed.filter(t => t.pnl_yuzde > 0);
     const losses = closed.filter(t => t.pnl_yuzde <= 0);
     const totalPnl = closed.reduce((acc, t) => acc + (t.pnl_yuzde || 0), 0);
     const winRate = closed.length > 0 ? (wins.length / closed.length) * 100 : 0;
 
+    // Filtreleme sayesinde engellenen toplam zarar
+    const eliminated = periodTrades.filter(t => t.is_filtered && t.status === 'CLOSED');
+    const preventedLoss = eliminated.reduce((acc, t) => acc + (t.pnl_yuzde < 0 ? Math.abs(t.pnl_yuzde) : 0), 0);
+
     return {
-      total: filteredTrades.length,
+      total: targetTrades.length,
       closedCount: closed.length,
       activeCount: active.length,
+      filteredCount,
+      preventedLoss: preventedLoss.toFixed(2),
       wins: wins.length,
       losses: losses.length,
       winRate: winRate.toFixed(1),
       totalPnl: totalPnl.toFixed(2),
     };
-  }, [filteredTrades]);
+  }, [periodTrades, showFiltered, filteredCount]);
+
+  const versionLabel = useMemo(() => {
+    if (version === 'v5_5') return 'V5.5';
+    if (version === 'v5_4') return 'V5.4';
+    if (version === 'v5_3') return 'V5.3';
+    return 'Backtest';
+  }, [version]);
 
   return (
     <div className="space-y-6 relative h-full flex flex-col">
@@ -153,15 +180,26 @@ export default function TradeLogs() {
           {/* Version Switcher */}
           <div className="flex flex-wrap items-center bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner gap-1">
             <button
-              onClick={() => handleVersionChange('v5_4')}
+              onClick={() => handleVersionChange('v5_5')}
               className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                version === 'v5_4' 
+                version === 'v5_5' 
                   ? 'bg-[#F0B90B] text-black shadow-md' 
                   : 'text-gray-400 hover:text-gray-200'
               }`}
             >
-              <Zap size={13} className={version === 'v5_4' ? 'text-black' : 'text-[#F0B90B]'} />
-              V5.4 Canlı (Optimize)
+              <Zap size={13} className={version === 'v5_5' ? 'text-black' : 'text-[#F0B90B]'} />
+              V5.5 Canlı (Maks PnL)
+            </button>
+            <button
+              onClick={() => handleVersionChange('v5_4')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                version === 'v5_4' 
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              <ShieldCheck size={13} />
+              V5.4 Canlı (Dinamik SMC)
             </button>
             <button
               onClick={() => handleVersionChange('v5_3')}
@@ -183,21 +221,25 @@ export default function TradeLogs() {
               }`}
             >
               <Target size={13} className={version === 'v5_4_backtest' ? 'text-white' : 'text-purple-400'} />
-              V5.4 Backtest (30 Coin)
+              14G Backtest (30 Coin)
             </button>
           </div>
 
-          {/* Toggle to show/hide filtered trades in V5.4 */}
-          {version === 'v5_4' && (
+          {/* Dinamik Elenen İşlemleri Gör / Gizle Butonu */}
+          {(version === 'v5_5' || version === 'v5_4') && (
             <button
               onClick={() => setShowFiltered(!showFiltered)}
-              className={`px-3 py-2 rounded-xl text-xs font-black border transition-all ${
+              className={`px-3 py-2 rounded-xl text-xs font-black border transition-all flex items-center gap-1.5 ${
                 showFiltered 
                   ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-sm' 
-                  : 'bg-[#121822] text-gray-400 border-[#1f2937] hover:text-gray-200'
+                  : 'bg-[#121822] text-gray-300 border-[#1f2937] hover:text-white hover:border-[#F0B90B]/50'
               }`}
             >
-              {showFiltered ? '✓ Filtrelenenleri Gizle' : '👁️ Elenen 22 İşlemi Gör'}
+              {showFiltered ? (
+                <>✓ Filtrelenenleri Gizle ({filteredCount})</>
+              ) : (
+                <>👁️ Elenen ({filteredCount}) İşlemi Gör</>
+              )}
             </button>
           )}
 
@@ -222,13 +264,32 @@ export default function TradeLogs() {
         </div>
       </div>
 
-      {/* Period Quick Stats Summary Bar */}
+      {/* Dinamik Bilgilendirme ve Filtre Kalkanı Bildirimi */}
+      {showFiltered && filteredCount > 0 && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-purple-200">
+          <div className="flex items-center gap-2">
+            <AlertTriangle size={16} className="text-purple-400 shrink-0" />
+            <span>
+              <strong>Ham Sinyal Görünümü:</strong> {versionLabel} kalkanı tarafından elenen {filteredCount} adet riskli işlem listeye dahil edildi.
+            </span>
+          </div>
+          {Number(periodStats.preventedLoss) > 0 && (
+            <span className="font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-bold shrink-0">
+              🛡️ +%{periodStats.preventedLoss} Kayıp Önlendi
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Period Quick Stats Summary Bar (Tamamen Dinamik) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between">
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-500 block">Filtrelenen İşlemler</span>
-            <span className="text-lg font-black text-gray-100 font-mono">{periodStats.total}</span>
-            <span className="text-[10px] text-gray-500 ml-1.5 font-mono">({periodStats.closedCount} kapalı)</span>
+            <span className="text-[10px] uppercase font-bold text-gray-500 block">Toplam İşlem</span>
+            <span className="text-lg font-black text-gray-100 font-mono">{periodStats.closedCount}</span>
+            <span className="text-[10px] text-gray-500 ml-1.5 font-mono">
+              kapalı{filteredCount > 0 && !showFiltered ? ` (${filteredCount} elendi)` : ''}
+            </span>
           </div>
           <Zap size={20} className="text-[#F0B90B]/60" />
         </div>
@@ -248,7 +309,7 @@ export default function TradeLogs() {
 
         <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between">
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-500 block">Kazanma Oranı</span>
+            <span className="text-[10px] uppercase font-bold text-gray-500 block">Kazanma Oranı (WR)</span>
             <span className="text-lg font-black text-emerald-400 font-mono">%{periodStats.winRate}</span>
             <span className="text-[10px] text-gray-500 ml-1.5 font-mono">({periodStats.wins}W / {periodStats.losses}L)</span>
           </div>
@@ -275,7 +336,7 @@ export default function TradeLogs() {
         <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#F0B90B] border-t-transparent rounded-full animate-spin"></div></div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-10">
-          {filteredTrades.length === 0 ? (
+          {displayedTrades.length === 0 ? (
             <div className="col-span-full py-16 text-center bg-[#0B0E11] border border-[#1f2937] rounded-xl shadow-lg">
               <div className="flex flex-col items-center justify-center text-gray-500">
                 <Filter size={32} className="mb-3 opacity-50" />
@@ -284,7 +345,7 @@ export default function TradeLogs() {
               </div>
             </div>
           ) : (
-            filteredTrades.map((log, i) => (
+            displayedTrades.map((log, i) => (
               <SignalCard key={log.id || i} trade={log} onClick={setActiveTrade} />
             ))
           )}

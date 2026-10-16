@@ -103,10 +103,10 @@ export default function SignalCard({ trade, onClick }) {
           </span>
         )}
 
-        {/* Filtered by V5.4 Tag */}
+        {/* Filtered by Version Tag */}
         {trade.is_filtered && (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
-            ⚠️ V5.4 ELENDİ
+            ⚠️ {trade.version || 'V5.5'} ELENDİ
           </span>
         )}
       </div>

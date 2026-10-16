@@ -6,12 +6,13 @@ import PnlChart from '../components/Chart';
 import { useLive } from '../context/LiveContext';
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ transactions: 0, active: 0, winRate: 0, pnl: 0, profitFactor: 0 });
+  const [stats, setStats] = useState({ transactions: 0, active: 0, winRate: 0, pnl: 0, profitFactor: 0, filteredCount: 0 });
   const [closedTransactions, setClosedTransactions] = useState([]);
   const [activeTransactions, setActiveTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [version, setVersion] = useState('v5_4'); // 'v5_4' (Optimize PROD) veya 'v5_3' (Canlı Baseline)
-  const [rawLogs, setRawLogs] = useState([]);  const [backtestLogs, setBacktestLogs] = useState([]);
+  const [version, setVersion] = useState('v5_5'); // 'v5_5' (Maks PnL PROD), 'v5_4' (Dinamik SMC), 'v5_3' (Baseline)
+  const [rawLogs, setRawLogs] = useState([]);
+  const [backtestLogs, setBacktestLogs] = useState([]);
   const { btcRegime } = useLive() || {};
 
   const processBacktest = (bt) => {
@@ -29,7 +30,7 @@ export default function Dashboard() {
       btc_regime: t.btc_regime,
       entry_reason: t.entry_reason,
       exit_reason: t.cikis_nedeni,
-      version: 'V5.4 Backtest'
+      version: 'Backtest'
     }));
     // Sort DESC
     closed.sort((a, b) => new Date(b.exit_time) - new Date(a.exit_time));
@@ -49,32 +50,38 @@ export default function Dashboard() {
       active: 0,
       winRate: wr,
       pnl: totalPnl,
-      profitFactor
+      profitFactor,
+      filteredCount: 0
     });
   };
 
   const processLogs = (logs, ver) => {
     if (!logs || logs.length === 0) return;
     const txs = calculateTransactions(logs, ver);
-    setClosedTransactions(txs.closed);
-    setActiveTransactions(txs.active);
+    const validClosed = txs.closed.filter(t => !t.is_filtered);
+    const eliminated = txs.closed.filter(t => t.is_filtered);
+    const validActive = txs.active.filter(t => !t.is_filtered);
+
+    setClosedTransactions(validClosed);
+    setActiveTransactions(validActive);
     
-    const wins = txs.closed.filter(t => t.win);
-    const losses = txs.closed.filter(t => !t.win);
+    const wins = validClosed.filter(t => t.win);
+    const losses = validClosed.filter(t => !t.win);
     
-    const wr = txs.closed.length > 0 ? ((wins.length / txs.closed.length) * 100).toFixed(1) : 0;
-    const totalPnl = txs.closed.reduce((acc, val) => acc + val.pnl_pct, 0).toFixed(2);
+    const wr = validClosed.length > 0 ? ((wins.length / validClosed.length) * 100).toFixed(1) : 0;
+    const totalPnl = validClosed.reduce((acc, val) => acc + (val.pnl_pct || val.pnl_yuzde || 0), 0).toFixed(2);
     
-    const grossProfit = wins.reduce((acc, val) => acc + val.pnl_pct, 0);
-    const grossLoss = Math.abs(losses.reduce((acc, val) => acc + val.pnl_pct, 0));
+    const grossProfit = wins.reduce((acc, val) => acc + (val.pnl_pct || val.pnl_yuzde || 0), 0);
+    const grossLoss = Math.abs(losses.reduce((acc, val) => acc + (val.pnl_pct || val.pnl_yuzde || 0), 0));
     const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : 0);
     
     setStats({ 
-      transactions: txs.closed.length, 
-      active: txs.active.length,
+      transactions: validClosed.length, 
+      active: validActive.length,
       winRate: wr, 
       pnl: totalPnl,
-      profitFactor
+      profitFactor,
+      filteredCount: eliminated.length
     });
   };
 
@@ -133,15 +140,26 @@ export default function Dashboard() {
             {/* Version Switcher Buttons */}
             <div className="flex flex-wrap items-center bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner gap-1">
               <button
-                onClick={() => handleVersionChange('v5_4')}
+                onClick={() => handleVersionChange('v5_5')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                  version === 'v5_4'
+                  version === 'v5_5'
                     ? 'bg-[#F0B90B] text-black shadow-lg shadow-[#F0B90B]/20'
                     : 'text-gray-400 hover:text-gray-200'
                 }`}
               >
-                <Zap size={14} className={version === 'v5_4' ? 'text-black' : 'text-[#F0B90B]'} />
-                V5.4 Canlı (Optimize)
+                <Zap size={14} className={version === 'v5_5' ? 'text-black' : 'text-[#F0B90B]'} />
+                V5.5 Canlı (Maks PnL)
+              </button>
+              <button
+                onClick={() => handleVersionChange('v5_4')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                  version === 'v5_4'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                <ShieldAlert size={14} />
+                V5.4 Canlı (Dinamik SMC)
               </button>
               <button
                 onClick={() => handleVersionChange('v5_3')}
@@ -163,7 +181,7 @@ export default function Dashboard() {
                 }`}
               >
                 <Target size={14} className={version === 'v5_4_backtest' ? 'text-white' : 'text-purple-400'} />
-                V5.4 Backtest (2-16 Ekim, 30 Coin)
+                14G Backtest (30 Coin)
               </button>
             </div>
           </div>
@@ -196,25 +214,46 @@ export default function Dashboard() {
       </div>
 
       {/* Version Status Comparison Banner */}
-      {version === 'v5_4' && (
+      {version === 'v5_5' && (
         <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(16,185,129,0.05)]">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse"></div>
             <div>
               <div className="text-xs font-black text-emerald-300">
-                ⚡ V5.4 CANLI OPTİMİZE GÖRÜNÜMÜ AKTİF
+                ⚡ V5.5 CANLI (MAKSİMUM PNL) GÖRÜNÜMÜ AKTİF
               </div>
               <div className="text-[11px] text-emerald-400/80 mt-0.5">
-                4H Makro Ayı Trend Filtresi, %1.50 FVG Tavanı ve %0.70 Sıkılaştırılmış Hard Stop uygulanmıştır. 22 riskli işlem filtrelendi.
+                ADX Testere Kalkanı, 4H Makro Ayı Trend Filtresi, %0.70 Hard Stop ve Dinamik Trailing aktif. {stats.filteredCount || 0} riskli işlem elendi.
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[11px] font-mono text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded font-black">
-              PF: 2.41 (+1.27)
+              PF: {stats.profitFactor}
             </span>
             <span className="text-[11px] font-mono text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded font-black">
-              4.5x PnL KAZANCI
+              MAKSİMUM KAZANÇ PROFİLİ
+            </span>
+          </div>
+        </div>
+      )}
+
+      {version === 'v5_4' && (
+        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(59,130,246,0.05)]">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-blue-400"></div>
+            <div>
+              <div className="text-xs font-black text-blue-300">
+                🛡️ V5.4 CANLI DİNAMİK SMC GÖRÜNÜMÜ AKTİF
+              </div>
+              <div className="text-[11px] text-blue-400/80 mt-0.5">
+                4H Makro Ayı Trend Filtresi, %1.50 FVG Tavanı ve %0.70 Sıkılaştırılmış Hard Stop uygulanmıştır. {stats.filteredCount || 0} riskli işlem elendi.
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] font-mono text-blue-300 bg-blue-500/20 border border-blue-500/30 px-2.5 py-1 rounded font-black">
+              PF: {stats.profitFactor}
             </span>
           </div>
         </div>
