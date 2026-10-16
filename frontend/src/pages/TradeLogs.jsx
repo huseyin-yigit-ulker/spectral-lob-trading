@@ -20,6 +20,35 @@ export default function TradeLogs() {
   const [version, setVersion] = useState('v5_4');
   const [showFiltered, setShowFiltered] = useState(false);
   const [rawLogs, setRawLogs] = useState([]);
+  const [backtestLogs, setBacktestLogs] = useState([]);
+
+  const processBacktest = (bt) => {
+    if (!bt) return;
+    const trades = bt.map(t => {
+      const ms = parseUtcDate(t.cikis_zaman).getTime() - parseUtcDate(t.giris_zaman).getTime();
+      const sure_dk = Math.max(0, Math.floor(ms / 60000));
+      return {
+        id: t.id,
+        sembol: t.sembol,
+        yön: t.tip,
+        status: 'CLOSED',
+        giris_zaman: t.giris_zaman,
+        cikis_zaman: t.cikis_zaman,
+        giris_fiyat: Number(t.giris_fiyat),
+        cikis_fiyat: Number(t.cikis_fiyat),
+        pnl_yuzde: Number(t.pnl_yuzde),
+        win: Boolean(t.win),
+        fvg_depth: Number(t.fvg_depth),
+        btc_regime: t.btc_regime,
+        entry_reason: t.entry_reason,
+        exit_reason: t.cikis_nedeni,
+        sure_str: sure_dk < 60 ? `${sure_dk} dk` : `${Math.floor(sure_dk / 60)}s ${sure_dk % 60}d`,
+        version: 'V5.4 Backtest',
+        is_filtered: false
+      };
+    });
+    setAllReconstructedTrades(trades);
+  };
 
   const processLogs = (data, ver) => {
     if (!data) return;
@@ -32,8 +61,19 @@ export default function TradeLogs() {
     const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: true });
     if (data) {
       setRawLogs(data);
-      processLogs(data, version);
+      if (version !== 'v5_4_backtest') {
+        processLogs(data, version);
+      }
     }
+
+    const { data: btData } = await supabase.from('backtest_trades').select('*').order('giris_zaman', { ascending: false });
+    if (btData) {
+      setBacktestLogs(btData);
+      if (version === 'v5_4_backtest') {
+        processBacktest(btData);
+      }
+    }
+
     setLoading(false);
   };
 
@@ -45,7 +85,11 @@ export default function TradeLogs() {
 
   const handleVersionChange = (newVer) => {
     setVersion(newVer);
-    processLogs(rawLogs, newVer);
+    if (newVer === 'v5_4_backtest') {
+      processBacktest(backtestLogs);
+    } else {
+      processLogs(rawLogs, newVer);
+    }
   };
 
   const filteredTrades = useMemo(() => {
@@ -107,7 +151,7 @@ export default function TradeLogs() {
         {/* Version Switcher & Segmented Period Filter */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Version Switcher */}
-          <div className="flex bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner">
+          <div className="flex flex-wrap items-center bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner gap-1">
             <button
               onClick={() => handleVersionChange('v5_4')}
               className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
@@ -117,7 +161,7 @@ export default function TradeLogs() {
               }`}
             >
               <Zap size={13} className={version === 'v5_4' ? 'text-black' : 'text-[#F0B90B]'} />
-              V5.4 PROD (Optimize)
+              V5.4 Canlı (Optimize)
             </button>
             <button
               onClick={() => handleVersionChange('v5_3')}
@@ -129,6 +173,17 @@ export default function TradeLogs() {
             >
               <Clock size={13} />
               V5.3 Canlı (Baseline)
+            </button>
+            <button
+              onClick={() => handleVersionChange('v5_4_backtest')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                version === 'v5_4_backtest' 
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              <Target size={13} className={version === 'v5_4_backtest' ? 'text-white' : 'text-purple-400'} />
+              V5.4 Backtest (30 Coin)
             </button>
           </div>
 
