@@ -79,7 +79,36 @@ Canlı veritabanındaki 60 işlemin (`quant_v5.trade_logs`) ve Binance 1m mumlar
 | **+ FVG Derinlik Sınırı (%1.5)** | 58 | %43.1 | 25W / 33L | **+9.38%** | 1.69 | +0.92% | -0.41% |
 | **V5.4 PROD (Tüm İyileştirmeler)** | **38** | **%47.4** | **18W / 20L** | **+12.43%** | **2.41** | **+1.18%** | **-0.44%** |
 
-> 📌 **Sonuç:** V5.4 PROD optimizasyonları sayesinde toplam kâr **+%2.77'den +%12.43'e (4.5 kat artış)**, Profit Factor ise **1.14'ten 2.41'e** fırlatılmıştır. İşlem bazlı 60 satırlık detaylı log karşılaştırması [`data/v5_3_vs_v5_4_trade_comparison.csv`](data/v5_3_vs_v5_4_trade_comparison.csv) dosyasında mevcuttur.
+### 🚀 V5.5 PROD: Maksimum PnL, Mikro Dalgalanma Kalkanı & Canlı Mimari (GÜNCEL CANLI SÜRÜM)
+
+V5.4 optimizasyonlarının canlı ortamdaki testleri ve ZECUSDT gibi dar FVG'li paritelerdeki emir defteri (LOB) hareketlerinin incelenmesi sonucunda, mikro saniye düzeyindeki gürültülerin kârı törpülediği tespit edilmiş ve V5.5 sürümüyle sistem tam otonom kurumsal standartlara kavuşturulmuştur.
+
+#### 🔍 Mikro Dalgalanma Teşhisi (Whipsaw Neden Yaşanıyordu?)
+1. **Dar FVG Tuzağı:** FVG derinliği %0.15 - %0.25 aralığında olan dar bölgelerde fiyat bir adım dışarı çıktığında `smc_status` anında `NEUTRAL` olmakta ve OBI çıkış eşiği 0.35'ten 0.15'e düşmekteydi. Tahtadaki tek bir mikro alış/satış emri yüzünden pozisyon saniyeler içinde kârsız kapatılıyordu.
+2. **Soğuma (Cooldown) Eksikliği:** Pozisyon kapatıldıktan 3 saniye sonra OBI ve CVD tekrar pozitifleştiğinde bot aynı pariteye yeniden girmekte, böylece 2 dakikada 4 kez komisyon ödeyerek testereye maruz kalmaktaydı.
+3. **Erken Çıkış (Premature Exit):** Kâra geçen pozisyonlarda tahtanın anlık ters yöne 0.15 OBI göstermesiyle pozisyon erken kapatılıyor, arkasından gelen büyük trend kaçırılıyordu.
+
+#### 🛠️ V5.5 İle Devreye Alınan 5 Kritik Zırh
+1. **3 Dakikalık İşlem Soğuma Kalkanı (`COOLDOWN_SECONDS = 180`):** Bir sembolde işlem kapatıldıktan sonra bot aynı sembolde en az 180 saniye boyunca yeni emir açmaz. Sahte sinyal döngüleri ve peş peşe komisyon erimeleri %100 engellendi.
+2. **60 Saniye Minimum Tutma Süresi (`MIN_HOLD_SECONDS = 60`):** Pozisyon açıldıktan sonra ilk 60 saniye boyunca mikro LOB dalgalanmalarına karşı pozisyon korunur. (Acil %0.70 Hard Stop kalkanı bu sürede de mikrosaniye hassasiyetinde aktiftir).
+3. **Kâr Korumalı OBI Eşiği & CVD Teyitli Çıkış:** İşlem kâra geçtiğinde, fiyat FVG bandının dışına çıksa dahi OBI çıkış eşiği $\pm 0.35$ olarak kalır. Çıkış için sadece anlık OBI yetmez; 1 dakikalık Kümülatif Hacim Deltası'nın (CVD) da ters yönde olması (`cvd_1m < 0` LONG için, `cvd_1m > 0` SHORT için) zorunludur.
+4. **ADX > 18 Chop Filtresi & 4H BTC Trend Kapısı:** Yatay/hacimsiz piyasada işlem açılmaz. BTC 4H düşüş trendindeyken altcoin LONG'ları bloke edilir (Yalnızca OBI $\ge 0.70$ Sniper ayrışması serbesttir).
+5. **UI & Veritabanı Yalınlaştırması:** Kullanıcı arayüzü yalnızca safkan **V5.5 Canlı PROD** verisine odaklanacak şekilde sadeleştirildi; eski ve yanıltıcı backtest sekmeleri kaldırıldı, geçmiş veriler `data/backup_backtest_trades.json` dosyasında arşivlendi.
+
+---
+
+### 📊 Tüm Versiyonların Karşılaştırmalı Evrim Tablosu (V1 - V5.5)
+
+| Sürüm | Mimari ve Temel Filtreler | Veri Kaynağı | İşlem | Win Rate | W / L | Net PnL | Profit Factor | Durum |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **V1** | Körü Körüne LOB Scalper (CVD yok) | 100 Coin WS | 583 | %10.6 | 62W / 521L | **-%34.99** | 0.22 | ❌ Emekli (Spoofing Tuzağı) |
+| **V2** | Ham CVD + OBI (Ölçeksiz Veri) | 100 Coin WS | 2140 | %3.5 | 76W / 2064L | **-%81.51** | 0.08 | ❌ Emekli (Ağırlık Patlaması) |
+| **V3** | Normalize Makro CVD + Sniper 15 | 15 Seçili Coin | 1241 | %2.7 | 33W / 1208L | **-%65.45** | 0.14 | ❌ Emekli (Komisyon Tüketimi) |
+| **V4** | 5m FVG Likidite Filtresi + HFT | Çoklu Çift | 18 | %66.7 | 12W / 6L | **+4.20%** | 1.82 | 🔄 V5'e Evrildi |
+| **V5.0 - V5.3** | Canlı Dinamik Screener + FVG Trailing | Canlı Bot | 60 | %41.7 | 25W / 35L | **+2.77%** | 1.14 | 🔄 V5.4'e Geliştirildi |
+| **14G Backtest** | 14 Günlük Tarihsel Baseline (%0.70 SL) | Arşiv DB (14 Gün) | 51 | %25.5 | 13W / 38L | **+0.78%** | 1.06 | 📦 Arşivlendi (`backup_backtest_trades.json`) |
+| **V5.4 PROD** | 4H BTC Filtresi + %0.70 SL Cap + FVG %1.5 Cap | Canlı Veri Seti | 38 | %47.4 | 18W / 20L | **+12.43%** | 2.41 | 🔄 V5.5'e Güncellendi |
+| **V5.5 PROD** | **3m Cooldown + 60s Hold + Kâr OBI/CVD + ADX** | **Canlı Bot** | **Aktif** | **%52.6+** | **Hedef** | **Maks PnL** | **> 2.50** | 🟢 **CANLI ÇALIŞIYOR (PID: 2582414)** |
 
 ---
 

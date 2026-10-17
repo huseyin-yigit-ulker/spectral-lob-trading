@@ -10,50 +10,9 @@ export default function Dashboard() {
   const [closedTransactions, setClosedTransactions] = useState([]);
   const [activeTransactions, setActiveTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [version, setVersion] = useState('v5_5'); // 'v5_5' (Maks PnL PROD), 'v5_4' (Dinamik SMC), 'v5_3' (Baseline)
+  const [version] = useState('v5_5');
   const [rawLogs, setRawLogs] = useState([]);
-  const [backtestLogs, setBacktestLogs] = useState([]);
   const { btcRegime } = useLive() || {};
-
-  const processBacktest = (bt) => {
-    if (!bt || bt.length === 0) return;
-    const closed = bt.map(t => ({
-      sembol: t.sembol,
-      tip: t.tip,
-      entry_time: t.giris_zaman,
-      exit_time: t.cikis_zaman,
-      entry_price: Number(t.giris_fiyat),
-      exit_price: Number(t.cikis_fiyat),
-      pnl_pct: Number(t.pnl_yuzde),
-      win: Boolean(t.win),
-      fvg_depth: Number(t.fvg_depth),
-      btc_regime: t.btc_regime,
-      entry_reason: t.entry_reason,
-      exit_reason: t.cikis_nedeni,
-      version: 'Backtest'
-    }));
-    // Sort DESC
-    closed.sort((a, b) => new Date(b.exit_time) - new Date(a.exit_time));
-    setClosedTransactions(closed);
-    setActiveTransactions([]);
-    
-    const wins = closed.filter(t => t.win);
-    const losses = closed.filter(t => !t.win);
-    const wr = closed.length > 0 ? ((wins.length / closed.length) * 100).toFixed(1) : 0;
-    const totalPnl = closed.reduce((acc, val) => acc + val.pnl_pct, 0).toFixed(2);
-    const grossProfit = wins.reduce((acc, val) => acc + val.pnl_pct, 0);
-    const grossLoss = Math.abs(losses.reduce((acc, val) => acc + val.pnl_pct, 0));
-    const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : 0);
-    
-    setStats({
-      transactions: closed.length,
-      active: 0,
-      winRate: wr,
-      pnl: totalPnl,
-      profitFactor,
-      filteredCount: 0
-    });
-  };
 
   const processLogs = (logs, ver) => {
     if (!logs || logs.length === 0) return;
@@ -96,21 +55,7 @@ export default function Dashboard() {
         
       if (logsData) {
         setRawLogs(logsData);
-        if (version !== 'v5_4_backtest') {
-          processLogs(logsData, version);
-        }
-      }
-
-      // Backtest tablosunu da asenkron cek
-      const { data: btData } = await supabase
-        .from('backtest_trades')
-        .select('*')
-        .order('giris_zaman', { ascending: true });
-      if (btData) {
-        setBacktestLogs(btData);
-        if (version === 'v5_4_backtest') {
-          processBacktest(btData);
-        }
+        processLogs(logsData, 'v5_5');
       }
 
       setLoading(false);
@@ -121,68 +66,16 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Versiyon degistiginde aninda tekrar hesapla
-  const handleVersionChange = (newVer) => {
-    setVersion(newVer);
-    if (newVer === 'v5_4_backtest') {
-      processBacktest(backtestLogs);
-    } else {
-      processLogs(rawLogs, newVer);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-[#1f2937] pb-4 gap-4">
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <h2 className="text-2xl font-black text-gray-100 tracking-tight">SMC Terminal <span className="text-[#F0B90B]">V5</span></h2>
-            {/* Version Switcher Buttons */}
-            <div className="flex flex-wrap items-center bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner gap-1">
-              <button
-                onClick={() => handleVersionChange('v5_5')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                  version === 'v5_5'
-                    ? 'bg-[#F0B90B] text-black shadow-lg shadow-[#F0B90B]/20'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
-              >
-                <Zap size={14} className={version === 'v5_5' ? 'text-black' : 'text-[#F0B90B]'} />
-                V5.5 Canlı (Maks PnL)
-              </button>
-              <button
-                onClick={() => handleVersionChange('v5_4')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                  version === 'v5_4'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
-              >
-                <ShieldAlert size={14} />
-                V5.4 Canlı (Dinamik SMC)
-              </button>
-              <button
-                onClick={() => handleVersionChange('v5_3')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                  version === 'v5_3'
-                    ? 'bg-[#2B3139] text-[#F0B90B] shadow-md'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
-              >
-                <Clock size={14} />
-                V5.3 Canlı (Baseline)
-              </button>
-              <button
-                onClick={() => handleVersionChange('v5_4_backtest')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                  version === 'v5_4_backtest'
-                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
-              >
-                <Target size={14} className={version === 'v5_4_backtest' ? 'text-white' : 'text-purple-400'} />
-                14G Backtest (30 Coin)
-              </button>
+            <h2 className="text-2xl font-black text-gray-100 tracking-tight">SMC Terminal <span className="text-[#F0B90B]">V5.5 PROD</span></h2>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0B0E11] border border-[#1f2937] shadow-inner">
+              <Zap size={14} className="text-[#F0B90B]" />
+              <span className="text-xs font-black text-gray-200">V5.5 Canlı (Maks PnL)</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </div>
           </div>
           <p className="text-sm text-gray-500 mt-1">High-Frequency Trading & Smart Money Concepts</p>
@@ -232,76 +125,7 @@ export default function Dashboard() {
               PF: {stats.profitFactor}
             </span>
             <span className="text-[11px] font-mono text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded font-black">
-              MAKSİMUM KAZANÇ PROFİLİ
-            </span>
-          </div>
-        </div>
-      )}
-
-      {version === 'v5_4' && (
-        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(59,130,246,0.05)]">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-blue-400"></div>
-            <div>
-              <div className="text-xs font-black text-blue-300">
-                🛡️ V5.4 CANLI DİNAMİK SMC GÖRÜNÜMÜ AKTİF
-              </div>
-              <div className="text-[11px] text-blue-400/80 mt-0.5">
-                4H Makro Ayı Trend Filtresi, %1.50 FVG Tavanı ve %0.70 Sıkılaştırılmış Hard Stop uygulanmıştır. {stats.filteredCount || 0} riskli işlem elendi.
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[11px] font-mono text-blue-300 bg-blue-500/20 border border-blue-500/30 px-2.5 py-1 rounded font-black">
-              PF: {stats.profitFactor}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {version === 'v5_3' && (
-        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <div>
-              <div className="text-xs font-black text-yellow-300">
-                📜 V5.3 CANLI BASELINE GÖRÜNÜMÜ AKTİF
-              </div>
-              <div className="text-[11px] text-yellow-400/80 mt-0.5">
-                Canlı botun geçmişte aldığı 60 işlemin ham gerçekleşme verileridir (Filtresiz ve gevşek %1.00 hard stop).
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[11px] font-mono text-yellow-300 bg-yellow-500/20 border border-yellow-500/30 px-2.5 py-1 rounded font-black">
-              PF: 1.14
-            </span>
-            <span className="text-[11px] font-mono text-yellow-300 bg-yellow-500/20 border border-yellow-500/30 px-2.5 py-1 rounded font-black">
-              ORİJİNAL HAM VERİ
-            </span>
-          </div>
-        </div>
-      )}
-
-      {version === 'v5_4_backtest' && (
-        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(168,85,247,0.05)]">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.8)] animate-pulse"></div>
-            <div>
-              <div className="text-xs font-black text-purple-300">
-                🔬 V5.4 KAPSAMLI GEÇMİŞ BACKTEST GÖRÜNÜMÜ AKTİF (2 - 16 EKİM 2026)
-              </div>
-              <div className="text-[11px] text-purple-300/80 mt-0.5">
-                Screener'daki en aktif 30 altcoin üzerinde 14 günlük 5m SMC Fair Value Gap simülasyonu. Veritabanı tablosu: <code className="text-purple-200 font-mono">quant_v5.backtest_trades</code>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[11px] font-mono text-purple-300 bg-purple-500/20 border border-purple-500/30 px-2.5 py-1 rounded font-black">
-              51 İŞLEM
-            </span>
-            <span className="text-[11px] font-mono text-purple-300 bg-purple-500/20 border border-purple-500/30 px-2.5 py-1 rounded font-black">
-              30 LİDER ALTCOİN
+              CANLI PROD SÜRÜMÜ
             </span>
           </div>
         </div>

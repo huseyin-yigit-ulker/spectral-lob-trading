@@ -45,7 +45,57 @@ Ajan neden hala çok sık fikir değiştiriyordu? Çünkü **Hafıza Kaybı (Amn
 * **Teşhis:** İşlemlerin %45'i BTC, ETH, BNB ve TRX'te gerçekleşti. Makas dar olsa da volatilite çok düşük olduğu için Ortalama Kâr %0.10'da kaldı. Ayriyeten STRK ve PENDLE gibi tahtalarda devasa Spoofing (sahte duvar) tuzakları botun Whipsaw yemesine (Ort. %-1.8 Zarar) neden oldu.
 * **Çözüm (Sniper):** Jupyter ile PnL analizi yapılarak, kırılımların trend yarattığı (Ortalama kârın %0.50'leri aştığı ve Win Rate'in >%50 olduğu) 15 altın coin tespit edildi. un_sniper_agent.py yazılarak bot sadece bu dürüst tahtalarda işlem yapmaya programlandı.
 
-### 🔵 Heuristic V4 (SMC + HFT Hybrid - Geliştirme Aşamasında)
+### 🔵 Heuristic V4 (SMC + HFT Hybrid)
 * **Problem:** V3 (Sniper) dürüst tahtaları bulsa da, teknik analizi (fiyat bağlamını) tamamen görmezden geldiği için fiyatın "Boşlukta" yaptığı rastgele HFT manipülasyonlarında Whipsaw yeme riski taşıyor.
 * **Mimari Değişiklik:** Sisteme 5 dakikalık (5m) Mum (Kline) verisi entegre edilerek Fair Value Gap (FVG) ve Order Block (OB) tespiti eklendi. OBI ve CVD mikro verileri, sadece fiyat bu 5m'lik Makro Likidite bölgelerine temas ettiğinde "Tetikleyici (Trigger)" olarak görev yapacak.
-* **Yeni Dosya:** scripts/run_smc_agent.py (Önceki versiyonlar korunarak tamamen yeni bir branch/dosya üzerinden geliştirildi).
+* **Dosya:** `scripts/run_smc_agent.py`
+* **Sonuç:** %39 Win Rate'ten %66.7'ye sıçrama.
+
+---
+
+## 🏆 V5: Çift Mikroservis & Dinamik Radar Mimarisi
+* **Screener (`scripts/market_screener.py`):** Binance Futures 150+ çifti 15 dakikada bir tarar; Volume > $150M ve Spread < %0.06 filtreleriyle en likit tahtaları seçer.
+* **Sniper (`scripts/run_dynamic_smc.py`):** JSON önbelleğini dinleyerek dinamik websocket kurar ve LOB mikro verilerini dinler.
+
+---
+
+## 💎 V5.2 & V5.3: SMC Yapısal OBI Dinamik Çıkış & Mum Teyitli SL
+* **SMC Dinamik OBI Çıkışı:** FVG bandı içindeyken OBI çıkış eşiği ±0.35; FVG kırıldığında ±0.15'e iner.
+* **Canlı Baseline Performansı:** 60 İşlem | %41.7 WR | 25W / 35L | +%2.77 Net PnL | Profit Factor: 1.14
+
+---
+
+## 📦 14 Günlük Baseline Backtest Arşivi (`data/backup_backtest_trades.json`)
+* **Veritabanı Tablosu:** `quant_v5.backtest_trades` (V5.5 geçişinde UI ve DB temizliği için yedeklenerek kaldırıldı).
+* **Zaman Aralığı:** 02.10.2026 08:20:00 UTC - 16.10.2026 16:50:00 UTC (14 Gün)
+* **Toplam İşlem:** 51
+* **Win Rate:** %25.49 (13 Kazanç / 38 Kayıp)
+* **Net Toplam PnL:** +%0.78
+* **Profit Factor:** 1.06
+* **Ortalama Kazanç:** +%1.03 | **Ortalama Kayıp:** -%0.33
+* **Çıkış Dağılımı:**
+  * Trailing SL: 24 işlem
+  * Structural SL: 21 işlem
+  * Hard SL (%0.70): 5 işlem
+  * Timeout (1.5h): 1 işlem
+* **Önemli Çıkarım:** Sabit stopların ve filtrelenmemiş yönlerin kârı törpülediği, 4H BTC filtresi ile FVG derinlik tavanının şart olduğu tespit edildi.
+
+---
+
+## 🔥 V5.4 PROD: 4H Trend Kapısı & %0.70 Stop Tavanı
+* **4H BTC Makro Trend Filtresi:** BTC 4H düşüş trendindeyken altcoin LONG'ları engellenir.
+* **Acil Hard Stop Cap (%0.70):** Uçurum zararlar engellendi.
+* **FVG Derinlik Üst Sınırı (%1.50):** Aşırı geniş ve sığ tahtalar elendi.
+* **Canlı Sonuç:** 38 İşlem | %47.4 WR | 18W / 20L | **+%12.43 Net PnL** | **Profit Factor: 2.41** (4.5 kat artış)
+
+---
+
+## 🚀 V5.5 PROD: Mikro Dalgalanma Zırhı & Tam Otonom Canlı Sürüm (AKTİF SÜRÜM)
+* **Kök Neden Teşhisi:** ZECUSDT gibi dar FVG paritelerinde fiyat FVG dışına çıkar çıkmaz OBI eşiğinin 0.35'ten 0.15'e düşmesi ve tahtadaki saniyelik bir tick yüzünden pozisyonun anında kapatılıp 3 saniye sonra tekrar girilmesi (Whipsaw döngüsü).
+* **1. 3-Dakika Cooldown (`COOLDOWN_SECONDS = 180`):** Pozisyon kapandıktan sonra aynı coinde 180 saniye bekleme şartı.
+* **2. 60-Saniye Minimum Tutma Süresi (`MIN_HOLD_SECONDS = 60`):** Pozisyon açılışındaki mikro LOB dalgalanmalarına karşı koruma (Acil %0.70 Hard Stop anında tetiklenmeye devam eder).
+* **3. Kâr Korumalı OBI Eşiği & CVD Teyidi:** Pozisyon kâra geçtiğinde OBI eşiği $\pm 0.35$'te sabit tutulur ve 1m CVD teyit vermedikçe işlem erken kapatılmaz.
+* **4. ADX > 18 Chop Kalkanı:** Hacimsiz piyasa testerelerinden korunma.
+* **5. UI & DB Temizliği:** Eski kafa karıştırıcı backtest sekmeleri kaldırıldı, UI doğrudan V5.5 canlı metriklere odaklandı.
+* **Canlı Süreç Durumu:** `scripts/run_dynamic_smc.py` PID 2582414 olarak aktif çalışıyor.
+

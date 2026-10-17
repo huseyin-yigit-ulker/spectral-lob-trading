@@ -20,39 +20,10 @@ export default function TradeLogs() {
   const [version, setVersion] = useState('v5_5');
   const [showFiltered, setShowFiltered] = useState(false);
   const [rawLogs, setRawLogs] = useState([]);
-  const [backtestLogs, setBacktestLogs] = useState([]);
 
-  const processBacktest = (bt) => {
-    if (!bt) return;
-    const trades = bt.map(t => {
-      const ms = parseUtcDate(t.cikis_zaman).getTime() - parseUtcDate(t.giris_zaman).getTime();
-      const sure_dk = Math.max(0, Math.floor(ms / 60000));
-      return {
-        id: t.id,
-        sembol: t.sembol,
-        yön: t.tip,
-        status: 'CLOSED',
-        giris_zaman: t.giris_zaman,
-        cikis_zaman: t.cikis_zaman,
-        giris_fiyat: Number(t.giris_fiyat),
-        cikis_fiyat: Number(t.cikis_fiyat),
-        pnl_yuzde: Number(t.pnl_yuzde),
-        win: Boolean(t.win),
-        fvg_depth: Number(t.fvg_depth),
-        btc_regime: t.btc_regime,
-        entry_reason: t.entry_reason,
-        exit_reason: t.cikis_nedeni,
-        sure_str: sure_dk < 60 ? `${sure_dk} dk` : `${Math.floor(sure_dk / 60)}s ${sure_dk % 60}d`,
-        version: 'Backtest',
-        is_filtered: false
-      };
-    });
-    setAllReconstructedTrades(trades);
-  };
-
-  const processLogs = (data, ver) => {
+  const processLogs = (data) => {
     if (!data) return;
-    const parsed = reconstructTrades(data, ver);
+    const parsed = reconstructTrades(data, 'v5_5');
     setAllReconstructedTrades(parsed.allTrades);
   };
 
@@ -61,19 +32,8 @@ export default function TradeLogs() {
     const { data } = await supabase.from('trade_logs').select('*').order('id', { ascending: true });
     if (data) {
       setRawLogs(data);
-      if (version !== 'v5_4_backtest') {
-        processLogs(data, version);
-      }
+      processLogs(data);
     }
-
-    const { data: btData } = await supabase.from('backtest_trades').select('*').order('giris_zaman', { ascending: false });
-    if (btData) {
-      setBacktestLogs(btData);
-      if (version === 'v5_4_backtest') {
-        processBacktest(btData);
-      }
-    }
-
     setLoading(false);
   };
 
@@ -82,15 +42,6 @@ export default function TradeLogs() {
     const interval = setInterval(fetchLogs, 15000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleVersionChange = (newVer) => {
-    setVersion(newVer);
-    if (newVer === 'v5_4_backtest') {
-      processBacktest(backtestLogs);
-    } else {
-      processLogs(rawLogs, newVer);
-    }
-  };
 
   // 1. Periyoda göre zaman filtresi
   const periodTrades = useMemo(() => {
@@ -177,57 +128,15 @@ export default function TradeLogs() {
         
         {/* Version Switcher & Segmented Period Filter */}
         <div className="flex flex-wrap items-center gap-3">
-          {/* Version Switcher */}
-          <div className="flex flex-wrap items-center bg-[#0B0E11] p-1 rounded-xl border border-[#1f2937] shadow-inner gap-1">
-            <button
-              onClick={() => handleVersionChange('v5_5')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                version === 'v5_5' 
-                  ? 'bg-[#F0B90B] text-black shadow-md' 
-                  : 'text-gray-400 hover:text-gray-200'
-              }`}
-            >
-              <Zap size={13} className={version === 'v5_5' ? 'text-black' : 'text-[#F0B90B]'} />
-              V5.5 Canlı (Maks PnL)
-            </button>
-            <button
-              onClick={() => handleVersionChange('v5_4')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                version === 'v5_4' 
-                  ? 'bg-blue-600 text-white shadow-md' 
-                  : 'text-gray-400 hover:text-gray-200'
-              }`}
-            >
-              <ShieldCheck size={13} />
-              V5.4 Canlı (Dinamik SMC)
-            </button>
-            <button
-              onClick={() => handleVersionChange('v5_3')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                version === 'v5_3' 
-                  ? 'bg-[#2B3139] text-[#F0B90B] shadow-md' 
-                  : 'text-gray-400 hover:text-gray-200'
-              }`}
-            >
-              <Clock size={13} />
-              V5.3 Canlı (Baseline)
-            </button>
-            <button
-              onClick={() => handleVersionChange('v5_4_backtest')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
-                version === 'v5_4_backtest' 
-                  ? 'bg-purple-600 text-white shadow-md' 
-                  : 'text-gray-400 hover:text-gray-200'
-              }`}
-            >
-              <Target size={13} className={version === 'v5_4_backtest' ? 'text-white' : 'text-purple-400'} />
-              14G Backtest (30 Coin)
-            </button>
+          {/* Active Version Badge */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0B0E11] border border-[#1f2937] shadow-inner">
+            <Zap size={14} className="text-[#F0B90B]" />
+            <span className="text-xs font-black text-gray-200">V5.5 Canlı PROD</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           </div>
 
           {/* Dinamik Elenen İşlemleri Gör / Gizle Butonu */}
-          {(version === 'v5_5' || version === 'v5_4') && (
-            <button
+          <button
               onClick={() => setShowFiltered(!showFiltered)}
               className={`px-3 py-2 rounded-xl text-xs font-black border transition-all flex items-center gap-1.5 ${
                 showFiltered 
@@ -241,7 +150,6 @@ export default function TradeLogs() {
                 <>👁️ Elenen ({filteredCount}) İşlemi Gör</>
               )}
             </button>
-          )}
 
           {/* Segmented Period Filter */}
           <div className="flex bg-[#121822] p-1 rounded-xl border border-[#1f2937] shadow-sm">
