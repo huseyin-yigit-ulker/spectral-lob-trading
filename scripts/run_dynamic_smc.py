@@ -203,7 +203,10 @@ def sync_signal_state(agent, prev_sig):
                     f"📊 <b>Giriş Tipi:</b> {'🎯 Sniper İstisnası' if agent.is_sniper else 'BTC Uyumlu Trend'}\n"
                     f"━━━━━━━━━━━━━━━━━━━━"
                 )
-            send_telegram_message(msg)
+            try:
+                send_telegram_message(msg)
+            except Exception as e:
+                pass
 
         # İşlem kapandıysa pozisyon değişkenlerini telegram ve supabase bildiriminden SONRA sıfırla
         if agent.internal_signal_state == 0 and prev_sig != 0:
@@ -483,14 +486,15 @@ async def binance_ws():
                                 elif k['i'] == '1m':
                                     close_p = float(k['c'])
                                     prev_sig = agent.internal_signal_state
-                                    # 1 Dakikalık Mum Kapanışı ile SL Kontrolü
+                                    # 1 Dakikalık Mum Kapanışı Onaylı SL / Trailing Çıkışı (Backtest ile Birebir Uyumlu)
+                                    # Mikro tik gürültüsüyle saniyelik komisyon erimelerini engeller, 1m kapanışı teyit eder
                                     if agent.internal_signal_state == 1 and agent.active_trade_sl and close_p <= agent.active_trade_sl:
                                         agent.internal_signal_state = 0
-                                        agent.exit_reason = "Teknik Stop-Loss (1m Mum Kapanışı)"
+                                        agent.exit_reason = "🎯 Trailing Stop (Kâr Koruma)" if agent.is_break_even else "Teknik Stop-Loss (1m Mum Kapanışı)"
                                         sync_signal_state(agent, prev_sig)
                                     elif agent.internal_signal_state == -1 and agent.active_trade_sl and close_p >= agent.active_trade_sl:
                                         agent.internal_signal_state = 0
-                                        agent.exit_reason = "Teknik Stop-Loss (1m Mum Kapanışı)"
+                                        agent.exit_reason = "🎯 Trailing Stop (Kâr Koruma)" if agent.is_break_even else "Teknik Stop-Loss (1m Mum Kapanışı)"
                                         sync_signal_state(agent, prev_sig)
                         
                         elif msg.get('e') == 'trade':
@@ -521,15 +525,15 @@ async def binance_ws():
                                         trail_sl = agent.entry_price * (1.0 - (agent.highest_pnl - 0.25) / 100)
                                         agent.active_trade_sl = min(agent.active_trade_sl or 999999, trail_sl)
                                 
-                                # Anlık Tick Seviyesinde Active SL / Trailing Çıkışı (1m kapanışı beklemeden anında çık)
+                                # Acil Hard Stop (%0.70): Ani çöküş / sert manipülasyonlara karşı anında tik seviyesinde korur
                                 prev_sig = agent.internal_signal_state
-                                if agent.internal_signal_state == 1 and agent.active_trade_sl and agent.current_price <= agent.active_trade_sl:
+                                if agent.internal_signal_state == 1 and agent.emergency_sl and agent.current_price <= agent.emergency_sl:
                                     agent.internal_signal_state = 0
-                                    agent.exit_reason = "🎯 Trailing Stop (Kâr Koruma)" if agent.is_break_even else "Teknik Stop-Loss (Anlık Fiyat)"
+                                    agent.exit_reason = "🚨 Acil Hard Stop (%0.70)"
                                     sync_signal_state(agent, prev_sig)
-                                elif agent.internal_signal_state == -1 and agent.active_trade_sl and agent.current_price >= agent.active_trade_sl:
+                                elif agent.internal_signal_state == -1 and agent.emergency_sl and agent.current_price >= agent.emergency_sl:
                                     agent.internal_signal_state = 0
-                                    agent.exit_reason = "🎯 Trailing Stop (Kâr Koruma)" if agent.is_break_even else "Teknik Stop-Loss (Anlık Fiyat)"
+                                    agent.exit_reason = "🚨 Acil Hard Stop (%0.70)"
                                     sync_signal_state(agent, prev_sig)
                             
                         elif msg.get('e') == 'depthUpdate':

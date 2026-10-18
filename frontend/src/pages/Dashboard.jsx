@@ -6,7 +6,7 @@ import PnlChart from '../components/Chart';
 import { useLive } from '../context/LiveContext';
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ transactions: 0, active: 0, winRate: 0, pnl: 0, profitFactor: 0, filteredCount: 0 });
+  const [stats, setStats] = useState({ transactions: 0, active: 0, winRate: 0, pnl: 0, profitFactor: 0 });
   const [closedTransactions, setClosedTransactions] = useState([]);
   const [activeTransactions, setActiveTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,6 @@ export default function Dashboard() {
     if (!logs || logs.length === 0) return;
     const txs = calculateTransactions(logs, ver);
     const validClosed = txs.closed.filter(t => !t.is_filtered);
-    const eliminated = txs.closed.filter(t => t.is_filtered);
     const validActive = txs.active.filter(t => !t.is_filtered);
 
     setClosedTransactions(validClosed);
@@ -39,8 +38,7 @@ export default function Dashboard() {
       active: validActive.length,
       winRate: wr, 
       pnl: totalPnl,
-      profitFactor,
-      filteredCount: eliminated.length
+      profitFactor
     });
   };
 
@@ -74,7 +72,7 @@ export default function Dashboard() {
             <h2 className="text-2xl font-black text-gray-100 tracking-tight">SMC Terminal <span className="text-[#F0B90B]">V5.5 PROD</span></h2>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0B0E11] border border-[#1f2937] shadow-inner">
               <Zap size={14} className="text-[#F0B90B]" />
-              <span className="text-xs font-black text-gray-200">V5.5 Canlı (Maks PnL)</span>
+              <span className="text-xs font-black text-gray-200">V5.5 Canlı PROD</span>
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </div>
           </div>
@@ -113,10 +111,10 @@ export default function Dashboard() {
             <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse"></div>
             <div>
               <div className="text-xs font-black text-emerald-300">
-                ⚡ V5.5 CANLI (MAKSİMUM PNL) GÖRÜNÜMÜ AKTİF
+                ⚡ V5.5 CANLI PROD (1M MUM KAPANIŞ ONAYLI SL & SABİT %0.70 ACİL STOP)
               </div>
               <div className="text-[11px] text-emerald-400/80 mt-0.5">
-                ADX Testere Kalkanı, 4H Makro Ayı Trend Filtresi, %0.70 Hard Stop ve Dinamik Trailing aktif. {stats.filteredCount || 0} riskli işlem elendi.
+                1 Dakikalık Mum Kapanış Onaylı SL, %0.70 Sabit Acil Hard Stop ve 4H Makro Trend Filtresi aktif.
               </div>
             </div>
           </div>

@@ -17,8 +17,7 @@ export default function TradeLogs() {
   const [loading, setLoading] = useState(true);
   const [activeTrade, setActiveTrade] = useState(null);
   const [period, setPeriod] = useState('all');
-  const [version, setVersion] = useState('v5_5');
-  const [showFiltered, setShowFiltered] = useState(false);
+  const [version] = useState('v5_5');
   const [rawLogs, setRawLogs] = useState([]);
 
   const processLogs = (data) => {
@@ -59,26 +58,14 @@ export default function TradeLogs() {
     });
   }, [allReconstructedTrades, period]);
 
-  // 2. Seçili periyotta filtrelenen (elenen) işlem sayısı (DİNAMİK)
-  const filteredCount = useMemo(() => {
-    return periodTrades.filter(t => t.is_filtered).length;
+  // 2. Ekranda gösterilecek nihai işlemler (Yalnızca geçerli canlı işlemler)
+  const displayedTrades = useMemo(() => {
+    return periodTrades.filter(t => !t.is_filtered);
   }, [periodTrades]);
 
-  // 3. Ekranda gösterilecek nihai işlemler (showFiltered kapalıysa elenenler gizlenir)
-  const displayedTrades = useMemo(() => {
-    if (!showFiltered && (version === 'v5_5' || version === 'v5_4')) {
-      return periodTrades.filter(t => !t.is_filtered);
-    }
-    return periodTrades;
-  }, [periodTrades, showFiltered, version]);
-
-  // 4. Dinamik İstatistikler (Seçili filtreye ve versiyona göre anında güncellenir)
+  // 3. Dinamik İstatistikler
   const periodStats = useMemo(() => {
-    // showFiltered açıksa tüm ekrandaki işlemler, kapalıysa yalnızca filtreden geçen gerçek işlemler
-    const targetTrades = showFiltered
-      ? periodTrades
-      : periodTrades.filter(t => !t.is_filtered);
-
+    const targetTrades = displayedTrades;
     const closed = targetTrades.filter(t => t.status === 'CLOSED');
     const active = targetTrades.filter(t => t.status === 'OPEN');
     const wins = closed.filter(t => t.pnl_yuzde > 0);
@@ -86,29 +73,18 @@ export default function TradeLogs() {
     const totalPnl = closed.reduce((acc, t) => acc + (t.pnl_yuzde || 0), 0);
     const winRate = closed.length > 0 ? (wins.length / closed.length) * 100 : 0;
 
-    // Filtreleme sayesinde engellenen toplam zarar
-    const eliminated = periodTrades.filter(t => t.is_filtered && t.status === 'CLOSED');
-    const preventedLoss = eliminated.reduce((acc, t) => acc + (t.pnl_yuzde < 0 ? Math.abs(t.pnl_yuzde) : 0), 0);
-
     return {
       total: targetTrades.length,
       closedCount: closed.length,
       activeCount: active.length,
-      filteredCount,
-      preventedLoss: preventedLoss.toFixed(2),
       wins: wins.length,
       losses: losses.length,
       winRate: winRate.toFixed(1),
       totalPnl: totalPnl.toFixed(2),
     };
-  }, [periodTrades, showFiltered, filteredCount]);
+  }, [displayedTrades]);
 
-  const versionLabel = useMemo(() => {
-    if (version === 'v5_5') return 'V5.5';
-    if (version === 'v5_4') return 'V5.4';
-    if (version === 'v5_3') return 'V5.3';
-    return 'Backtest';
-  }, [version]);
+  const versionLabel = 'V5.5';
 
   return (
     <div className="space-y-6 relative h-full flex flex-col">
@@ -135,22 +111,6 @@ export default function TradeLogs() {
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           </div>
 
-          {/* Dinamik Elenen İşlemleri Gör / Gizle Butonu */}
-          <button
-              onClick={() => setShowFiltered(!showFiltered)}
-              className={`px-3 py-2 rounded-xl text-xs font-black border transition-all flex items-center gap-1.5 ${
-                showFiltered 
-                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-sm' 
-                  : 'bg-[#121822] text-gray-300 border-[#1f2937] hover:text-white hover:border-[#F0B90B]/50'
-              }`}
-            >
-              {showFiltered ? (
-                <>✓ Filtrelenenleri Gizle ({filteredCount})</>
-              ) : (
-                <>👁️ Elenen ({filteredCount}) İşlemi Gör</>
-              )}
-            </button>
-
           {/* Segmented Period Filter */}
           <div className="flex bg-[#121822] p-1 rounded-xl border border-[#1f2937] shadow-sm">
             <div className="flex bg-[#0B0E11] p-0.5 rounded-lg border border-[#1f2937]">
@@ -171,23 +131,6 @@ export default function TradeLogs() {
           </div>
         </div>
       </div>
-
-      {/* Dinamik Bilgilendirme ve Filtre Kalkanı Bildirimi */}
-      {showFiltered && filteredCount > 0 && (
-        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-purple-200">
-          <div className="flex items-center gap-2">
-            <AlertTriangle size={16} className="text-purple-400 shrink-0" />
-            <span>
-              <strong>Ham Sinyal Görünümü:</strong> {versionLabel} kalkanı tarafından elenen {filteredCount} adet riskli işlem listeye dahil edildi.
-            </span>
-          </div>
-          {Number(periodStats.preventedLoss) > 0 && (
-            <span className="font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-bold shrink-0">
-              🛡️ +%{periodStats.preventedLoss} Kayıp Önlendi
-            </span>
-          )}
-        </div>
-      )}
 
       {/* Period Quick Stats Summary Bar (Tamamen Dinamik) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
