@@ -23,21 +23,29 @@ export default function Dashboard() {
     setClosedTransactions(validClosed);
     setActiveTransactions(validActive);
     
-    const wins = validClosed.filter(t => t.win);
-    const losses = validClosed.filter(t => !t.win);
-    
-    const wr = validClosed.length > 0 ? ((wins.length / validClosed.length) * 100).toFixed(1) : 0;
-    const totalPnl = validClosed.reduce((acc, val) => acc + (val.pnl_pct || val.pnl_yuzde || 0), 0).toFixed(2);
-    
-    const grossProfit = wins.reduce((acc, val) => acc + (val.pnl_pct || val.pnl_yuzde || 0), 0);
-    const grossLoss = Math.abs(losses.reduce((acc, val) => acc + (val.pnl_pct || val.pnl_yuzde || 0), 0));
-    const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : 0);
-    
+    const MAKER_FEE = 0.04;
+    const totalBrutPnl = validClosed.reduce((acc, val) => acc + (val.brut_pnl !== undefined ? val.brut_pnl : (val.pnl_pct || val.pnl_yuzde || 0)), 0);
+    const totalCommission = validClosed.length * MAKER_FEE;
+    const totalNetPnl = totalBrutPnl - totalCommission;
+
+    const netWins = validClosed.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0);
+    const brutWins = validClosed.filter(t => (t.brut_pnl !== undefined ? t.brut_pnl : t.pnl_yuzde) > 0);
+
+    const netWr = validClosed.length > 0 ? ((netWins.length / validClosed.length) * 100).toFixed(1) : '0.0';
+    const brutWr = validClosed.length > 0 ? ((brutWins.length / validClosed.length) * 100).toFixed(1) : '0.0';
+
+    const netGrossProfit = netWins.reduce((acc, t) => acc + ((t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0 ? (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) : 0), 0);
+    const netGrossLoss = Math.abs(validClosed.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) < 0).reduce((acc, t) => acc + (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)), 0));
+    const profitFactor = netGrossLoss > 0 ? (netGrossProfit / netGrossLoss).toFixed(2) : (netGrossProfit > 0 ? '∞' : '0.00');
+
     setStats({ 
       transactions: validClosed.length, 
       active: validActive.length,
-      winRate: wr, 
-      pnl: totalPnl,
+      winRate: netWr,
+      brutWinRate: brutWr,
+      pnl: totalNetPnl.toFixed(2),
+      brutPnl: totalBrutPnl.toFixed(2),
+      commission: totalCommission.toFixed(2),
       profitFactor
     });
   };
@@ -111,10 +119,10 @@ export default function Dashboard() {
             <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse"></div>
             <div>
               <div className="text-xs font-black text-emerald-300">
-                ⚡ V5.5 CANLI PROD (1M MUM KAPANIŞ ONAYLI SL & SABİT %0.70 ACİL STOP)
+                ⚡ V5.5 CANLI PROD (1M MUM KAPANIŞ ONAYLI SL & LİMİT EMİR KOMİSYONLU NET GETİRİ)
               </div>
               <div className="text-[11px] text-emerald-400/80 mt-0.5">
-                1 Dakikalık Mum Kapanış Onaylı SL, %0.70 Sabit Acil Hard Stop ve 4H Makro Trend Filtresi aktif.
+                Limit (Maker) emir ücreti (Giriş %0.02 + Çıkış %0.02 = %0.04) net getiriye yansıtılmıştır. Hem Brüt hem Net PnL eşzamanlı izlenir.
               </div>
             </div>
           </div>
@@ -195,13 +203,44 @@ export default function Dashboard() {
         </div>
       </div>
       
-      {/* Top Metrics Row */}
+      {/* Top Metrics Row: Dual Net & Brüt View */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <StatCard icon={<Activity size={20} />} label="Net PnL" value={`${stats.pnl > 0 ? '+' : ''}${stats.pnl}%`} color={stats.pnl >= 0 ? "green" : "red"} />
-        <StatCard icon={<Zap size={20} />} label="Win Rate" value={`${stats.winRate}%`} color="yellow" />
-        <StatCard icon={<TrendingUp size={20} />} label="Profit Factor" value={stats.profitFactor} color="blue" />
-        <StatCard icon={<Target size={20} />} label="Closed Trades" value={stats.transactions} color="purple" />
-        <StatCard icon={<Layers size={20} />} label="Active Positions" value={stats.active} color="yellow" pulse={stats.active > 0} />
+        <StatCard 
+          icon={<Activity size={20} />} 
+          label="Net PnL (Limit)" 
+          value={`${stats.pnl > 0 ? '+' : ''}${stats.pnl}%`} 
+          subValue={`Brüt: ${stats.brutPnl > 0 ? '+' : ''}${stats.brutPnl}%`} 
+          color={stats.pnl >= 0 ? "green" : "red"} 
+        />
+        <StatCard 
+          icon={<TrendingUp size={20} />} 
+          label="Brüt PnL (Ham)" 
+          value={`${stats.brutPnl > 0 ? '+' : ''}${stats.brutPnl}%`} 
+          subValue={`Komisyon: -%${stats.commission}`} 
+          color={stats.brutPnl >= 0 ? "green" : "red"} 
+        />
+        <StatCard 
+          icon={<Zap size={20} />} 
+          label="Win Rate" 
+          value={`%${stats.winRate}`} 
+          subValue={`Brüt WR: %${stats.brutWinRate}`} 
+          color="yellow" 
+        />
+        <StatCard 
+          icon={<Layers size={20} />} 
+          label="Profit Factor" 
+          value={stats.profitFactor} 
+          subValue="Net Kâr Faktörü" 
+          color="blue" 
+        />
+        <StatCard 
+          icon={<Target size={20} />} 
+          label="İşlemler" 
+          value={`${stats.transactions} Kapalı`} 
+          subValue={stats.active > 0 ? `⚡ ${stats.active} Aktif Pozisyon` : "Aktif Pozisyon Yok"} 
+          color="purple" 
+          pulse={stats.active > 0} 
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -325,7 +364,7 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({ icon, label, value, color, pulse }) {
+function StatCard({ icon, label, value, subValue, color, pulse }) {
   const colorMap = {
     blue: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     green: 'bg-green-500/10 text-green-400 border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]',
@@ -335,10 +374,11 @@ function StatCard({ icon, label, value, color, pulse }) {
   };
   return (
     <div className={`bg-[#0b0e14] p-5 rounded-xl border border-[#1f2937] flex items-center gap-4 hover:border-gray-600 transition-colors ${pulse ? 'animate-pulse' : ''}`}>
-      <div className={`p-3 rounded-lg border ${colorMap[color]}`}>{icon}</div>
-      <div>
+      <div className={`p-3 rounded-lg border shrink-0 ${colorMap[color]}`}>{icon}</div>
+      <div className="min-w-0">
         <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">{label}</p>
         <p className={`text-2xl font-black ${color === 'red' ? 'text-red-400' : color === 'green' ? 'text-green-400' : color === 'yellow' ? 'text-[#F0B90B]' : 'text-gray-100'}`}>{value}</p>
+        {subValue && <p className="text-[11px] text-gray-400 font-mono mt-0.5 truncate">{subValue}</p>}
       </div>
     </div>
   );

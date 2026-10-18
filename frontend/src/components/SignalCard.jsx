@@ -47,17 +47,22 @@ export default function SignalCard({ trade, onClick }) {
           </div>
         </div>
 
-        {/* Status Badge */}
+        {/* Status Badge: Dual Net & Brut View */}
         <div className="shrink-0 flex flex-col items-end gap-1">
           {isClosed ? (
-            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold border font-mono ${
-              isWin 
-                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' 
-                : 'bg-rose-500/15 text-rose-400 border-rose-500/30'
-            }`}>
-              <CheckCircle2 size={12} />
-              {pnlFormatted}
-            </span>
+            <div className="flex flex-col items-end">
+              <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-bold border font-mono ${
+                (trade.net_pnl !== undefined ? trade.net_pnl : (trade.pnl_yuzde - 0.04)) > 0 
+                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' 
+                  : 'bg-rose-500/15 text-rose-400 border-rose-500/30'
+              }`}>
+                <CheckCircle2 size={12} />
+                Net: {(trade.net_pnl !== undefined ? trade.net_pnl : (trade.pnl_yuzde - 0.04)) >= 0 ? '+' : ''}{(trade.net_pnl !== undefined ? trade.net_pnl : (trade.pnl_yuzde - 0.04)).toFixed(2)}%
+              </span>
+              <span className="text-[10px] text-gray-400 font-mono mt-0.5">
+                Brüt: {(trade.brut_pnl !== undefined ? trade.brut_pnl : trade.pnl_yuzde) >= 0 ? '+' : ''}{(trade.brut_pnl !== undefined ? trade.brut_pnl : trade.pnl_yuzde).toFixed(2)}% (Limit -%0.04)
+              </span>
+            </div>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />

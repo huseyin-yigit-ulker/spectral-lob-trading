@@ -175,10 +175,19 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
         pos.version = 'V5.3';
       }
 
+      // Komisyon Hesabı: Limit (Maker) Emir için Giriş %0.02 + Çıkış %0.02 = %0.04
+      const MAKER_FEE_PCT = 0.04;
+      const brutPnl = pnlPct;
+      const netPnl = Number((brutPnl - MAKER_FEE_PCT).toFixed(3));
+
       pos.fiyat_fark = diff;
-      pos.pnl_yuzde = pnlPct;
-      pos.pnl_pct = pnlPct;
-      pos.win = pnlPct > 0;
+      pos.brut_pnl = brutPnl;
+      pos.net_pnl = netPnl;
+      pos.komisyon_pct = MAKER_FEE_PCT;
+      pos.pnl_yuzde = netPnl; // Birincil pnl net kârdır
+      pos.pnl_pct = netPnl;
+      pos.win = netPnl > 0;
+      pos.brut_win = brutPnl > 0;
       pos.tip = pos.yön;
       pos.entry_price = pos.giris_fiyat;
       pos.exit_price = pos.cikis_fiyat;
@@ -219,17 +228,27 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
   const allTrades = [...activeTrades, ...closedTrades].sort((a, b) => parseUtcDate(b.giris_zaman) - parseUtcDate(a.giris_zaman));
 
   // Istatistikler (Filtrelenmemis gercek islemler uzerinden)
-  let totalPnl = 0;
-  let wins = 0;
-  let losses = 0;
+  let totalNetPnl = 0;
+  let totalBrutPnl = 0;
+  let netWins = 0;
+  let brutWins = 0;
+  let netLosses = 0;
+  let brutLosses = 0;
   let filteredCount = 0;
   let preventedLossPnl = 0;
+  let validCount = 0;
 
   closedTrades.forEach(t => {
     if (!t.is_filtered) {
-      totalPnl += t.pnl_yuzde;
-      if (t.pnl_yuzde > 0) wins++;
-      else if (t.pnl_yuzde < 0) losses++;
+      validCount++;
+      const netVal = t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - 0.04);
+      const brutVal = t.brut_pnl !== undefined ? t.brut_pnl : t.pnl_yuzde;
+      totalNetPnl += netVal;
+      totalBrutPnl += brutVal;
+      if (netVal > 0) netWins++;
+      else if (netVal < 0) netLosses++;
+      if (brutVal > 0) brutWins++;
+      else if (brutVal < 0) brutLosses++;
     } else {
       filteredCount++;
       if (t.pnl_yuzde < 0) {
@@ -238,19 +257,30 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
     }
   });
 
-  const totalClosed = wins + losses;
-  const winRate = totalClosed > 0 ? (wins / totalClosed) * 100 : 0;
+  const totalClosed = validCount;
+  const netWinRate = totalClosed > 0 ? (netWins / totalClosed) * 100 : 0;
+  const brutWinRate = totalClosed > 0 ? (brutWins / totalClosed) * 100 : 0;
+  const totalCommission = totalClosed * 0.04;
 
   return {
     allTrades,
     activeTrades,
     closedTrades,
     stats: {
-      totalPnl,
-      winRate,
+      totalPnl: totalNetPnl,
+      totalNetPnl,
+      totalBrutPnl,
+      totalCommission,
+      winRate: netWinRate,
+      netWinRate,
+      brutWinRate,
       totalClosed,
-      wins,
-      losses,
+      wins: netWins,
+      losses: netLosses,
+      netWins,
+      netLosses,
+      brutWins,
+      brutLosses,
       activeCount: activeTrades.length,
       filteredCount,
       preventedLossPnl

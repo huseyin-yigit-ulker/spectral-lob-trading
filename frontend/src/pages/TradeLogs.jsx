@@ -63,24 +63,36 @@ export default function TradeLogs() {
     return periodTrades.filter(t => !t.is_filtered);
   }, [periodTrades]);
 
-  // 3. Dinamik İstatistikler
+  // 3. Dinamik İstatistikler (Net ve Brüt)
   const periodStats = useMemo(() => {
     const targetTrades = displayedTrades;
     const closed = targetTrades.filter(t => t.status === 'CLOSED');
     const active = targetTrades.filter(t => t.status === 'OPEN');
-    const wins = closed.filter(t => t.pnl_yuzde > 0);
-    const losses = closed.filter(t => t.pnl_yuzde <= 0);
-    const totalPnl = closed.reduce((acc, t) => acc + (t.pnl_yuzde || 0), 0);
-    const winRate = closed.length > 0 ? (wins.length / closed.length) * 100 : 0;
+    
+    const MAKER_FEE = 0.04;
+    const totalBrutPnl = closed.reduce((acc, t) => acc + (t.brut_pnl !== undefined ? t.brut_pnl : (t.pnl_yuzde || 0)), 0);
+    const totalCommission = closed.length * MAKER_FEE;
+    const totalNetPnl = totalBrutPnl - totalCommission;
+
+    const netWins = closed.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0);
+    const brutWins = closed.filter(t => (t.brut_pnl !== undefined ? t.brut_pnl : t.pnl_yuzde) > 0);
+    const netLosses = closed.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) <= 0);
+
+    const netWinRate = closed.length > 0 ? (netWins.length / closed.length) * 100 : 0;
+    const brutWinRate = closed.length > 0 ? (brutWins.length / closed.length) * 100 : 0;
 
     return {
       total: targetTrades.length,
       closedCount: closed.length,
       activeCount: active.length,
-      wins: wins.length,
-      losses: losses.length,
-      winRate: winRate.toFixed(1),
-      totalPnl: totalPnl.toFixed(2),
+      netWins: netWins.length,
+      netLosses: netLosses.length,
+      brutWins: brutWins.length,
+      netWinRate: netWinRate.toFixed(1),
+      brutWinRate: brutWinRate.toFixed(1),
+      totalNetPnl: totalNetPnl.toFixed(2),
+      totalBrutPnl: totalBrutPnl.toFixed(2),
+      totalCommission: totalCommission.toFixed(2),
     };
   }, [displayedTrades]);
 
@@ -132,14 +144,14 @@ export default function TradeLogs() {
         </div>
       </div>
 
-      {/* Period Quick Stats Summary Bar (Tamamen Dinamik) */}
+      {/* Period Quick Stats Summary Bar (Çift Yönlü Net & Brüt Görünüm) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between">
           <div>
             <span className="text-[10px] uppercase font-bold text-gray-500 block">Toplam İşlem</span>
             <span className="text-lg font-black text-gray-100 font-mono">{periodStats.closedCount}</span>
-            <span className="text-[10px] text-gray-500 ml-1.5 font-mono">
-              kapalı{filteredCount > 0 && !showFiltered ? ` (${filteredCount} elendi)` : ''}
+            <span className="text-[10px] text-gray-400 ml-1.5 font-mono">
+              kapalı {periodStats.activeCount > 0 ? `(${periodStats.activeCount} aktif)` : ''}
             </span>
           </div>
           <Zap size={20} className="text-[#F0B90B]/60" />
@@ -147,34 +159,33 @@ export default function TradeLogs() {
 
         <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between">
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-500 block">Açık Pozisyonlar</span>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-lg font-black text-amber-400 font-mono">{periodStats.activeCount}</span>
-              {periodStats.activeCount > 0 && (
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-              )}
-            </div>
-          </div>
-          <Activity size={20} className="text-amber-400/60" />
-        </div>
-
-        <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between">
-          <div>
             <span className="text-[10px] uppercase font-bold text-gray-500 block">Kazanma Oranı (WR)</span>
-            <span className="text-lg font-black text-emerald-400 font-mono">%{periodStats.winRate}</span>
-            <span className="text-[10px] text-gray-500 ml-1.5 font-mono">({periodStats.wins}W / {periodStats.losses}L)</span>
+            <span className="text-lg font-black text-emerald-400 font-mono">%{periodStats.netWinRate}</span>
+            <span className="text-[10px] text-gray-400 block font-mono">Brüt: %{periodStats.brutWinRate} ({periodStats.netWins}W / {periodStats.netLosses}L)</span>
           </div>
           <Target size={20} className="text-emerald-400/60" />
         </div>
 
         <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between">
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-500 block">Net PnL</span>
-            <span className={`text-lg font-black font-mono ${Number(periodStats.totalPnl) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-              {Number(periodStats.totalPnl) >= 0 ? '+' : ''}{periodStats.totalPnl}%
+            <span className="text-[10px] uppercase font-bold text-gray-500 block">Brüt PnL (Ham)</span>
+            <span className={`text-lg font-black font-mono ${Number(periodStats.totalBrutPnl) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              {Number(periodStats.totalBrutPnl) >= 0 ? '+' : ''}{periodStats.totalBrutPnl}%
             </span>
+            <span className="text-[10px] text-gray-400 block font-mono">Komisyon: -%{periodStats.totalCommission}</span>
           </div>
-          {Number(periodStats.totalPnl) >= 0 ? (
+          <TrendingUp size={20} className="text-blue-400/60" />
+        </div>
+
+        <div className="bg-[#121822] border border-[#1f2937] rounded-xl p-3 flex items-center justify-between shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+          <div>
+            <span className="text-[10px] uppercase font-bold text-gray-500 block">Net PnL (Limit)</span>
+            <span className={`text-lg font-black font-mono ${Number(periodStats.totalNetPnl) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              {Number(periodStats.totalNetPnl) >= 0 ? '+' : ''}{periodStats.totalNetPnl}%
+            </span>
+            <span className="text-[10px] text-emerald-400/80 block font-mono">Maker -%0.04 Düşülmüş</span>
+          </div>
+          {Number(periodStats.totalNetPnl) >= 0 ? (
             <TrendingUp size={20} className="text-emerald-400/60" />
           ) : (
             <TrendingDown size={20} className="text-rose-400/60" />
