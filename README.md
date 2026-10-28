@@ -173,7 +173,7 @@ The modern React + Tailwind web interface provides sub-second visibility into bo
 ## 📂 Repository Structure
 
 ```ascii
-orders_signal/
+spectral-lob-trading/
 ├── agent/                       # Reinforcement Learning environment and models (PPO)
 │   ├── environment.py           # Gym trading environment with position context
 │   ├── models.py                # Actor-Critic policy neural architectures
@@ -236,8 +236,8 @@ orders_signal/
 Clone the repository and prepare your local environment file:
 
 ```bash
-git clone https://github.com/huseyin-yigit-ulker/orders_signal.git
-cd orders_signal
+git clone https://github.com/huseyin-yigit-ulker/spectral-lob-trading.git
+cd spectral-lob-trading
 
 # Copy the safe environment template
 cp .env.example .env
