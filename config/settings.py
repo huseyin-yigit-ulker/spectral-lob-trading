@@ -5,8 +5,8 @@ from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class BinanceSettings(BaseSettings):
-    api_key: str = Field(..., env="BINANCE_API_KEY")
-    api_secret: str = Field(..., env="BINANCE_API_SECRET")
+    api_key: Optional[str] = Field(None, env="BINANCE_API_KEY")
+    api_secret: Optional[str] = Field(None, env="BINANCE_API_SECRET")
     testnet: bool = Field(True, env="BINANCE_TESTNET")
 
     @computed_field

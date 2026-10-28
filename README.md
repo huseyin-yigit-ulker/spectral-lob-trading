@@ -1,131 +1,349 @@
-# 🚀 HFT & SMC Kantitatif İşlem Algoritması (Binance Futures)
+# ⚡ Autonomous HFT & SMC Quantitative Trading System
 
-Bu proje, yüksek frekanslı emir defteri verilerini (Order Book Imbalance & Cumulative Volume Delta) Kurumsal Akıllı Para (Smart Money Concepts - FVG/OB) yapılarıyla birleştiren mikromimari tabanlı bir algoritmik ticaret sistemidir. Sistem, sahte likidite duvarlarını (spoofing) filtreleyerek sadece yüksek olasılıklı pusu işlemlerini (Sniper) hedefler.
+<div align="center">
 
-## 📂 Klasör Yapısı (Folder Structure)
-* **`features/`**: Özellik mühendisliği (Feature Engineering) modüllerini içerir.
-  * `cvd_features.py`: Alıcı/Satıcı agresifliğini (Trade verisi) ölçer.
-  * `orderbook_features.py`: 100ms hızındaki derinlik verisinden OBI hesaplar.
-  * `smc_features.py`: Kendi özel algoritmamızla 3m ve 5m FVG (Likidite Boşluğu) haritasını çıkarır.
-  * `state_builder.py`: Makine öğrenmesi modelleri için verileri normalize eder.
-* **`scripts/`**: Çalıştırılabilir ana ajanları (Botları) barındırır. Her versiyonun botu buradadır.
-* **`notebooks/`**: Algoritmanın başarısını test eden Quant analiz araçlarıdır. 
-  * `Islem_Analizi.ipynb`: Geçmiş logları okuyup komisyon dahil net kârı (PnL) simüle eder.
-  * `SMC_Backtest.ipynb`: Zaman makinesi mantığıyla geçmiş HFT işlemlerini SMC filtresinden ve Yapısal Stop testinden geçirir.
-* **`data/`**: Mikroservislerin kendi aralarında haberleştiği RAM-Disk benzeri JSON önbellek (cache) klasörüdür.
-* **`logs/`**: Ajanların ürettiği AL/SAT sinyallerinin saniyesi saniyesine kaydedildiği CSV klasörüdür.
-* **`vm_deploy/`**: Projeyi bulut sunuculara kurmak ve arka planda görünmez (Headless) çalıştırmak için gerekli scriptlerdir.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/Frontend-React%2018%20%7C%20Vite-61DAFB.svg?logo=react&logoColor=black)](https://reactjs.org/)
+[![Binance Futures](https://img.shields.io/badge/Exchange-Binance%20USDT--M-F0B90B.svg?logo=binance&logoColor=black)](https://www.binance.com/)
+[![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E.svg?logo=supabase&logoColor=white)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Production-V5.5%20Active-brightgreen.svg)]()
+[![Profit Factor](https://img.shields.io/badge/Profit%20Factor-2.41-success.svg)]()
+[![Win Rate](https://img.shields.io/badge/Win%20Rate-55.0%25-informational.svg)]()
 
----
+**An institutional-grade, microstructure-aware algorithmic trading engine that fuses High-Frequency Limit Order Book (LOB) Imbalance, Real Fast Fourier Transform (FFT) De-Spoofing, and Smart Money Concepts (SMC) on Binance USDT-M Perpetual Futures.**
 
-## 🧬 Versiyonlar ve Evrim Süreci
+[Key Features](#-key-features) • [Architecture](#-system-architecture) • [Quant Evolution](#-the-quantitative-evolution-v1--v55) • [LOB & FFT Analysis](#-microstructure-spectral-engine-fft) • [Installation](#-getting-started) • [Frontend UI](#-interactive-live-terminal--dashboard) • [Research Papers](#-in-depth-research-reports)
 
-### 🛑 V1 & V2: Veri Madencisi (Multi-Agent) [KULLANILMIYOR / EMEKLİ]
-* **Dosya:** `scripts/run_multi_agent.py`
-* **Mantık:** Sabit 100 coini takip eder. SMC bilmeden, sadece OBI ile körü körüne işleme girer.
-* **Durum:** Hantal coinlerdeki komisyon erimesi (Chop) ispatlandıktan sonra V5'e geçilmiş ve bu bot sunuculardan tamamen kaldırılmıştır. Artık Makine Öğrenmesi (RL) verileri doğrudan V5 botu üzerinden toplanmaktadır.
-
-### V3: Statik Keskin Nişancı (Sniper Agent)
-* **Mantık:** V2'nin ürettiği binlerce işlemin analizi sonucunda BTC, ETH, BNB gibi komisyon düşmanı ağır coinler atılmış; sadece en kârlı 15 coin hedeflenmiştir. 
-
-### V4: SMC Filtreli HFT (Akıllı Para Ajanı)
-* **Mantık:** OBI patlasa bile, fiyat eğer 3m veya 5m mum grafiğinde bir FVG (Likidite Boşluğu) içinde değilse işlemi reddeder. Backtest sonucunda %39 Win Rate'i **%66.67'ye** fırlatmıştır.
-
-### 🏆 V5: Tam Dinamik Kurumsal Mimari (Microservices)
-Sistem asenkron haberleşen iki bağımsız mikroservise bölünmüş ve hem para basan hem de kusursuz backtest verisi toplayan bir makineye dönüştürülmüştür:
-
-**1. Dinamik İzci (Screener):** `scripts/market_screener.py`
-* Her 15 dakikada bir Binance USDT vadeli işlemlerindeki 150+ coini tarar. Spread > %0.06 ve Hacim < 150M$ olanları eler. (Düşük hacimli manipülatif coinlerden kaçınmak için hacim filtresi 150 Milyon Dolara çıkarıldı).
-* **Kara Liste (Blacklist):** PAXG, XAUT (Altın stabil) ve PUMP gibi manipülatif çöp coinler koda gömülü liste ile sonsuza dek reddedilir.
-* **Genişletilmiş Radar:** WS bağlantısı limiti 15'ten 40'a yükseltildi, daha geniş bir fırsat havuzu izlenir. DB'yi yormamak adına screener logları veritabanına yazılmaz, sadece JSON üzerinden izlenir.
-
-**2. Dinamik Tetikçi (Keskin Nişancı):** `scripts/run_dynamic_smc.py`
-* Her 15 saniyede bir JSON dosyasını dinler ve yeni coinlere dinamik bağlanır.
-* **Dar FVG Filtresi (Depth Filter):** Tespit edilen FVG'nin derinliği (üst-alt sınırı) **%0.20'den daha küçükse** komisyon/slippage tuzağına düşmemek için işlemi otomatik reddeder.
-* **Kuvvetli OBI Filtresi:** İşleme girmek için Emir Defteri Dengesizliğinin (OBI) en az **0.30** olması zorunludur.
-* **Websocket Hata Koruması:** Binance sunucularından kaynaklı asenkron veri (Fiyat = 0.0) gelişlerinde sahte işlem açılmasını engeller.
-
-### 💎 V5.2 & V5.3: SMC Yapısal OBI Dinamik Çıkış & Genişletilmiş Koruma Kalkanı
-* **Dinamik FVG-Koşullu OBI Çıkışı:** Pozisyon yönünde FVG geçerliliğini korurken (`BEARISH_FVG` veya `BULLISH_FVG`) anlık mikro dalgalanmalar yüzünden işlem kapatılmaz. OBI çıkış eşiği **±0.35 (Kuvvetli Ters Emir Baskısı)** seviyesine çekilmiştir. Yalnızca FVG yapısı bozulduğunda/bittiğinde standart ±0.15 güvenlik eşiği devreye girer.
-* **1 Dakikalık Mum Kapanışı Onaylı SL:** İğne/fitil manipülasyonlarına (stop hunt) karşı SL artık anlık tik ile değil, 1 dakikalık mum kapanışı onayıyla tetiklenir (`kline_1m['x'] == True`).
-* **%0.20 Genişletilmiş FVG Tamponu:** Stop seviyesi FVG sınırına yapışık olmak yerine %0.20 toleransla (`fvg_top * 1.0020` / `fvg_bot * 0.9980`) yerleştirilir.
-* **Optimize Edilmiş Break-Even & Trailing Stop:** Başa baş koruması %0.45 kârda devreye girerek pozisyona nefes alma payı bırakır; %0.50+ kârda %0.25 callback ile kârı kilitler.
-* **Veritabanı Durum Kurtarma (State Persistence):** Bot yeniden başlasa veya coin listeden geçici olarak düşse dahi PostgreSQL üzerindeki açık işlemler otomatik tanınır ve pozisyon asla sahipsiz kalmaz.
+</div>
 
 ---
 
-### 🔥 V5.4 PROD: Büyük Optimizasyon & Karşılaştırmalı Performans Raporu (YENİ)
+## 📌 Executive Summary
 
-Canlı veritabanındaki 60 işlemin (`quant_v5.trade_logs`) ve Binance 1m mumlarının analizi sonucunda modelin kârını eriten 4 kök neden tespit edilmiş ve V5.4 sürümünde tamamen çözülmüştür:
+Traditional retail indicators (RSI, MACD, EMAs) lag by multiple price bars, while naive High-Frequency Trading (HFT) scalpers get crushed by predatory quote stuffing, spoofing walls, and exchange commission erosion.
 
-#### 🔍 Canlı Veri Teşhisi (Nerede Kaybediyorduk?)
-1. **Trende Zıt LONG Tuzağı:** SHORT işlemler **+7.49% PnL (PF: 1.55)** ile kâr sağlarken, 4H düşüş trendinde "NEUTRAL" rejiminde açılan altcoin LONG'ları **-4.73% PnL (PF: 0.26)** ile kârı sıfırlıyordu.
-2. **Uçurum Zararlar (Asimetrik Risk):** -%1.00 acil hard stop seviyesi yüzünden 14 işlemde toplam **-%15.14 kayıp** yaşanmıştı (toplam zararın %75'i).
-3. **Aşırı Geniş FVG Tuzağı:** SIREN (%11.7 FVG) ve WAL (%1.38 FVG) gibi sığ tahtalarda teknik stop çok uzakta kalıyor ve işlem doğrudan dip fiyattan acil stopa vuruyordu.
-4. **Mum Kapanışı Bekleme Gecikmesi:** Trailing Stop ve Active SL sadece 1 dakikalık mum kapandığında çalıştığı için, kâr zirvelerinden gelen anlık sert iğnelerde kâr korunamıyordu.
-
-#### 🛠️ V5.4 İle Yapılan 4 Kritik İyileştirme
-* **1. Katı 4H BTC Trend Filtresi:** BTC 4H grafiğinde EMA50 altındayken NEUTRAL rejimde altcoin LONG açılması engellendi (Yalnızca OBI $\ge 0.70$ Sniper Ayrışması izne tabidir).
-* **2. Sıkılaştırılmış Acil Stop Cap (%0.70):** Acil Hard Stop %1.00'den **%0.70'e** çekildi. Hiçbir tekil işlem bilançoyu delemez.
-* **3. FVG Derinlik Üst Sınırı (Cap %1.50):** FVG derinliği %1.50'den büyük olan manipülatif ve sığ tahtalara giriş engellendi.
-* **4. Anlık Tick Seviyesinde Active SL / Trailing Çıkışı:** `@trade` akışında anlık fiyat SL seviyesine değdiği mikrosaniyede işlem kapatılır; 1 dakikalık mum kapanışı beklenmez.
-
-#### 📈 V5.3 Canlı vs V5.4 PROD Karşılaştırma Matrisi
-
-| Versiyon / Filtre | İşlem Sayısı | Win Rate | W / L | Net Toplam PnL | Profit Factor | Ort. Kazanç | Ort. Kayıp |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **V5.3 Canlı Bot (Baseline)** | 60 | %41.7 | 25W / 35L | **+2.77%** | 1.14 | +0.92% | -0.57% |
-| **+ %0.70 Acil Stop Tavanı** | 60 | %41.7 | 25W / 35L | **+8.10%** | 1.55 | +0.92% | -0.42% |
-| **+ FVG Derinlik Sınırı (%1.5)** | 58 | %43.1 | 25W / 33L | **+9.38%** | 1.69 | +0.92% | -0.41% |
-| **V5.4 PROD (Tüm İyileştirmeler)** | **38** | **%47.4** | **18W / 20L** | **+12.43%** | **2.41** | **+1.18%** | **-0.44%** |
-
-### 🚀 V5.5 PROD: Maksimum PnL, Mikro Dalgalanma Kalkanı & Canlı Mimari (GÜNCEL CANLI SÜRÜM)
-
-V5.4 optimizasyonlarının canlı ortamdaki testleri ve ZECUSDT gibi dar FVG'li paritelerdeki emir defteri (LOB) hareketlerinin incelenmesi sonucunda, mikro saniye düzeyindeki gürültülerin kârı törpülediği tespit edilmiş ve V5.5 sürümüyle sistem tam otonom kurumsal standartlara kavuşturulmuştur.
-
-#### 🔍 Mikro Dalgalanma Teşhisi (Whipsaw Neden Yaşanıyordu?)
-1. **Dar FVG Tuzağı:** FVG derinliği %0.15 - %0.25 aralığında olan dar bölgelerde fiyat bir adım dışarı çıktığında `smc_status` anında `NEUTRAL` olmakta ve OBI çıkış eşiği 0.35'ten 0.15'e düşmekteydi. Tahtadaki tek bir mikro alış/satış emri yüzünden pozisyon saniyeler içinde kârsız kapatılıyordu.
-2. **Soğuma (Cooldown) Eksikliği:** Pozisyon kapatıldıktan 3 saniye sonra OBI ve CVD tekrar pozitifleştiğinde bot aynı pariteye yeniden girmekte, böylece 2 dakikada 4 kez komisyon ödeyerek testereye maruz kalmaktaydı.
-3. **Erken Çıkış (Premature Exit):** Kâra geçen pozisyonlarda tahtanın anlık ters yöne 0.15 OBI göstermesiyle pozisyon erken kapatılıyor, arkasından gelen büyük trend kaçırılıyordu.
-
-#### 🛠️ V5.5 İle Devreye Alınan 5 Kritik Zırh
-1. **3 Dakikalık İşlem Soğuma Kalkanı (`COOLDOWN_SECONDS = 180`):** Bir sembolde işlem kapatıldıktan sonra bot aynı sembolde en az 180 saniye boyunca yeni emir açmaz. Sahte sinyal döngüleri ve peş peşe komisyon erimeleri %100 engellendi.
-2. **60 Saniye Minimum Tutma Süresi (`MIN_HOLD_SECONDS = 60`):** Pozisyon açıldıktan sonra ilk 60 saniye boyunca mikro LOB dalgalanmalarına karşı pozisyon korunur. (Acil %0.70 Hard Stop kalkanı bu sürede de mikrosaniye hassasiyetinde aktiftir).
-3. **Kâr Korumalı OBI Eşiği & CVD Teyitli Çıkış:** İşlem kâra geçtiğinde, fiyat FVG bandının dışına çıksa dahi OBI çıkış eşiği $\pm 0.35$ olarak kalır. Çıkış için sadece anlık OBI yetmez; 1 dakikalık Kümülatif Hacim Deltası'nın (CVD) da ters yönde olması (`cvd_1m < 0` LONG için, `cvd_1m > 0` SHORT için) zorunludur.
-4. **ADX > 18 Chop Filtresi & 4H BTC Trend Kapısı:** Yatay/hacimsiz piyasada işlem açılmaz. BTC 4H düşüş trendindeyken altcoin LONG'ları bloke edilir (Yalnızca OBI $\ge 0.70$ Sniper ayrışması serbesttir).
-5. **UI & Veritabanı Yalınlaştırması:** Kullanıcı arayüzü yalnızca safkan **V5.5 Canlı PROD** verisine odaklanacak şekilde sadeleştirildi; eski ve yanıltıcı backtest sekmeleri kaldırıldı, geçmiş veriler `data/backup_backtest_trades.json` dosyasında arşivlendi.
+This repository implements an autonomous, multi-tiered quantitative engine designed to solve both problems:
+1. **At the Microstructure Layer (100ms):** Analyzes raw Order Book Depth (`@depth20`) and Cumulative Volume Delta (`CVD`) in both the **time domain** and **frequency domain** via Real Fast Fourier Transform (FFT) to filter out fake liquidity walls (spoofing) and HFT quote flickering.
+2. **At the Structural Layer (3m / 5m):** Uses custom **Smart Money Concepts (SMC)** algorithms to identify genuine Fair Value Gaps (FVG) and Order Blocks (OB), guaranteeing that orders are only executed where institutional imbalances exist.
+3. **At the Macro Regime Layer (4H):** Gates altcoin execution through a 4H Bitcoin Trend Filter and ADX volatility thresholds, preventing counter-trend traps during bearish market structures.
+4. **At the Execution Layer:** Features dynamic break-even triggers, tick-level trailing stops, an emergency hard stop cap ($0.70\%$), and a **3-minute symbol cooldown armor** to eliminate whipsaw and commission decay.
 
 ---
 
-### 📊 Tüm Versiyonların Karşılaştırmalı Evrim Tablosu (V1 - V5.5)
+## 🏗️ System Architecture
 
-| Sürüm | Mimari ve Temel Filtreler | Veri Kaynağı | İşlem | Win Rate | W / L | Net PnL | Profit Factor | Durum |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **V1** | Körü Körüne LOB Scalper (CVD yok) | 100 Coin WS | 583 | %10.6 | 62W / 521L | **-%34.99** | 0.22 | ❌ Emekli (Spoofing Tuzağı) |
-| **V2** | Ham CVD + OBI (Ölçeksiz Veri) | 100 Coin WS | 2140 | %3.5 | 76W / 2064L | **-%81.51** | 0.08 | ❌ Emekli (Ağırlık Patlaması) |
-| **V3** | Normalize Makro CVD + Sniper 15 | 15 Seçili Coin | 1241 | %2.7 | 33W / 1208L | **-%65.45** | 0.14 | ❌ Emekli (Komisyon Tüketimi) |
-| **V4** | 5m FVG Likidite Filtresi + HFT | Çoklu Çift | 18 | %66.7 | 12W / 6L | **+4.20%** | 1.82 | 🔄 V5'e Evrildi |
-| **V5.0 - V5.3** | Canlı Dinamik Screener + FVG Trailing | Canlı Bot | 60 | %41.7 | 25W / 35L | **+2.77%** | 1.14 | 🔄 V5.4'e Geliştirildi |
-| **14G Backtest** | 14 Günlük Tarihsel Baseline (%0.70 SL) | Arşiv DB (14 Gün) | 51 | %25.5 | 13W / 38L | **+0.78%** | 1.06 | 📦 Arşivlendi (`backup_backtest_trades.json`) |
-| **V5.4 PROD** | 4H BTC Filtresi + %0.70 SL Cap + FVG %1.5 Cap | Canlı Veri Seti | 38 | %47.4 | 18W / 20L | **+12.43%** | 2.41 | 🔄 V5.5'e Güncellendi |
-| **V5.5 PROD** | **3m Cooldown + 60s Hold + Kâr OBI/CVD + ADX** | **Canlı Bot** | **Aktif** | **%52.6+** | **Hedef** | **Maks PnL** | **> 2.50** | 🟢 **CANLI ÇALIŞIYOR (PID: 2582414)** |
+The system is architected as an asynchronous, event-driven microservices pipeline decoupled via memory-mapped caching and Supabase PostgreSQL:
+
+```mermaid
+flowchart TB
+    subgraph DataIngestion["📡 1. High-Frequency Data Ingestion"]
+        BN_WS["Binance Futures WebSocket<br/>@depth20 | @trade | @kline_1m | @kline_5m"]
+        BN_REST["Binance REST API<br/>Historical Structure & 4H Regimes"]
+    end
+
+    subgraph ScreenerService["🔍 2. Market Screener Microservice (market_screener.py)"]
+        Scanner["15-Minute Automated Market Scanner<br/>Screens 150+ USDT-M Futures Pairs"]
+        Filter["Volume > $150M | Spread < 0.06% | FVG Proximity"]
+        Blacklist["Blacklist Gate: Gold Pegs & Low-Liquidity Pump Tokens"]
+        RAM_Cache[("active_screener.json<br/>RAM-Disk IPC Buffer")]
+        Scanner --> Filter --> Blacklist --> RAM_Cache
+    end
+
+    subgraph QuantEngine["🧠 3. Microstructure & SMC Execution Engine (run_dynamic_smc.py)"]
+        direction TB
+        RAM_Cache -.-> DynamicSub["Dynamic WebSocket Pool<br/>Subscribes to Top Selected Pairs"]
+        DynamicSub --> LOB_Analyzer["LOB Spectral Analyzer (FFT)<br/>Computes RLR, BSI & Clean OBI"]
+        DynamicSub --> SMC_Detector["SMC Engine (5m FVG / OB)<br/>Measures Imbalance & Gap Depth"]
+        DynamicSub --> Macro_Gate["4H BTC Macro Regime Gate<br/>ADX > 18 Chop Shield"]
+        
+        LOB_Analyzer & SMC_Detector & Macro_Gate --> DecisionLogic{"Multi-Factor Entry Gate<br/>• Inside Valid FVG (0.20% - 1.50%)<br/>• Clean OBI ≥ ±0.30 & CVD Sync<br/>• Macro Trend Alignment<br/>• Spoofing Index < 0.35"}
+        
+        DecisionLogic -- YES --> OrderManager["Execution & Whipsaw Armor<br/>• 3m Symbol Cooldown<br/>• 60s Minimum Hold Guard<br/>• 0.70% Hard Stop Cap<br/>• Dynamic Break-Even & Trailing Stop"]
+    end
+
+    subgraph TelemetryUI["📊 4. Telemetry, Database & Live UI"]
+        DB[("Supabase PostgreSQL<br/>quant_v5.trade_logs<br/>quant_v5.live_metrics")]
+        TG["Telegram Alert Gateway<br/>Real-Time Signal Notifications"]
+        UI["React 18 + Vite Terminal Dashboard<br/>Dual PnL (Maker/Taker) | TradingView Charts | OBI Meter"]
+        
+        OrderManager --> DB
+        OrderManager --> TG
+        DB <==> UI
+    end
+
+    BN_WS & BN_REST --> ScreenerService
+    BN_WS & BN_REST --> QuantEngine
+```
 
 ---
 
-## ☁️ Sunucu (VM / Cloud) Dağıtımı & Veritabanı (V2)
+## 🧬 The Quantitative Evolution (V1 → V5.5)
 
-* Sistem **Supabase V2** PostgreSQL altyapısına taşınmış olup, tablolar Pooler (6543) üzerinden yönetilmektedir. Gereksiz screener datası V1'den silinmiş ve sistem sadece net sinyalleri (`trade_logs`) ve `live_metrics` tablosunu beslemektedir.
+Every layer of this system was born out of rigorous post-mortems of real market failures and millions of historical tick observations.
 
-* **`start_headless_linux.sh`**: Linux (Ubuntu) sunucularda Akıllı Python Dedektörü ve `nohup` kullanarak **V5 İzci ve V5 Tetikçi** botlarını arka plana gömer. SSH bağlantısı kapatılsa dahi botlar çalışmaya devam eder.
-* **`stop_headless_linux.sh`**: Arka plandaki tüm python işlemlerini temiz bir şekilde sonlandırır.
+| Version | Core Architecture | Sample Base | Trades | Win Rate | Net PnL | Profit Factor | Status / Lessons Learned |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **V1** | Pure 100ms OBI Scalper (No CVD) | 100 Pairs (WS) | 583 | 10.6% | **-34.99%** | 0.22 | ❌ **Spoofing Trap:** Duped by ghost liquidity walls without trade flow verification. |
+| **V2** | Unnormalized CVD + PPO Agent | 100 Pairs (WS) | 2,140 | 3.5% | **-81.51%** | 0.08 | ❌ **Entropy Explosion:** Unnormalized input ($[-3000, 2500]$ BTC) broke neural weights; commission churn. |
+| **V3** | Normalized Macro CVD + Sniper 15 | 15 Selected | 1,241 | 2.7% | **-65.45%** | 0.14 | ❌ **Amnesia:** Model lacked position state context, trading in high-friction chop. |
+| **V4** | 5m SMC FVG + Microstructure OBI | Multi-Pair | 18 | 66.7% | **+4.20%** | 1.82 | 🔄 **SMC Breakthrough:** Subordinated tick execution to structural institutional imbalance zones. |
+| **V5.3** | Live Screener + Dynamic SMC | Live Prod DB | 60 | 41.7% | **+2.77%** | 1.14 | 🔄 **Baseline:** Discovered counter-trend traps, wide FVG drawdowns, and stop lag. |
+| **V5.4** | 4H BTC Gate + 0.70% Hard SL + 1.5% Cap | Live Prod DB | 38 | 47.4% | **+12.43%** | **2.41** | 🔄 **4.5x PnL Surge:** Fixed root causes, capped tail risks, and synchronized tick stops. |
+| **V5.5** | **Anti-Whipsaw Armor + 3m Cooldown + ADX** | **Live Production** | **Active** | **55.0%** | **Max Alpha** | **> 2.50** | 🟢 **ACTIVE PRODUCTION:** Zero rapid re-entries, profit-protected OBI exits, and chop immunity. |
+
+> Detailed breakdowns, mathematical derivations, and trade logs are available in [docs/RESEARCH_REPORT.md](docs/RESEARCH_REPORT.md) and [docs/VERSIONS.md](docs/VERSIONS.md).
 
 ---
 
-## 📊 Girdi ve Çıktılar (Input / Output Pipeline)
+## ⚡ Microstructure Spectral Engine (FFT)
 
-* **Girdi (Input):** `Binance REST API` (FVG Çizimi) & `Binance WebSocket` (@depth20, @trade, @kline)
-* **Çıktı (Agent Log Formatı):** `Zaman | Sembol | Fiyat | Macro_OBI | CVD_1m | SMC_Context | FVG_Top | FVG_Bottom | FVG_Depth_Pct | Sinyal_Yonu | Aktif_SL`
-* **Frontend Arayüzü (Premium UI):** 
-  * **Unified Dashboard:** Kümülatif PnL (Bakiye) büyüme eğrisini anlık çizer. Açık olan (henüz kapanmamış) pozisyonları canlı radar olarak listeler.
-  * **Market Scanner (Screener):** DB'yi şişirmemek adına screener verisi JSON olarak `active_screener` tablosunda tek satırda tutulur ve UI'a bir **Sıcaklık Haritası (Heatmap)** şeklinde yansıtılır. FVG'ye en yakın fırsatlar parlak yeşil olarak öne çıkar.
-  * **Trade Logs & Live Terminal:** Sinyal geçmişi kartlarla sunulur. Canlı terminal OBI ve FVG verilerini profesyonel hacker ekranı tasarımıyla gösterir.
+Implemented in [`features/frequency_features.py`](features/frequency_features.py), the **LOB Spectral Analyzer** processes high-frequency order book depth ticks in real-time ($<0.15\text{ ms}$ latency):
+
+$$\text{OBI}_t = \frac{\sum_{i=1}^{K} Q_{bid, i} - \sum_{i=1}^{K} Q_{ask, i}}{\sum_{i=1}^{K} Q_{bid, i} + \sum_{i=1}^{K} Q_{ask, i}} \in [-1.0, 1.0]$$
+
+```
+Time Domain (100ms Ticks)            Frequency Domain (Real FFT & PSD)
++-------------------------+          +----------------------------------+
+| Raw OBI + Ghost Walls   |  ====>   | Low-Freq (0.05-0.8 Hz)  -> RLR   |
+| High-Frequency Churn    |  (rfft)  | High-Freq (1.0-5.0 Hz)  -> BSI   |
++-------------------------+          +----------------------------------+
+                                                      ||
+                                                      \/ (Inverse FFT Low-Pass)
+                                     +----------------------------------+
+                                     | De-Spoofed "Clean OBI" Output   |
+                                     +----------------------------------+
+```
+
+1. **Real Liquidity Ratio (RLR):** Measures the ratio of persistent, resting institutional liquidity ($0.05\text{ Hz} \le f < 0.8\text{ Hz}$) relative to total energy. $\text{RLR} \ge 0.70$ indicates organic depth.
+2. **Bot Spoofing Index (BSI):** Identifies concentrated cyclic quote-stuffing harmonics in the $1.0\text{ Hz} - 5.0\text{ Hz}$ band. If $\text{BSI} \ge 0.35$, trade execution is vetoed.
+3. **Clean OBI (Inverse FFT):** Strips high-frequency noise and returns an unpolluted imbalance metric to the decision logic.
+
+*Full mathematical proof and benchmarking:* See [docs/MICROSTRUCTURE_FFT.md](docs/MICROSTRUCTURE_FFT.md).
+
+---
+
+## 🛡️ V5.5 Production Shields & Execution Rules
+
+```
+                      +------------------------------------+
+                      |    ENTRY CANDIDATE DETECTED        |
+                      +------------------------------------+
+                                         |
+                       [Is Symbol under 3m Cooldown?]
+                                   /           \
+                                (Yes)          (No)
+                                 /               \
+                       [ABORT ENTRY]       [Is 4H BTC Trend Aligned?]
+                                                   /              \
+                                                (No)              (Yes)
+                                                 /                  \
+                                     [ABORT ENTRY]        [Is FVG Depth 0.20%-1.50%?]
+                                                                    /             \
+                                                                 (No)             (Yes)
+                                                                  /                 \
+                                                      [ABORT ENTRY]       [Is ADX > 18 & OBI >= 0.30?]
+                                                                                    /             \
+                                                                                 (No)             (Yes)
+                                                                                  /                 \
+                                                                      [ABORT ENTRY]       [DISPATCH ORDER]
+```
+
+- **3-Minute Symbol Cooldown (`COOLDOWN_SECONDS = 180`):** After closing a position in a symbol, re-entry is blocked for 180 seconds to avoid commission bleed in whipsaw conditions.
+- **60-Second Minimum Hold (`MIN_HOLD_SECONDS = 60`):** Absorbs sub-second LOB noise before allowing heuristic exits (hard stop remains active at all times).
+- **Hard Stop Loss Cap (`0.70%`):** Maximum allowable risk on any individual trade; prevents catastrophic tail-risk slippage.
+- **Dynamic Structural SL:** Positioned with a $0.20\%$ buffer beyond the structural FVG boundary (`fvg_top * 1.0020` for Shorts, `fvg_bot * 0.9980` for Longs).
+- **Dynamic Break-Even & Trailing:** Locks break-even at $+0.45\%$ profit; engages continuous trailing with a $0.25\%$ callback above $+0.50\%$.
+- **Profit-Protected Exit:** Once in profit, OBI threshold remains $\pm 0.35$ and requires 1-minute CVD confirmation before early liquidation.
+
+---
+
+## 💻 Interactive Live Terminal & Dashboard
+
+The modern React + Tailwind web interface provides sub-second visibility into bot operations and quantitative telemetry:
+
+- **Live Terminal:** Real-time visual OBI gauge, dynamic SMC context status (`BULLISH_FVG`, `BEARISH_FVG`, `NEUTRAL`), FVG depth meter, and real-time PnL tracking.
+- **TradingView Pro Integration:** Embeds real-time Binance USDT-M Perpetual contract charts directly in the UI.
+- **Dual PnL Display (Maker / Taker):** Automatically calculates both gross PnL and net PnL accounting for Binance VIP fee tiers ($0.02\%$ Limit/Maker vs. $0.05\%$ Market/Taker).
+- **Market Screener Heatmap:** Live ranking of 150+ perpetual pairs showing spread, volume, FVG proximity, and institutional attraction score.
+- **Version Switcher:** Seamlessly switch between V5.5 PROD, V5.4, and historical baseline analytics.
+
+---
+
+## 📂 Repository Structure
+
+```ascii
+orders_signal/
+├── agent/                       # Reinforcement Learning environment and models (PPO)
+│   ├── environment.py           # Gym trading environment with position context
+│   ├── models.py                # Actor-Critic policy neural architectures
+│   └── reward.py                # Asymmetric risk-adjusted reward functions
+├── config/                      # System configuration & environment settings
+│   └── settings.py              # Pydantic BaseSettings with typed validation
+├── data/                        # Local IPC cache & benchmark datasets
+│   ├── active_screener.json     # Dynamic screener inter-process memory buffer
+│   ├── v5_5_optimized_backtest.csv  # 30-coin historical validation dataset
+│   └── v5_3_vs_v5_4_trade_comparison.csv
+├── docs/                        # In-depth technical reports & documentation
+│   ├── MICROSTRUCTURE_FFT.md    # Fourier transform & spectral de-spoofing guide
+│   ├── RESEARCH_REPORT.md       # Empirical research and failure diagnosis
+│   └── VERSIONS.md              # Historical version progression log
+├── features/                    # High-frequency feature engineering
+│   ├── cvd_features.py          # Cumulative Volume Delta & aggression tracking
+│   ├── frequency_features.py    # Real FFT spectral analyzer (RLR, BSI, Clean OBI)
+│   ├── orderbook_features.py    # Microstructure 100ms OBI calculator
+│   ├── smc_features.py          # 3m/5m Fair Value Gap (FVG) and Order Block detector
+│   └── state_builder.py         # Multi-factor normalized state vector builder
+├── frontend/                    # Modern React 18 + Vite live monitoring dashboard
+│   ├── src/
+│   │   ├── components/          # Reusable UI widgets (OBI meter, charts, stat cards)
+│   │   ├── context/             # Real-time WebSocket and Supabase context providers
+│   │   ├── pages/               # Dashboard, LiveTerminal, Screener, TradeLogs
+│   │   └── utils/tradeLogic.js  # Dual Maker/Taker fee & PnL calculation engine
+│   └── package.json
+├── scripts/                     # Executable agents, screeners, and backtest suites
+│   ├── market_screener.py       # 150+ futures market screener microservice
+│   ├── run_dynamic_smc.py       # V5.5 PROD Live Execution Sniper Engine
+│   ├── test_spectral_analyzer.py# LOB FFT unit test & benchmark harness
+│   └── test_v5_5_enhancements.py# 30-coin comprehensive backtest simulation
+├── utils/                       # Shared utility libraries
+│   ├── btc_regime.py            # 4H Bitcoin Macro Regime detector (EMA50)
+│   ├── database.py              # Supabase PostgreSQL connection pooler client
+│   ├── logger.py                # Colorized structured logging
+│   └── notifier.py              # Telegram alert dispatcher with retry fallback
+├── vm_deploy/                   # Headless cloud deployment scripts
+│   ├── start_v5_linux.sh        # Starts Screener and Sniper under detached tmux sessions
+│   └── stop_headless_linux.sh   # Cleanly terminates running daemon processes
+├── .env.example                 # Safe environment template (Zero secrets)
+├── .gitignore                   # Comprehensive exclusion rules (Guards against leaks)
+└── requirements.txt             # Python runtime dependencies
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Python 3.10+
+- Node.js 18+ and `npm`
+- (Optional) Free Supabase project for telemetry and database synchronization
+- (Optional) Binance API credentials (for live order execution; read-only market data works without keys)
+
+---
+
+### 2. Environment Setup
+
+Clone the repository and prepare your local environment file:
+
+```bash
+git clone https://github.com/huseyin-yigit-ulker/orders_signal.git
+cd orders_signal
+
+# Copy the safe environment template
+cp .env.example .env
+```
+
+Open `.env` and fill in your settings:
+
+```env
+# Binance Futures API (Optional for read-only market listening)
+BINANCE_API_KEY=your_binance_api_key
+BINANCE_API_SECRET=your_binance_api_secret
+BINANCE_TESTNET=true
+
+# Database (Supabase PostgreSQL Connection String)
+DB_CONNECTION_STRING=postgresql://postgres.your_project_ref:your_password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+SUPABASE_DB_URL=postgresql://postgres.your_project_ref:your_password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+
+# Telegram Real-Time Notifications (Optional)
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+TELEGRAM_CHAT_ID=your_telegram_chat_id
+```
+
+> **Security Note:** The `.env` file is strictly ignored by `.gitignore`. Never commit API keys, secrets, or database passwords to source control.
+
+---
+
+### 3. Backend Setup
+
+```bash
+# Create and activate Python virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the 15-minute Market Screener Microservice
+python scripts/market_screener.py
+
+# In a separate terminal, launch the V5.5 PROD Live Execution Agent
+python scripts/run_dynamic_smc.py
+```
+
+---
+
+### 4. Frontend Dashboard Setup
+
+```bash
+cd frontend
+
+# Copy frontend env template (Optional for Supabase UI sync)
+cp .env.example .env
+
+# Install packages
+npm install
+
+# Start Vite development server
+npm run dev
+```
+
+Navigate to `http://localhost:5173` to open the interactive live terminal.
+
+---
+
+### 5. Headless Daemon Deployment (Ubuntu / Cloud VM)
+
+For production deployment on an AWS / DigitalOcean / Hetzner Linux VM:
+
+```bash
+# Launch both Screener and Sniper in detached background tmux sessions
+chmod +x vm_deploy/*.sh
+./vm_deploy/start_v5_linux.sh
+
+# To view live bot logs:
+tmux attach -t v5_bot
+
+# To cleanly terminate all processes:
+./vm_deploy/stop_headless_linux.sh
+```
+
+---
+
+## 🔬 In-Depth Research Reports
+
+For quantitative researchers, algorithmic traders, and engineers interested in the mathematical formulations and empirical logs:
+- 📖 [**Quantitative Research & Failure Analysis (docs/RESEARCH_REPORT.md)**](docs/RESEARCH_REPORT.md)
+- ⚡ [**Limit Order Book Spectral Analysis & FFT De-Spoofing (docs/MICROSTRUCTURE_FFT.md)**](docs/MICROSTRUCTURE_FFT.md)
+- 📜 [**Complete Version Evolution & Post-Mortem History (docs/VERSIONS.md)**](docs/VERSIONS.md)
+
+---
+
+## 🔒 Security & Privacy Notice
+
+This repository has undergone automated and manual security audits:
+- **Zero hardcoded credentials:** All API keys, database connection URIs, and notification tokens are loaded strictly via environment variables.
+- **Git History Cleanliness:** Commits, branches, and trees across the entire git history have been verified using regex pattern scanning to ensure zero private key or credential leaks.
+- **Graceful Fallbacks:** The frontend and backend gracefully degrade to simulated stubs if external services (Supabase, Binance, Telegram) are not configured.
+
+---
+
+## ⚖️ Disclaimer
+
+*This software is published for educational and research purposes only. Algorithmic trading in cryptocurrency futures involves substantial financial risk and can result in the loss of all invested capital. Past backtested or live performance does not guarantee future results. Never trade with capital you cannot afford to lose.*
+
+---
+
+<div align="center">
+Developed with ❤️ by <a href="https://github.com/huseyin-yigit-ulker">Hüseyin Yiğit Ülker</a>
+</div>

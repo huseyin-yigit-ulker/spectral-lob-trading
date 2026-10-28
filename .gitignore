@@ -1,15 +1,52 @@
+# Python & Virtual Environments
 venv/
+.venv/
+env/
 __pycache__/
-.env
-*.pyc
-.idea/
-.vscode/
+*.py[cod]
+*$py.class
 *.egg-info/
 dist/
 build/
+.mypy_cache/
+.pytest_cache/
+
+# Environment Variables & Secrets (CRITICAL FOR PUBLIC REPO)
+.env
+.env.*
+*.env
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa*
+id_ed25519*
+*credentials*
+*secret*
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Models & Weights
 *.pt
 *.pth
+
+# Database, Data & Local Logs
 logs/
+*.log
 data/*.db
+data/*.sqlite3
 *.sqlite3
-.mypy_cache/
+
+# Node & Frontend Build
+node_modules/
+dist/
+dist-ssr/
+
