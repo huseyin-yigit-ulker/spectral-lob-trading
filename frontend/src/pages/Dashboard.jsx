@@ -1,16 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { calculateTransactions } from '../utils/transactions';
-import { Activity, Target, ShieldAlert, Zap, Clock, ArrowRight, TrendingUp, TrendingDown, Layers } from 'lucide-react';
+import { parseUtcDate } from '../utils/tradeLogic';
+import { Activity, Target, ShieldAlert, Zap, Clock, ArrowRight, TrendingUp, TrendingDown, Layers, Calendar, Info } from 'lucide-react';
 import PnlChart from '../components/Chart';
 import { useLive } from '../context/LiveContext';
 
+const PERIODS = [
+  { id: '7d', label: '⚡ V5.5 PROD (Son 7 Gün)' },
+  { id: '24h', label: 'Son 24 Saat' },
+  { id: 'all', label: 'Tüm Zamanlar (11-29 Ekim Geçmişi)' },
+];
+
 export default function Dashboard() {
-  const [stats, setStats] = useState({ transactions: 0, active: 0, winRate: 0, pnl: 0, profitFactor: 0 });
   const [closedTransactions, setClosedTransactions] = useState([]);
   const [activeTransactions, setActiveTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [version] = useState('v5_5');
+  const [period, setPeriod] = useState('7d');
   const [rawLogs, setRawLogs] = useState([]);
   const { btcRegime } = useLive() || {};
 
@@ -22,32 +29,6 @@ export default function Dashboard() {
 
     setClosedTransactions(validClosed);
     setActiveTransactions(validActive);
-    
-    const MAKER_FEE = 0.04;
-    const totalBrutPnl = validClosed.reduce((acc, val) => acc + (val.brut_pnl !== undefined ? val.brut_pnl : (val.pnl_pct || val.pnl_yuzde || 0)), 0);
-    const totalCommission = validClosed.length * MAKER_FEE;
-    const totalNetPnl = totalBrutPnl - totalCommission;
-
-    const netWins = validClosed.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0);
-    const brutWins = validClosed.filter(t => (t.brut_pnl !== undefined ? t.brut_pnl : t.pnl_yuzde) > 0);
-
-    const netWr = validClosed.length > 0 ? ((netWins.length / validClosed.length) * 100).toFixed(1) : '0.0';
-    const brutWr = validClosed.length > 0 ? ((brutWins.length / validClosed.length) * 100).toFixed(1) : '0.0';
-
-    const netGrossProfit = netWins.reduce((acc, t) => acc + ((t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0 ? (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) : 0), 0);
-    const netGrossLoss = Math.abs(validClosed.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) < 0).reduce((acc, t) => acc + (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)), 0));
-    const profitFactor = netGrossLoss > 0 ? (netGrossProfit / netGrossLoss).toFixed(2) : (netGrossProfit > 0 ? '∞' : '0.00');
-
-    setStats({ 
-      transactions: validClosed.length, 
-      active: validActive.length,
-      winRate: netWr,
-      brutWinRate: brutWr,
-      pnl: totalNetPnl.toFixed(2),
-      brutPnl: totalBrutPnl.toFixed(2),
-      commission: totalCommission.toFixed(2),
-      profitFactor
-    });
   };
 
   useEffect(() => {
@@ -71,6 +52,50 @@ export default function Dashboard() {
     const interval = setInterval(fetchData, 15000); // refresh every 15s
     return () => clearInterval(interval);
   }, []);
+
+  // Periyoda göre filtrelenmiş kapalı işlemler
+  const periodTransactions = useMemo(() => {
+    if (period === 'all') return closedTransactions;
+    const now = Date.now();
+    let limitMs = 7 * 24 * 60 * 60 * 1000;
+    if (period === '24h') limitMs = 24 * 60 * 60 * 1000;
+    else if (period === '7d') limitMs = 7 * 24 * 60 * 60 * 1000;
+
+    return closedTransactions.filter(t => {
+      const tradeTime = parseUtcDate(t.cikis_zaman || t.exit_time || t.giris_zaman).getTime();
+      return (now - tradeTime) <= limitMs;
+    });
+  }, [closedTransactions, period]);
+
+  // Seçili periyoda göre dinamik istatistikler
+  const stats = useMemo(() => {
+    const MAKER_FEE = 0.04;
+    const list = periodTransactions;
+    const totalBrutPnl = list.reduce((acc, val) => acc + (val.brut_pnl !== undefined ? val.brut_pnl : (val.pnl_pct || val.pnl_yuzde || 0)), 0);
+    const totalCommission = list.length * MAKER_FEE;
+    const totalNetPnl = totalBrutPnl - totalCommission;
+
+    const netWins = list.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0);
+    const brutWins = list.filter(t => (t.brut_pnl !== undefined ? t.brut_pnl : t.pnl_yuzde) > 0);
+
+    const netWr = list.length > 0 ? ((netWins.length / list.length) * 100).toFixed(1) : '0.0';
+    const brutWr = list.length > 0 ? ((brutWins.length / list.length) * 100).toFixed(1) : '0.0';
+
+    const netGrossProfit = netWins.reduce((acc, t) => acc + ((t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) > 0 ? (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) : 0), 0);
+    const netGrossLoss = Math.abs(list.filter(t => (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)) < 0).reduce((acc, t) => acc + (t.net_pnl !== undefined ? t.net_pnl : (t.pnl_yuzde - MAKER_FEE)), 0));
+    const profitFactor = netGrossLoss > 0 ? (netGrossProfit / netGrossLoss).toFixed(2) : (netGrossProfit > 0 ? '∞' : '0.00');
+
+    return { 
+      transactions: list.length, 
+      active: activeTransactions.length,
+      winRate: netWr,
+      brutWinRate: brutWr,
+      pnl: totalNetPnl.toFixed(2),
+      brutPnl: totalBrutPnl.toFixed(2),
+      commission: totalCommission.toFixed(2),
+      profitFactor
+    };
+  }, [periodTransactions, activeTransactions]);
 
   return (
     <div className="space-y-6">
@@ -181,10 +206,10 @@ export default function Dashboard() {
 
             <div className="flex items-center gap-2 bg-[#0B0E11] px-3.5 py-2 rounded-lg border border-[#1f2937]">
               <span className="text-xs text-gray-400 font-semibold">SHORT Sinyalleri:</span>
-              {btcRegime?.regime === 'BULLISH' ? (
-                <span className="text-xs font-black text-red-400 flex items-center gap-1">❌ BLOKE EDİLDİ</span>
-              ) : (
+              {btcRegime?.regime === 'BEARISH' ? (
                 <span className="text-xs font-black text-green-400 flex items-center gap-1">✅ İZİNLİ (BEKLENEN)</span>
+              ) : (
+                <span className="text-xs font-black text-red-400 flex items-center gap-1">❌ BLOKE EDİLDİ</span>
               )}
             </div>
 
@@ -202,22 +227,50 @@ export default function Dashboard() {
 
         </div>
       </div>
+
+      {/* Period Filter Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#121822] border border-[#1f2937] rounded-xl p-3 shadow-md">
+        <div className="flex items-center gap-2">
+          <Calendar size={16} className="text-[#F0B90B]" />
+          <span className="text-xs font-bold text-gray-300 uppercase tracking-wide">Analiz Dönemi:</span>
+          {period === 'all' && (
+            <span className="text-[11px] text-amber-400/90 font-mono hidden md:inline">
+              (20-21 Ekim tarihlerindeki eski whipsaw/test dönemi dahildir)
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {PERIODS.map(p => (
+            <button
+              key={p.id}
+              onClick={() => setPeriod(p.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                period === p.id
+                  ? 'bg-[#F0B90B] text-black shadow-md shadow-[#F0B90B]/10'
+                  : 'bg-[#0B0E11] text-gray-400 hover:text-white border border-[#1f2937]'
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
       
       {/* Top Metrics Row: Dual Net & Brüt View */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <StatCard 
           icon={<Activity size={20} />} 
           label="Net PnL (Limit)" 
-          value={`${stats.pnl > 0 ? '+' : ''}${stats.pnl}%`} 
-          subValue={`Brüt: ${stats.brutPnl > 0 ? '+' : ''}${stats.brutPnl}%`} 
-          color={stats.pnl >= 0 ? "green" : "red"} 
+          value={`${Number(stats.pnl) > 0 ? '+' : ''}${stats.pnl}%`} 
+          subValue={`Brüt: ${Number(stats.brutPnl) > 0 ? '+' : ''}${stats.brutPnl}%`} 
+          color={Number(stats.pnl) >= 0 ? "green" : "red"} 
         />
         <StatCard 
           icon={<TrendingUp size={20} />} 
           label="Brüt PnL (Ham)" 
-          value={`${stats.brutPnl > 0 ? '+' : ''}${stats.brutPnl}%`} 
+          value={`${Number(stats.brutPnl) > 0 ? '+' : ''}${stats.brutPnl}%`} 
           subValue={`Komisyon: -%${stats.commission}`} 
-          color={stats.brutPnl >= 0 ? "green" : "red"} 
+          color={Number(stats.brutPnl) >= 0 ? "green" : "red"} 
         />
         <StatCard 
           icon={<Zap size={20} />} 
@@ -248,51 +301,47 @@ export default function Dashboard() {
         {/* Chart Column (Takes up 2 cols on large screens) */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-[#0b0e14] border border-[#1f2937] rounded-xl overflow-hidden">
-            <div className="p-4 border-b border-[#1f2937] bg-[#121822]">
+            <div className="p-4 border-b border-[#1f2937] bg-[#121822] flex items-center justify-between">
               <h3 className="text-sm font-bold text-gray-300 uppercase flex items-center gap-2">
                 <TrendingUp size={16} className="text-[#F0B90B]"/> Cumulative Equity Curve
               </h3>
+              <span className="text-[11px] font-mono text-gray-500">
+                {period === '7d' ? 'Son 7 Günlük Kümülatif Getiri' : period === '24h' ? 'Son 24 Saatlik Getiri' : 'Tüm Zamanlar Kümülatif Getiri'}
+              </span>
             </div>
             <div className="p-4">
-               {loading ? <div className="h-[300px] flex items-center justify-center text-gray-500">Loading Chart...</div> : 
-                <PnlChart data={closedTransactions} />
-               }
+              {loading ? (
+                <div className="h-[300px] flex items-center justify-center text-gray-500 text-sm">
+                  Yükleniyor...
+                </div>
+              ) : periodTransactions.length === 0 ? (
+                <div className="h-[300px] flex items-center justify-center text-gray-500 text-sm font-mono">
+                  Seçili periyotta kapalı işlem verisi bulunamadı.
+                </div>
+              ) : (
+                <PnlChart data={periodTransactions} />
+              )}
             </div>
           </div>
 
-          <div className="bg-[#0b0e14] border border-[#1f2937] rounded-xl overflow-hidden">
-             <div className="p-4 border-b border-[#1f2937] bg-[#121822] flex justify-between items-center">
-              <h3 className="text-sm font-bold text-gray-300 uppercase flex items-center gap-2">
-                <Target size={16} className="text-green-400"/> Active Positions
-              </h3>
-              {stats.active > 0 && <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>}
-            </div>
-            <div className="p-4 space-y-3">
-               {loading ? <p className="text-gray-500 text-sm">Loading...</p> : 
-                activeTransactions.length === 0 ? <p className="text-gray-500 text-sm">No active positions currently.</p> :
+          {/* Active Positions */}
+          <div className="bg-[#0b0e14] border border-[#1f2937] rounded-xl p-4">
+            <h3 className="text-sm font-bold text-gray-300 uppercase flex items-center gap-2 mb-4">
+              <Activity size={16} className="text-green-400"/> Active Positions
+            </h3>
+            <div className="space-y-3">
+               {activeTransactions.length === 0 ? <p className="text-gray-500 text-sm">No active positions currently.</p> :
                 activeTransactions.map((t, i) => (
-                  <div key={i} className="p-4 bg-green-500/5 rounded-lg border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)] space-y-2">
+                  <div key={i} className="flex flex-col p-3 bg-[#121822] rounded-lg border border-[#1f2937] space-y-2">
                     <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-bold text-white flex items-center gap-2 text-lg">
-                          {t.sembol}
-                          <span className={`text-xs font-bold px-2 py-1 rounded flex items-center gap-1 ${t.tip === 'LONG' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                            {t.tip === 'LONG' ? <TrendingUp size={12}/> : <TrendingDown size={12}/>}
-                            {t.tip}
-                          </span>
-                          {t.is_sniper && (
-                            <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                              🎯 SNİPER
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-gray-400 mt-1">Giriş: ${Number(t.entry_price).toFixed(4)}</div>
+                      <div className="flex items-center gap-2">
+                         <span className="font-bold text-white">{t.sembol}</span>
+                         <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${t.tip === 'LONG' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>{t.tip}</span>
+                         {t.is_sniper && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">🎯 Sniper</span>}
                       </div>
-                      <div className="text-right">
-                         <div className="text-xs text-gray-400">₿ BTC: <span className="font-bold text-gray-200">{t.btc_regime || 'NEUTRAL'}</span></div>
+                      <div className="text-right font-mono">
+                         <div className="text-xs text-gray-400">Giriş: <span className="text-white">${Number(t.entry_price).toFixed(4)}</span></div>
+                         <div className="text-[10px] text-gray-400">₿ BTC: <span className="font-bold text-gray-200">{t.btc_regime || 'NEUTRAL'}</span></div>
                          <div className="text-xs text-green-400 mt-1 animate-pulse">SMC İzleniyor...</div>
                       </div>
                     </div>
@@ -310,15 +359,18 @@ export default function Dashboard() {
 
         {/* Closed Transactions Column */}
         <div className="bg-[#0b0e14] border border-[#1f2937] rounded-xl flex flex-col h-[700px]">
-          <div className="p-4 border-b border-[#1f2937] bg-[#121822] rounded-t-xl">
+          <div className="p-4 border-b border-[#1f2937] bg-[#121822] rounded-t-xl flex items-center justify-between">
             <h3 className="text-sm font-bold text-gray-300 uppercase flex items-center gap-2">
               <Clock size={16} className="text-gray-400"/> Recent History
             </h3>
+            <span className="text-[10px] font-mono text-gray-500">
+              {periodTransactions.length} İşlem
+            </span>
           </div>
           <div className="p-4 flex-1 overflow-y-auto space-y-3">
             {loading ? <p className="text-gray-500 text-sm">Loading...</p> : 
-             closedTransactions.length === 0 ? <p className="text-gray-500 text-sm">No closed trades yet.</p> :
-             closedTransactions.slice(0, 15).map((t, i) => (
+             periodTransactions.length === 0 ? <p className="text-gray-500 text-sm">No closed trades in selected period.</p> :
+             periodTransactions.slice(0, 20).map((t, i) => (
               <div key={i} className={`p-3 rounded-lg border space-y-1.5 ${t.win ? 'bg-green-900/10 border-green-500/20' : 'bg-red-900/10 border-red-500/20'}`}>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-1.5">
@@ -348,10 +400,10 @@ export default function Dashboard() {
                 )}
                 <div className="flex justify-between items-end pt-0.5 border-t border-[#1f2937]/40">
                   <div className="text-[10px] text-gray-500">
-                    {new Date(t.exit_time).toLocaleTimeString()}
+                    {new Date(t.exit_time || t.cikis_zaman).toLocaleTimeString()}
                   </div>
                   <div className={`font-mono font-bold text-sm ${t.win ? 'text-green-400' : 'text-red-400'}`}>
-                    {t.pnl_pct > 0 ? '+' : ''}{t.pnl_pct.toFixed(2)}%
+                    {(t.net_pnl !== undefined ? t.net_pnl : t.pnl_pct) > 0 ? '+' : ''}{(t.net_pnl !== undefined ? t.net_pnl : t.pnl_pct).toFixed(2)}%
                   </div>
                 </div>
               </div>
