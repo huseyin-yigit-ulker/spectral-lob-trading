@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Screener from './pages/Screener';
 import TradeLogs from './pages/TradeLogs';
@@ -7,6 +7,18 @@ import PublicSignals from './pages/PublicSignals';
 import { Activity, LayoutDashboard, List, Terminal, Globe, TerminalSquare, Radio } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { LiveProvider, useLive } from './context/LiveContext';
+
+function RedirectHandler() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const redirect = sessionStorage.getItem('spa_redirect');
+    if (redirect && redirect !== '/') {
+      sessionStorage.removeItem('spa_redirect');
+      navigate(redirect, { replace: true });
+    }
+  }, [navigate]);
+  return null;
+}
 
 function Topbar() {
   const [utcTime, setUtcTime] = useState('');
@@ -154,6 +166,7 @@ export default function App() {
   return (
     <LiveProvider>
       <BrowserRouter>
+        <RedirectHandler />
         <div className="flex flex-col h-screen bg-[#0B0E11] text-[#EAECEF] overflow-hidden selection:bg-[#F0B90B]/30">
           <Topbar />
           <div className="flex flex-1 overflow-hidden">
