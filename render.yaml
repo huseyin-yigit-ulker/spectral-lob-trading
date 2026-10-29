@@ -1,0 +1,17 @@
+services:
+  # Static Site: React + Vite Frontend Dashboard & Public Signal Monitor
+  - type: web
+    name: orders-signal-dashboard
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+

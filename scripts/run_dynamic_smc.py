@@ -125,8 +125,9 @@ def sync_signal_state(agent, prev_sig):
         # SUPABASE VE TELEGRAM ENTEGRASYONU
         if log_trade_to_supabase:
             reason_to_log = agent.exit_reason if agent.internal_signal_state == 0 else agent.entry_reason
+            logged_price = agent.current_price if (agent.current_price and agent.current_price > 0) else (agent.emergency_sl if (getattr(agent, 'emergency_sl', None) and agent.emergency_sl > 0) else agent.entry_price)
             log_trade_to_supabase(
-                dt_str, agent.symbol, agent.current_price, agent.macro_obi, agent.cvd_1m, 
+                dt_str, agent.symbol, logged_price, agent.macro_obi, agent.cvd_1m, 
                 agent.smc_status, agent.last_signal_text, f_t, f_b, round(f_depth, 4),
                 round(agent.rlr, 3), round(agent.bsi, 3), round(agent.clean_obi, 4),
                 agent.btc_regime, reason_to_log
@@ -527,11 +528,11 @@ async def binance_ws():
                                 
                                 # Acil Hard Stop (%0.70): Ani çöküş / sert manipülasyonlara karşı anında tik seviyesinde korur
                                 prev_sig = agent.internal_signal_state
-                                if agent.internal_signal_state == 1 and agent.emergency_sl and agent.current_price <= agent.emergency_sl:
+                                if agent.internal_signal_state == 1 and agent.emergency_sl and agent.current_price > 0 and agent.current_price <= agent.emergency_sl:
                                     agent.internal_signal_state = 0
                                     agent.exit_reason = "🚨 Acil Hard Stop (%0.70)"
                                     sync_signal_state(agent, prev_sig)
-                                elif agent.internal_signal_state == -1 and agent.emergency_sl and agent.current_price >= agent.emergency_sl:
+                                elif agent.internal_signal_state == -1 and agent.emergency_sl and agent.current_price > 0 and agent.current_price >= agent.emergency_sl:
                                     agent.internal_signal_state = 0
                                     agent.exit_reason = "🚨 Acil Hard Stop (%0.70)"
                                     sync_signal_state(agent, prev_sig)
@@ -665,7 +666,7 @@ async def binance_ws():
                             can_obi_exit = time_in_pos >= MIN_HOLD_SECONDS
                             
                             if agent.internal_signal_state == 1:
-                                if agent.emergency_sl and agent.current_price <= agent.emergency_sl:
+                                if agent.emergency_sl and agent.current_price > 0 and agent.current_price <= agent.emergency_sl:
                                     agent.internal_signal_state = 0
                                     agent.exit_reason = "🚨 Acil Hard Stop (%0.70)"
                                 elif can_obi_exit:
@@ -675,7 +676,7 @@ async def binance_ws():
                                         agent.internal_signal_state = 0
                                         agent.exit_reason = f"Dinamik OBI Karşıt Akış ({agent.macro_obi:+.2f})"
                             elif agent.internal_signal_state == -1:
-                                if agent.emergency_sl and agent.current_price >= agent.emergency_sl:
+                                if agent.emergency_sl and agent.current_price > 0 and agent.current_price >= agent.emergency_sl:
                                     agent.internal_signal_state = 0
                                     agent.exit_reason = "🚨 Acil Hard Stop (%0.70)"
                                 elif can_obi_exit:

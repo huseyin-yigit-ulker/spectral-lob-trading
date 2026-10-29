@@ -93,12 +93,18 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
         }
       }
 
+      const entryPrice = Number(log.fiyat || 0);
+      if (!entryPrice || entryPrice <= 0 || isNaN(entryPrice)) {
+        // Gecersiz sifir fiyatli giris kaydini atla
+        return;
+      }
+
       openPositions[sym] = {
         id: log.id,
         sembol: sym,
         yön: log.sinyal.includes('AL') ? 'LONG' : 'SHORT',
         giris_zaman: log.zaman,
-        giris_fiyat: Number(log.fiyat),
+        giris_fiyat: entryPrice,
         fvg_top: Number(log.fvg_top || 0),
         fvg_bottom: Number(log.fvg_bottom || 0),
         obi: Number(log.obi || 0),
@@ -120,7 +126,16 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
     } else if (isExit && openPositions[sym]) {
       const pos = openPositions[sym];
       pos.cikis_zaman = log.zaman;
-      pos.cikis_fiyat = Number(log.fiyat);
+      
+      let rawExitPrice = Number(log.fiyat || 0);
+      // Eger cikis fiyati sifir veya hatali geldiyse (ornegin acil hard stop logu), %0.70 Hard Stop seviyesine cek
+      if (!rawExitPrice || rawExitPrice <= 0 || isNaN(rawExitPrice)) {
+        rawExitPrice = pos.yön === 'LONG' 
+          ? pos.giris_fiyat * 0.9930 
+          : pos.giris_fiyat * 1.0070;
+        pos.hard_sl_triggered = true;
+      }
+      pos.cikis_fiyat = rawExitPrice;
       pos.cikis_obi = Number(log.obi || 0);
       pos.cikis_cvd = Number(log.cvd || 0);
       pos.status = 'CLOSED';
@@ -128,7 +143,15 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
       let diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
       let pnlPct = (diff / pos.giris_fiyat) * 100;
 
-      // Filtreleme ve Hard Stop Kontrolleri
+      // Anormal -%100 veya asiri uclari onle ve Hard Stop cap (%0.70) uygula
+      if (pnlPct < -0.70) {
+        pnlPct = -0.70;
+        pos.cikis_fiyat = pos.yön === 'LONG' ? pos.giris_fiyat * 0.9930 : pos.giris_fiyat * 1.0070;
+        pos.hard_sl_triggered = true;
+        diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
+      }
+
+      // Filtreleme Kontrolleri
       const isExcessiveFvg = pos.fvg_depth > 1.50;
       const isTooSmallFvg = pos.fvg_depth > 0 && pos.fvg_depth < 0.15;
       const isNeutralBearLong = pos.yön === 'LONG' && (!pos.is_sniper) && (pos.btc_regime === 'NEUTRAL' || pos.btc_regime === 'BEARISH' || pos.btc_regime === 'UNKNOWN');
@@ -145,12 +168,6 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
           pos.filter_reason = '4H Ayı Trendinde Altcoin LONG Bloke Edildi';
         } else {
           pos.is_filtered = false;
-          if (pnlPct < -0.70) {
-            pnlPct = -0.70;
-            pos.cikis_fiyat = pos.yön === 'LONG' ? pos.giris_fiyat * 0.9930 : pos.giris_fiyat * 1.0070;
-            pos.hard_sl_triggered = true;
-            diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
-          }
         }
         pos.version = 'V5.5';
       } else if (version === 'v5_4') {
@@ -162,12 +179,6 @@ export function reconstructTrades(rawLogs, version = 'v5_5') {
           pos.filter_reason = '4H Ayı Trendinde Altcoin LONG Bloke Edildi';
         } else {
           pos.is_filtered = false;
-          if (pnlPct < -0.70) {
-            pnlPct = -0.70;
-            pos.cikis_fiyat = pos.yön === 'LONG' ? pos.giris_fiyat * 0.9930 : pos.giris_fiyat * 1.0070;
-            pos.hard_sl_triggered = true;
-            diff = pos.yön === 'LONG' ? (pos.cikis_fiyat - pos.giris_fiyat) : (pos.giris_fiyat - pos.cikis_fiyat);
-          }
         }
         pos.version = 'V5.4';
       } else {

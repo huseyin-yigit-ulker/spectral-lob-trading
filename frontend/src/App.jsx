@@ -3,7 +3,8 @@ import Dashboard from './pages/Dashboard';
 import Screener from './pages/Screener';
 import TradeLogs from './pages/TradeLogs';
 import LiveTerminal from './pages/LiveTerminal';
-import { Activity, LayoutDashboard, List, Terminal, Globe, TerminalSquare } from 'lucide-react';
+import PublicSignals from './pages/PublicSignals';
+import { Activity, LayoutDashboard, List, Terminal, Globe, TerminalSquare, Radio } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { LiveProvider, useLive } from './context/LiveContext';
 
@@ -20,10 +21,21 @@ function Topbar() {
   }, []);
 
   return (
-    <div className="h-14 border-b border-[#1f2937] bg-[#0B0E11] flex items-center justify-between px-6 shrink-0 sticky top-0 z-40">
-      <div className="flex items-center gap-2">
-        <Terminal className="text-[#F0B90B]" size={20} />
-        <span className="font-black text-white tracking-tight">QUANT<span className="text-[#F0B90B]">V5</span></span>
+    <div className="h-14 border-b border-[#1f2937] bg-[#0B0E11] flex items-center justify-between px-4 sm:px-6 shrink-0 sticky top-0 z-40">
+      <div className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+          <Terminal className="text-[#F0B90B]" size={20} />
+          <span className="font-black text-white tracking-tight">QUANT<span className="text-[#F0B90B]">V5</span></span>
+        </Link>
+
+        {/* Public Signals Quick Link */}
+        <Link 
+          to="/signals" 
+          className="hidden md:flex items-center gap-1.5 px-2.5 py-1 bg-[#F0B90B]/10 hover:bg-[#F0B90B]/20 border border-[#F0B90B]/40 rounded-lg text-xs font-black text-[#F0B90B] transition-all"
+        >
+          <Radio size={12} className="animate-pulse" />
+          <span>CANLI SİNYALLER</span>
+        </Link>
       </div>
 
       {/* Center: BTC Macro Regime & Expected Trade Direction */}
@@ -52,7 +64,7 @@ function Topbar() {
         )}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="hidden md:flex items-center gap-2 text-gray-400 text-xs font-mono bg-[#1E2329] px-3 py-1 rounded-md border border-[#2B3139]">
           <Globe size={12} className="text-[#F0B90B]" />
           {utcTime || '00:00:00 UTC'}
@@ -70,6 +82,7 @@ function Sidebar() {
   const loc = useLocation();
   const links = [
     { to: '/', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
+    { to: '/signals', icon: <Radio size={18} className="text-[#F0B90B]" />, label: 'Canlı Sinyaller (Public)', highlight: true },
     { to: '/screener', icon: <Activity size={18} />, label: 'Market Scanner' },
     { to: '/live', icon: <TerminalSquare size={18} />, label: 'Live Terminal' },
     { to: '/trades', icon: <List size={18} />, label: 'Signal Logs' },
@@ -84,17 +97,27 @@ function Sidebar() {
             <Link 
               key={l.to} 
               to={l.to}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ${
+              className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-bold transition-all ${
                 isActive 
                   ? 'bg-[#1E2329] text-[#F0B90B] border border-[#2B3139]' 
                   : 'text-gray-400 hover:text-white hover:bg-[#121822]'
               }`}
             >
-              {l.icon}
-              {l.label}
+              <div className="flex items-center gap-3">
+                {l.icon}
+                <span>{l.label}</span>
+              </div>
+              {l.highlight && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              )}
             </Link>
           );
         })}
+      </div>
+
+      <div className="p-4 border-t border-[#1f2937]/80 text-[11px] text-gray-500 font-mono">
+        <div>QUANTV5 PROD TERMINAL</div>
+        <div className="text-[#F0B90B]">Public Research Edition</div>
       </div>
     </div>
   );
@@ -104,6 +127,7 @@ function MobileNav() {
   const loc = useLocation();
   const links = [
     { to: '/', icon: <LayoutDashboard size={20} /> },
+    { to: '/signals', icon: <Radio size={20} className="text-[#F0B90B]" /> },
     { to: '/screener', icon: <Activity size={20} /> },
     { to: '/live', icon: <TerminalSquare size={20} /> },
     { to: '/trades', icon: <List size={20} /> },
@@ -138,6 +162,8 @@ export default function App() {
               <div className="w-full max-w-[1800px] mx-auto">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
+                  <Route path="/signals" element={<PublicSignals />} />
+                  <Route path="/public" element={<PublicSignals />} />
                   <Route path="/screener" element={<Screener />} />
                   <Route path="/live" element={<LiveTerminal />} />
                   <Route path="/trades" element={<TradeLogs />} />
@@ -151,4 +177,3 @@ export default function App() {
     </LiveProvider>
   );
 }
-
